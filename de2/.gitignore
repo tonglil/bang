@@ -1,0 +1,57 @@
+# Ignoring files in top level folder
+.qsys_edit/
+*.qpf
+*.qsf
+*.bsf
+
+# Ignoring everything in nios_system/synthesis/ except for the 3 SD card files we have to update
+nios_system/synthesis/*
+!nios_system/synthesis/submodules/Altera_UP_SD_Card_Memory_Block.bsf
+!nios_system/synthesis/submodules/Altera_UP_SD_Card_Memory_Block.cmp
+!nios_system/synthesis/submodules/Altera_UP_SD_Card_Memory_Block.vhd
+
+### Quartus Standard ###
+
+# Ignore hdl source files in top level directory
+*.vhd
+*.v
+
+# Ignore Quartus II generated files
+*sopc_*
+*.jdi
+*.ptf.*
+*.sof
+*.pof
+*.qws
+*.smsg
+*_inst.vhd
+*_generation_script*
+*.done
+*.txt
+*.qarlog
+*.rpt
+*.summary
+*.qws
+*.cmp
+*.eqn
+*.html
+*.jpg
+*.bak
+*.qar
+*.sopc_builder
+*example*
+*~
+*.sdc
+*.tcl
+*.pin
+*.mif
+*.hex
+*.tmp
+
+# Ignore Quartus II generated folders
+db/
+incremental_db/
+simulation/
+timing/
+testbench/
+*_sim/
