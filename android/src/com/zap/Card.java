@@ -1,25 +1,26 @@
-package com.zap.cards;
+package com.zap;
 
 public class Card {
-	public final char id;
+	public final int cid;
 	public final String name;
 	public final char border;
 	public final char number;
 	public final char suit;
 	public final boolean zap;
 	public final boolean missed;
-	public final char life;
+	public final int life;
 	public final boolean forceDiscard;
-	public final char draw;
+	public final int draw;
 	public final boolean onePlayer;
 	public final boolean allPlayers;
 	public final boolean onePlayerReachable;
-	public final char onePlayerFixed;
+	public final int onePlayerFixed;
 	//space duel, indians, general store
 	//space jail, dynamite, barrel, scope, mustang
-	Card(char id, String name, char border, char number, char suit, boolean zap, boolean missed, char life, boolean forceDiscard, char draw,
-			boolean onePlayer, boolean allPlayers, boolean onePlayerReachable, char onePlayerFixed) {
-		this.id = id;
+	Card(int cid, String name, char border, char number, char suit, boolean zap, 
+			boolean missed, int life, boolean forceDiscard, int draw, boolean onePlayer, 
+			boolean allPlayers, boolean onePlayerReachable, int onePlayerFixed) {
+		this.cid = cid;
 		this.name = name;
 		this.border = border;
 		this.number = number;
@@ -34,4 +35,12 @@ public class Card {
 		this.onePlayerReachable = onePlayerReachable;
 		this.onePlayerFixed = onePlayerFixed;
 	}	
+	
+	public boolean isGunCard() {
+		if (border == 'L' && onePlayerFixed != 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
