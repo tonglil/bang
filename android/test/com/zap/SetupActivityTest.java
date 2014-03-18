@@ -1,4 +1,4 @@
-package com.zap.android;
+package com.zap;
 
 import junit.framework.TestCase;
 

@@ -1,4 +1,4 @@
-package com.zap;
+package com.zap.main;
 
 public class Card {
 	public final int cid;

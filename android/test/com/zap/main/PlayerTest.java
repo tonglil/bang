@@ -5,9 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.zap.Card;
-import com.zap.Player;
-
 public class PlayerTest {
 
 	@Test
