@@ -1,3 +1,10 @@
+#ifndef TYPES_H_
+#define TYPES_H_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #define NUM_PLAYERS 7
 #define MAX_NAME 20
 #define MAX_CARDS 80
@@ -18,6 +25,21 @@ typedef enum cardStatus {
     PLAYED,
     DISCARDED
 } cardStatus;
+
+typedef enum action{
+    DISCARD,
+    CHOOSE,
+    LOSE_LIFE,
+    TRANSFER_CARDS
+} action;
+
+typedef int Card;
+
+typedef struct CardInfo {
+    Card card;
+    int fromId;
+    int toId;
+} CardInfo;
 
 typedef struct CardCtrl {
     Card deck[MAX_CARDS];
@@ -47,15 +69,45 @@ typedef enum messageType{
 
 typedef struct Message{
     messageType type;
-    actionType action;
+    action action;
     int id;
     int count;
     Card cards[MAX_CARDS];
 } Message;
 
+typedef struct Player {
+    int id;
+    int position;
+    role role;
+    int lives;
+    Card hand[MAX_CARDS];
+    Card blueCards[MAX_BLUE_CARDS];
+} Player;
+
+typedef struct PlayersInfo {
+    Player players[NUM_PLAYERS];
+    int distance[NUM_PLAYERS];
+} PlayersInfo;
+
+typedef struct PlayerCtrl {
+    Player players[NUM_PLAYERS];
+    int turn;
+    int subTurn;
+} PlayerCtrl;
+
+int getNumAlivePlayers(PlayerCtrl* playerCtrl) {
+    int count = 0;
+    int i;
+    for (i = 0; i < NUM_PLAYERS; i++) {
+        if (playerCtrl->players[i].lives > 0)
+            count++;
+    }
+    return count;
+}
+
 void updateStore(PlayerCtrl *playerCtrl, CardCtrl* cardCtrl) {
     int i;
-    for (i = 0; i < NUM_PLAYERS); i++) {
+    for (i = 0; i < NUM_PLAYERS; i++) {
         cardCtrl->store[i] = 0;
     }
     for (i = 0; i < getNumAlivePlayers(playerCtrl); i++) {
@@ -66,17 +118,11 @@ void updateStore(PlayerCtrl *playerCtrl, CardCtrl* cardCtrl) {
 
 void removeCardFromStore(CardCtrl* cardCtrl, Card card) {
     int i;
-    for (i = 0; i < NUM_PLAYERS); i++) {
+    for (i = 0; i < NUM_PLAYERS; i++) {
         if (cardCtrl->store[i] == card)
             cardCtrl->store[i] = 0;
             return;
     }
-}
-
-typedef struct CardInfo {
-    Card card;
-    int fromId;
-    int toId;
 }
 
 void initCards(CardCtrl* cardCtrl) {
@@ -103,16 +149,16 @@ void initCards(CardCtrl* cardCtrl) {
     cardCtrl->discardIndex = 0;
 }
 
+void sendCard(int id, Card card){
+    return;
+}
+
 void drawCardsForId(int id, CardCtrl* cardCtrl, int count) {
     int i;
     for (i = 0; i < count; i++) {
         sendCard(id, cardCtrl->deck[cardCtrl->deckIndex]);
         cardCtrl->deckIndex++;
     }
-}
-
-void sendCard(int id, Card card){
-    return;
 }
 
 void sendStore(int id, CardCtrl* cardCtrl){
@@ -151,38 +197,12 @@ void zapOrLose(int id){
     return;
 }
 
-void getLife(int id){
-    return;
-}
-
-typedef struct Player {
-    int id;
-    int position;
-    role role;
-    int lives;
-    Card hand[MAX_CARDS];
-    Card blueCards[MAX_BLUE_CARDS];
-} Player;
-
-typedef struct PlayersInfo {
-    Player players[NUM_PLAYERS]
-    Player distance[NUM_PLAYERS]
-} PlayerInfo;
-
-typedef struct PlayerCtrl {
-    Player players[NUM_PLAYERS];
-    int turn;
-    int subTurn;
-} PlayerCtrl;
-
-typedef int Card;
-
 void updateBlueCardsForId(PlayerCtrl* playerCtrl, int id, Card cards[]) {
-    playerCtrl->players[id].blueCards = cards;
+    memcpy(playerCtrl->players[id].blueCards, cards, sizeof(Card)*MAX_BLUE_CARDS);
 }
 
 void updateHandForId(PlayerCtrl* playerCtrl, int id, Card cards[]) {
-    playerCtrl->players[id].hand = cards;
+    memcpy(playerCtrl->players[id].hand, cards, sizeof(Card)*MAX_CARDS);
 }
 
 Player getPlayerWithId(PlayerCtrl* playerCtrl, int id) {
@@ -191,15 +211,14 @@ Player getPlayerWithId(PlayerCtrl* playerCtrl, int id) {
 
 PlayersInfo getPlayersInfoForId(PlayerCtrl* playerCtrl, int id) {
     PlayersInfo playersInfo;
-    playersInfo.players = playerCtrl->players;
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
+	playersInfo.players[i] = playerCtrl->players[i];
         if (playersInfo.players[i].position < 0) {
             playersInfo.distance[i] = -1;
             continue;
         }
-
-        tempDistance =  playersInfo.players[i].position - playersInfo.players[id].position;
+        int tempDistance =  playersInfo.players[i].position - playersInfo.players[id].position;
         //Get absolute distance
         if (tempDistance < 0)
             tempDistance = -tempDistance;
@@ -209,7 +228,7 @@ PlayersInfo getPlayersInfoForId(PlayerCtrl* playerCtrl, int id) {
         //If 3 players are alive
         //eg if position1 = 0 and position2 = 2 distance is 1
         if (tempDistance > getNumAlivePlayers(playerCtrl)/2)
-            tempDistance = getNumAlivePlayers(playerCtrl) - tempDistance
+            tempDistance = getNumAlivePlayers(playerCtrl) - tempDistance;
         playersInfo.distance[i] = tempDistance;
     }
     return playersInfo;
@@ -224,7 +243,7 @@ void endTurn(PlayerCtrl* playerCtrl) {
         playerCtrl->turn++;
         if (playerCtrl->turn >= NUM_PLAYERS)
             playerCtrl->turn = 0;
-    } while (playerCtrl->players[playerCtrl->turn].lives <= 0)
+    } while (playerCtrl->players[playerCtrl->turn].lives <= 0);
 }
 
 void setSubTurn(PlayerCtrl* playerCtrl, int id) {
@@ -240,7 +259,17 @@ void endSubTurn(PlayerCtrl* playerCtrl) {
         playerCtrl->subTurn++;
         if (playerCtrl->subTurn >= NUM_PLAYERS)
             playerCtrl->subTurn = 0;
-    } while (playerCtrl->players[playerCtrl->subTurn].lives <= 0)
+    } while (playerCtrl->players[playerCtrl->subTurn].lives <= 0);
+}
+
+int getPlayerIdAtPosition(PlayerCtrl* playerCtrl, int pos) {
+    int i;
+    for (i = 0; i < NUM_PLAYERS; i++) {
+        if (playerCtrl->players[i].position == pos)
+            return i;
+    }
+    printf("Could not find player with that position\n");
+    return -1;
 }
 
 void updateLivesForId(PlayerCtrl* playerCtrl, int id, int lives) {
@@ -258,31 +287,10 @@ void updateLivesForId(PlayerCtrl* playerCtrl, int id, int lives) {
     }
 }
 
-int getNumAlivePlayers(PlayerCtrl* playerCtrl) {
-    int count = 0;
-    int i;
-    for (i = 0; i < NUM_PLAYERS; i++) {
-        if (playerCtrl->players[i].lives > 0)
-            count++;
-    }
+Message receivedFromAndroid() {
+    Message message;
+    return message;
 }
-
-int getPlayerIdAtPosition(PlayerCtrl* playerCtrl, int pos) {
-    int i;
-    for (i = 0; i < NUM_PLAYERS; i++) {
-        if (playerCtrl->players[i].position == pos)
-            return i;
-    }
-    printf("Could not find player with that position\n");
-    return -1;
-}
-
-typedef enum actionType{
-    DISCARD,
-    CHOOSE,
-    LOSE_LIFE,
-    TRANSFER_CARDS
-} actionType;
 
 void startGatling(PlayerCtrl* playerCtrl, int id) {
     setSubTurn(playerCtrl,id);
@@ -290,15 +298,15 @@ void startGatling(PlayerCtrl* playerCtrl, int id) {
     missOrLose(getSubTurn(playerCtrl));
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
-        switch (message.actionType) {
+        switch (message.action) {
         case DISCARD:
-            updateHandForId(PlayerCtrl, message.id, message.cards);
+            updateHandForId(playerCtrl, message.id, message.cards);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
                 missOrLose(getSubTurn(playerCtrl));
             break;
         case LOSE_LIFE:
-            updateLivesForId(playerCtrl, message.id, message.lives);
+            updateLivesForId(playerCtrl, message.id, message.count);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
                 missOrLose(getSubTurn(playerCtrl));
@@ -316,15 +324,15 @@ void startDuel(PlayerCtrl* playerCtrl, int to, int from) {
         missOrLose(turn);
         while (1) {
             Message message = receivedFromAndroid();
-            if (message.actionType == DISCARD) {
-                updateHandForId(PlayerCtrl, message.id, message.cards);
+            if (message.action == DISCARD) {
+                updateHandForId(playerCtrl, message.id, message.cards);
                 if (turn == to)
                     turn = from;
                 else
                     turn = to;
                 break;
-            } else if (message.actionType = LOSE_LIFE) {
-                updateLivesForId(playerCtrl, message.id, message.lives);
+            } else if (message.action == LOSE_LIFE) {
+                updateLivesForId(playerCtrl, message.id, message.count);
                 loop = 0;
                 break;
             }
@@ -336,11 +344,11 @@ void startZap(PlayerCtrl* playerCtrl, int to) {
     missOrLose(to);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.actionType == DISCARD) {
+        if (message.action == DISCARD) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.actionType == LOSE_LIFE) {
-            updateLivesForId(playerCtrl, message.id, message.lives);
+        } else if (message.action == LOSE_LIFE) {
+            updateLivesForId(playerCtrl, message.id, message.count);
             break;
         }
     }
@@ -352,15 +360,15 @@ void startAliens(PlayerCtrl* playerCtrl, int id) {
     zapOrLose(getSubTurn(playerCtrl));
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
-        switch (message.actionType) {
+        switch (message.action) {
         case DISCARD:
-            updateHandForId(PlayerCtrl, message.id, message.cards);
+            updateHandForId(playerCtrl, message.id, message.cards);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
                 zapOrLose(getSubTurn(playerCtrl));
             break;
         case LOSE_LIFE:
-            updateLivesForId(playerCtrl, message.id, message.lives);
+            updateLivesForId(playerCtrl, message.id, message.count);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
                 zapOrLose(getSubTurn(playerCtrl));
@@ -375,10 +383,10 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
     updateStore(playerCtrl, cardCtrl);
     setSubTurn(playerCtrl,id);
     sendStore(getSubTurn(playerCtrl), cardCtrl);
-    int loop
+    int loop = 1;
     while (loop) {
         Message message = receivedFromAndroid();
-        switch (message.actionType) {
+        switch (message.action) {
         case CHOOSE:
             sendCard(getSubTurn(playerCtrl), message.cards[0]);
             removeCardFromStore(cardCtrl, message.cards[0]);
@@ -391,7 +399,7 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
     }
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
-        switch (message.actionType) {
+        switch (message.action) {
         case CHOOSE:
             sendCard(getSubTurn(playerCtrl), message.cards[0]);
             removeCardFromStore(cardCtrl, message.cards[0]);
@@ -412,7 +420,7 @@ void startSaloon(PlayerCtrl* playerCtrl) {
             getLife(i);
         while (1) {
             Message message = receivedFromAndroid();
-            if (message.messageType == UPDATE_LIVES) {
+            if (message.type == UPDATE_LIVES) {
                 updateLivesForId(playerCtrl, message.id, message.count);
                 break;
             }
@@ -425,17 +433,17 @@ void startPanic(PlayerCtrl* playerCtrl, int to, int from) {
     sendPanic(to);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.actionType == TRANSFER_CARDS) {
+        if (message.action == TRANSFER_CARDS) {
             transfer = message.cards[0];
             break;
         }
     }
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.actionType == UPDATE_HAND) {
+        if (message.action == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.actionType == UPDATE_BLUE) {
+        } else if (message.action == UPDATE_BLUE) {
             updateBlueCardsForId(playerCtrl, message.id, message.cards);
             break;
         }
@@ -443,10 +451,10 @@ void startPanic(PlayerCtrl* playerCtrl, int to, int from) {
     sendCard(from, transfer);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.actionType == UPDATE_HAND) {
+        if (message.action == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.actionType == UPDATE_BLUE) {
+        } else if (message.action == UPDATE_BLUE) {
             updateBlueCardsForId(playerCtrl, message.id, message.cards);
             break;
         }
@@ -457,13 +465,15 @@ void startCatBalou(PlayerCtrl* playerCtrl, int to) {
     sendCatBalou(to);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.actionType == UPDATE_HAND) {
+        if (message.action == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.actionType == UPDATE_BLUE) {
+        } else if (message.action == UPDATE_BLUE) {
             updateBlueCardsForId(playerCtrl, message.id, message.cards);
             break;
         }
     }
 }
+
+#endif /* PLAYER_H_ */
 

@@ -5,19 +5,40 @@
 #include <time.h>
 #include <assert.h>
 #include <sys/time.h>
-#include Player.h
+#include "Player.h"
+
+#include "Menu.h"
+#include "animations.h"
+#include "sys/alt_timestamp.h"
+
+#define switches (volatile char *) 0x0004430
+#define leds (char *) 0x0004420
+
+#define FPS 2.0
+#define TICKS_PER_FRAME (1000.0 / FPS)
+#define PS 256
 
 int main() {
+    menu = malloc(sizeof(Menu));
+    alt_up_char_buffer_dev *char_buffer = initCharBuffer();
+    initMenu(menu);
+
+    while (1) {
+    	*leds = *switches;
+    	alt_timestamp_start();
+    	alt_up_char_buffer_clear(char_buffer);
+    	runMenu(menu, char_buffer);
+    	srand(alt_timestamp());
+    }
     CardCtrl *cardCtrl = (CardCtrl*)malloc(sizeof(CardCtrl));
     PlayerCtrl* playerCtrl = (PlayerCtrl*)malloc(sizeof(PlayerCtrl));
     initCards(cardCtrl);
-    initPlayers(playerCtrl);
 
     while (1){
         int listening = 1;
         while (listening) {
-            Message message = receiveFromAndroid();
-            switch (message.messageType) {
+            Message message = receivedFromAndroid();
+            switch (message.type) {
             case DRAW_CARDS:
                 drawCardsForId(message.id, cardCtrl, message.count);
                 break;
@@ -31,10 +52,10 @@ int main() {
                 updateLivesForId(playerCtrl, message.id, message.count);
                 break;
             case GATLING:
-                startGatling(playerCtrl, messageType.id);
+                startGatling(playerCtrl, message.id);
                 break;
             case ALIENS:
-                startAliens(playerCtrl, messageType.id);
+                startAliens(playerCtrl, message.id);
                 break;
             case BEER:
                 updateLivesForId(playerCtrl, message.id, message.count);

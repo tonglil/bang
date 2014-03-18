@@ -31,3 +31,12 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+*.objdump
+*.map
+*.elf
+*.o
+*.d
+de2/software/zap/create-this-app
+*.project
+*.force_relink
+*.cproject
