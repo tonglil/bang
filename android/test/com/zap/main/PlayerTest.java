@@ -1,9 +1,12 @@
-package com.zap;
+package com.zap.main;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import com.zap.Card;
+import com.zap.Player;
 
 public class PlayerTest {
 
