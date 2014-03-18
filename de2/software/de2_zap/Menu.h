@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <system.h>
 #include "animations.h"
+#include "Types.h"
 
 #ifndef MENU_H_
 #define MENU_H_
@@ -17,6 +18,12 @@
 #define CURSOR_HEIGHT 10
 #define CURSOR_WIDTH 10
 #define MENU_TITLE_Y 15
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 320
+#define CHAR_WIDTH 4
+#define CHAR_HEIGHT 4
+#define CHAR_ROW_SIZE SCREEN_WIDTH/CHAR_WIDTH
+#define CHAR_COL_SIZE SCREEN_HEIGHT/CHAR_HEIGHT
 
 typedef enum {
 	MAIN_MENU,
