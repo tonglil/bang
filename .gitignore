@@ -31,3 +31,56 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# C
+# -----
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+# -----
+
+#Java
+# -----
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+# -----
+
+#Rest
+de2/software/zap/.cproject
+de2/software/zap/.project
+de2/software/zap/Makefile
+de2/software/zap/create-this-app
+de2/software/zap/obj/
+de2/software/zap/zap.map
+de2/software/zap/zap.objdump
+de2/software/zap_bsp/
