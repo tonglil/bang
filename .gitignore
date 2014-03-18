@@ -40,3 +40,5 @@ de2/software/zap/create-this-app
 *.project
 *.force_relink
 *.cproject
+de2/software/de2_zap/Makefile
+de2/software/de2_zap/create-this-app

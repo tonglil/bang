@@ -27,7 +27,7 @@ void runMenu(Menu* menu, alt_up_char_buffer_dev* char_buffer) {
 		menu->hasChanged = 0;
 
 		if (menu->mode == MAIN_MENU) {
-			sprintf(buffer, "FRUIT EXPLOSION");
+			sprintf(buffer, "ZAP");
 			alt_up_char_buffer_string(char_buffer, buffer, 20, MENU_TITLE_Y-1);
 
 			sprintf(buffer, "Game Start");
