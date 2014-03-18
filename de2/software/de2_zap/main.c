@@ -8,7 +8,9 @@
 #include "Player.h"
 
 #include "Menu.h"
-#include "animations.h"
+#include "Draw.h"
+#include "Card.h"
+#include "Communication.h"
 #include "sys/alt_timestamp.h"
 
 #define switches (volatile char *) 0x0004430

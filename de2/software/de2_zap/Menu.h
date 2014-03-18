@@ -1,14 +1,7 @@
-/*
- * Menu.h
- *
- *  Created on: 2014-02-12
- *      Author: Byron
- */
-
 #include <stdio.h>
 #include <unistd.h>
 #include <system.h>
-#include "animations.h"
+#include "Draw.h"
 #include "Types.h"
 
 #ifndef MENU_H_

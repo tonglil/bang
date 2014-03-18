@@ -1,10 +1,3 @@
-/*
- * Menu.c
- *
- *  Created on: 2014-02-12
- *      Author: Byron
- */
-
 #include "Menu.h"
 
 Menu* menu;
