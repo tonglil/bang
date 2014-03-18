@@ -21,6 +21,14 @@
 #define PS 256
 
 int main() {
+    printf("hey!\n");
+    alt_timestamp_start();
+    srand(alt_timestamp());
+    CardCtrl *cardCtrl = (CardCtrl*)malloc(sizeof(CardCtrl));
+    PlayerCtrl* playerCtrl = (PlayerCtrl*)malloc(sizeof(PlayerCtrl));
+    initCards(cardCtrl);
+    initPlayers(cardCtrl, 6);
+
     menu = malloc(sizeof(Menu));
     alt_up_char_buffer_dev *char_buffer = initCharBuffer();
     initMenu(menu);
@@ -32,9 +40,6 @@ int main() {
     	runMenu(menu, char_buffer);
     	srand(alt_timestamp());
     }
-    CardCtrl *cardCtrl = (CardCtrl*)malloc(sizeof(CardCtrl));
-    PlayerCtrl* playerCtrl = (PlayerCtrl*)malloc(sizeof(PlayerCtrl));
-    initCards(cardCtrl);
 
     while (1){
         int listening = 1;

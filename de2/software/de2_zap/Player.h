@@ -12,15 +12,16 @@
 typedef enum { false, true } bool;
 
 typedef enum role {
+    NONE,
     SHERIFF,
     DEPUTY,
     OUTLAW,
-    RENEGADE
+    RENEGADE,
 } role;
 
 typedef struct Player {
     int id;
-    int position;
+    int pos;
     role role;
     int lives;
     Card hand[MAX_CARDS];
@@ -34,10 +35,12 @@ typedef struct PlayersInfo {
 
 typedef struct PlayerCtrl {
     Player players[NUM_PLAYERS];
+    int numPlayers;
     int turn;
     int subTurn;
 } PlayerCtrl;
 
+void initPlayers(PlayerCtrl* playerCtrl, int count);
 int getNumAlivePlayers(PlayerCtrl* playerCtrl);
 void updateStore(PlayerCtrl *playerCtrl, CardCtrl* cardCtrl);
 void removeCardFromStore(CardCtrl* cardCtrl, Card card);
@@ -49,7 +52,7 @@ void endTurn(PlayerCtrl* playerCtrl);
 void setSubTurn(PlayerCtrl* playerCtrl, int id);
 int getSubTurn(PlayerCtrl* playerCtrl);
 void endSubTurn(PlayerCtrl* playerCtrl);
-int getPlayerIdAtPosition(PlayerCtrl* playerCtrl, int pos);
+int getPlayerIdAtpos(PlayerCtrl* playerCtrl, int pos);
 void updateLivesForId(PlayerCtrl* playerCtrl, int id, int lives);
 
 #endif /* PLAYER_H_ */

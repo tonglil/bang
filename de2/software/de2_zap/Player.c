@@ -1,5 +1,59 @@
 #include "Player.h"
 
+void initPlayers(PlayerCtrl* playerCtrl, int count) {
+    if (count < 4){
+        printf("There has to be at least 4 players");
+        return;
+    }
+
+    Player defaultPlayer;
+    defaultPlayer.id = -1;
+    defaultPlayer.pos = -1;
+    defaultPlayer.role = NONE;
+    defaultPlayer.lives = 0;
+    int i;
+    for (i = 0; i < NUM_PLAYERS; i++) {
+        playerCtrl->players[i] = defaultPlayer;
+    }
+
+    playerCtrl->players[0].role = SHERIFF;
+    playerCtrl->players[1].role = DEPUTY;
+    playerCtrl->players[2].role = OUTLAW;
+    playerCtrl->players[3].role = OUTLAW;
+
+    if (count > 4)
+        playerCtrl->players[4].role = DEPUTY;
+    if (count > 5)
+        playerCtrl->players[5].role = OUTLAW;
+    if (count == 7)
+        playerCtrl->players[6].role = RENEGADE;
+
+    //Shuffle roles
+    for (i = 0; i < count; i++)
+    {
+        int j = i + rand() % (count - i);
+        if (j >= MAX_CARDS)
+            printf("Randomizer exceeded maximum index\n");
+        role temp = playerCtrl->players[j].role;
+        playerCtrl->players[j].role = playerCtrl->players[i].role;
+        playerCtrl->players[i].role = temp;
+    }
+
+    for (i = 0; i < NUM_PLAYERS; i++) {
+        Player *p = &(playerCtrl->players[i]);
+        if (p->role == NONE)
+            continue;
+        p->id = i;
+        p->pos = i;
+        if (p->role == SHERIFF)
+            p->lives = 5;
+        else
+            p->lives = 4;
+
+        printf("ID %d, Role %d, Pos %d, Lives %d\n", p->id, p->role, p->pos, p->lives);
+    }
+}
+
 int getNumAlivePlayers(PlayerCtrl* playerCtrl) {
     int count = 0;
     int i;
@@ -47,19 +101,19 @@ PlayersInfo getPlayersInfoForId(PlayerCtrl* playerCtrl, int id) {
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
     playersInfo.players[i] = playerCtrl->players[i];
-        if (playersInfo.players[i].position < 0) {
+        if (playersInfo.players[i].pos < 0) {
             playersInfo.distance[i] = -1;
             continue;
         }
-        int tempDistance =  playersInfo.players[i].position - playersInfo.players[id].position;
+        int tempDistance =  playersInfo.players[i].pos - playersInfo.players[id].pos;
         //Get absolute distance
         if (tempDistance < 0)
             tempDistance = -tempDistance;
         //If 7 players are alive
-        //eg if position1 = 0 and position2 = 6 distance is 1
-        //eg if position1 = 1 and position2 = 6 distance is 2
+        //eg if pos1 = 0 and pos2 = 6 distance is 1
+        //eg if pos1 = 1 and pos2 = 6 distance is 2
         //If 3 players are alive
-        //eg if position1 = 0 and position2 = 2 distance is 1
+        //eg if pos1 = 0 and pos2 = 2 distance is 1
         if (tempDistance > getNumAlivePlayers(playerCtrl)/2)
             tempDistance = getNumAlivePlayers(playerCtrl) - tempDistance;
         playersInfo.distance[i] = tempDistance;
@@ -91,13 +145,13 @@ void endSubTurn(PlayerCtrl* playerCtrl) {
     } while (playerCtrl->players[playerCtrl->subTurn].lives <= 0);
 }
 
-int getPlayerIdAtPosition(PlayerCtrl* playerCtrl, int pos) {
+int getPlayerIdAtpos(PlayerCtrl* playerCtrl, int pos) {
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
-        if (playerCtrl->players[i].position == pos)
+        if (playerCtrl->players[i].pos == pos)
             return i;
     }
-    printf("Could not find player with that position\n");
+    printf("Could not find player with that pos\n");
     return -1;
 }
 
@@ -106,11 +160,11 @@ void updateLivesForId(PlayerCtrl* playerCtrl, int id, int lives) {
         return;
     if (lives == 0) {
         int i;
-        for (i = playerCtrl->players[id].position + 1; i < getNumAlivePlayers(playerCtrl); i++) {
-            playerCtrl->players[getPlayerIdAtPosition(playerCtrl, i)].position--;
+        for (i = playerCtrl->players[id].pos + 1; i < getNumAlivePlayers(playerCtrl); i++) {
+            playerCtrl->players[getPlayerIdAtpos(playerCtrl, i)].pos--;
         }
         playerCtrl->players[id].lives = 0;
-        playerCtrl->players[id].position = -1;
+        playerCtrl->players[id].pos = -1;
     } else {
         playerCtrl->players[id].lives = lives;
     }
