@@ -82,12 +82,12 @@ public class MainActivity extends Activity {
         // Create an array of bytes. First byte will be the
         // message length, and the next ones will be the message
 
-        // byte buf[] = new byte[msg.length() + 1];
-        // buf[0] = (byte) msg.length();
-        // System.arraycopy(msg.getBytes(), 0, buf, 1, msg.length());
+        byte buf[] = new byte[msg.length() + 1];
+        buf[0] = (byte) msg.length();
+        System.arraycopy(msg.getBytes(), 0, buf, 1, msg.length());
 
-        byte buf[] = new byte[msg.length()];
-        System.arraycopy(msg.getBytes(), 0, buf, 0, msg.length());
+        // byte buf[] = new byte[msg.length()];
+        // System.arraycopy(msg.getBytes(), 0, buf, 0, msg.length());
 
         // Now send through the output stream of the socket
 
@@ -95,8 +95,8 @@ public class MainActivity extends Activity {
         try {
             out = app.sock.getOutputStream();
             try {
-                // out.write(buf, 0, msg.length() + 1);
-                out.write(buf, 0, msg.length());
+                out.write(buf, 0, msg.length() + 1);
+                // out.write(buf, 0, msg.length());
             } catch (IOException e) {
                 e.printStackTrace();
             }
