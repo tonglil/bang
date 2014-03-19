@@ -41,6 +41,8 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
 
     for (i = 0; i < NUM_PLAYERS; i++) {
         Player *p = &(playerCtrl->players[i]);
+        memset(p->blueCards, 0, sizeof(Card)*MAX_CARDS);
+        memset(p->hand, 0, sizeof(Card)*MAX_CARDS);
         if (p->role == NONE)
             continue;
         p->id = i;
@@ -51,6 +53,21 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
             p->lives = 4;
 
         printf("ID %d, Role %d, Pos %d, Lives %d\n", p->id, p->role, p->pos, p->lives);
+    }
+}
+
+const char * roleToString(role r) {
+    switch (r) {
+    case SHERIFF:
+        return "Sheriff";
+    case DEPUTY:
+        return "Deputy";
+    case OUTLAW:
+        return "Outlaw";
+    case RENEGADE:
+        return "Renegade";
+    default:
+        return "None";
     }
 }
 

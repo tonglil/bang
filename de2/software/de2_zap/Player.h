@@ -54,6 +54,7 @@ int getSubTurn(PlayerCtrl* playerCtrl);
 void endSubTurn(PlayerCtrl* playerCtrl);
 int getPlayerIdAtpos(PlayerCtrl* playerCtrl, int pos);
 void updateLivesForId(PlayerCtrl* playerCtrl, int id, int lives);
+const char * roleToString(role r);
 
 #endif /* PLAYER_H_ */
 

@@ -26,5 +26,7 @@ typedef struct CardCtrl {
 } CardCtrl;
 
 void initCards(CardCtrl* cardCtrl);
+const char * cardToString(Card id);
+Card testDrawCard(CardCtrl* cardCtrl);
 
 #endif /* CARD_H_ */

@@ -7,7 +7,7 @@
 #include <sys/time.h>
 #include "Player.h"
 
-#include "Menu.h"
+#include "Field.h"
 #include "Draw.h"
 #include "Card.h"
 #include "Communication.h"
@@ -27,17 +27,25 @@ int main() {
     CardCtrl *cardCtrl = (CardCtrl*)malloc(sizeof(CardCtrl));
     PlayerCtrl* playerCtrl = (PlayerCtrl*)malloc(sizeof(PlayerCtrl));
     initCards(cardCtrl);
-    initPlayers(cardCtrl, 6);
+    initPlayers(playerCtrl, 7);
+    int i, j;
+    for (i = 0; i < NUM_PLAYERS; i++) {
+        for (j = 0; j < 3; j++) {
+            playerCtrl->players[i].blueCards[j] = testDrawCard(cardCtrl);
+            printf("The drawn card is %d\n", playerCtrl->players[i].blueCards[j]);
+        }
+    }
 
-    menu = malloc(sizeof(Menu));
-    alt_up_char_buffer_dev *char_buffer = initCharBuffer();
-    initMenu(menu);
+    field = malloc(sizeof(Field));
+    alt_up_char_buffer_dev *charBuffer = initCharBuffer();
+    alt_up_pixel_buffer_dma_dev *pixelBuffer = initPixelBuffer();
+    initField(field, playerCtrl, cardCtrl, charBuffer);
 
     while (1) {
     	*leds = *switches;
     	alt_timestamp_start();
-    	alt_up_char_buffer_clear(char_buffer);
-    	runMenu(menu, char_buffer);
+    	alt_up_char_buffer_clear(charBuffer);
+    	runField(field);
     	srand(alt_timestamp());
     }
 

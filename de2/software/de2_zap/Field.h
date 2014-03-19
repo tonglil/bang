@@ -3,6 +3,8 @@
 #include <system.h>
 #include "Draw.h"
 #include "Types.h"
+#include "Player.h"
+#include "Card.h"
 
 #ifndef MENU_H_
 #define MENU_H_
@@ -47,7 +49,7 @@ typedef enum {
 	MIN_10
 }TIME_LIMIT;
 
-typedef struct Menu {
+typedef struct Field {
 	volatile int optionSelected;
 	int optionsMax;
 	char hasChanged;
@@ -56,13 +58,16 @@ typedef struct Menu {
 	PLAYER_MODE p2Mode;
 	AI_MODE aiMode;
 	TIME_LIMIT timeMode;
-}Menu;
+	PlayerCtrl* playerCtrl;
+	CardCtrl* cardCtrl;
+	alt_up_char_buffer_dev* charBuffer;
+}Field;
 
-void runMenu(Menu* menu, alt_up_char_buffer_dev* char_buffer);
-int getCursorPosition(Menu*);
-void initMenu(Menu* menu);
-void handleMenu(char ascii);
+void runField(Field* field);
+int getCursorPosition(Field*);
+void initField(Field* field, PlayerCtrl* playerCtrl, CardCtrl* cardCtrl, alt_up_char_buffer_dev* charBuffer);
+void handleField(char ascii);
 
-extern Menu* menu;
+extern Field* field;
 
 #endif /* MENU_H_ */
