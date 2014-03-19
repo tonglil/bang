@@ -1,4 +1,8 @@
+#ifndef COMM_H_
+#define COMM_H_
+
 #include <stdio.h>
+#include <stdlib.h>
 #include "altera_up_avalon_rs232.h"
 #include <string.h>
 
@@ -13,8 +17,10 @@ typedef struct Comm_data {
     int num_to_receive;
 } Comm_data;
 
-alt_up_rs232_dev* init_clear_uart(Comm_data* cd);
+alt_up_rs232_dev* init_clear_uart(Comm_data*);
 
-void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd);
+void receive_data_from_middleman(alt_up_rs232_dev*, Comm_data*);
 
-void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd);
+void send_data_to_middleman(alt_up_rs232_dev*, Comm_data*);
+
+#endif
