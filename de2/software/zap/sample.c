@@ -1,17 +1,14 @@
-#include "comm.h"
+#include "comm_func.h"
+
+alt_up_rs232_dev* uart;
+Comm_data* cd;
 
 int main() {
-    Comm_data* cd = (Comm_data*) malloc(sizeof(Comm_data));
+    cd = (Comm_data*) malloc(sizeof(Comm_data));
 
-    alt_up_rs232_dev* uart = init_clear_uart(cd);
+    uart = init_clear_uart(cd);
 
-    while(1) {
-
-    receive_data_from_middleman(uart, cd);
-
-    send_data_to_middleman(uart, cd);
-
-    }
+    tell_user_pid_role(1, 1);
 
     return 0;
 }

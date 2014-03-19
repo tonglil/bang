@@ -47,12 +47,7 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
 
 void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     // Reply to the message
-    printf("Return the message to the Middleman and Android client\n");
-    int i;
-    for (i = 0; i < cd->r_len; i++) {
-        cd->s_message[i] = cd->r_message[i];
-    }
-    cd->s_len = cd->r_len;
+    printf("Send the message to the Middleman\n");
     // Write the client id
     alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
     // Write the message length
