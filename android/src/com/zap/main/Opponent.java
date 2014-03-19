@@ -47,6 +47,14 @@ public class Opponent {
 		}
 	}
 	
+	public ArrayList<Card> getBlueCards() {
+		ArrayList<Card> r = new ArrayList<Card>();
+		for (Card c : blueCards) {
+			r.add(c);
+		}
+		return r;
+	}
+	
 	public void setRange(int range) {
 		this.range = range;
 	}
