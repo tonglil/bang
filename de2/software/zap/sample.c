@@ -8,7 +8,7 @@ int main() {
 
     uart = init_clear_uart(cd);
 
-    tell_user_pid_role(1, 1);
+    tell_user_pid_role(2, 1);
 
     return 0;
 }

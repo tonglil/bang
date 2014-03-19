@@ -9,7 +9,7 @@ void tell_user_pid_role(int pid, int role) {
 
     cd->s_len = 1;
 
-    send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd);
+    send_data_to_middleman(uart, cd);
 }
 
 void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi) {

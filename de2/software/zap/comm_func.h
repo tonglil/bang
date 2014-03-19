@@ -8,7 +8,6 @@
 
 #include "Player.h"
 #include "comm.h"
-#include "global.h"
 
 extern alt_up_rs232_dev* uart;
 extern Comm_data* cd;
