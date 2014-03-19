@@ -8,6 +8,10 @@
 
 #include "Player.h"
 #include "comm.h"
+#include "global.h"
+
+extern alt_up_rs232_dev* uart;
+extern Comm_data* cd;
 
 void tell_user_pid_role(int pid, int role);
 
