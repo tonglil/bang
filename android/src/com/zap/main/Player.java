@@ -2,9 +2,9 @@ package com.zap.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 //TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
+//TODO Amitoj: Implement onEvent functions, implement dynamite
 
 public class Player {
 	private CardController cc;
@@ -16,6 +16,7 @@ public class Player {
 	private boolean turn;
 	private boolean dead;
 	private boolean zappedThisTurn;
+	private boolean inJail;
 	
 	public String test_call;
 
@@ -36,6 +37,7 @@ public class Player {
 		dead = false;
 		zappedThisTurn = false;
 		test_call = "";
+		inJail = false;
 	}
 	
 	public void setLives(int lives) {
@@ -121,6 +123,15 @@ public class Player {
 		o.setLives(lives);
 	}
 	
+	//TEST
+	public void setOpponentBlueCards(int pid, ArrayList<Integer> cids) {
+		Opponent o = opponents.get(new Integer(pid));
+		o.discardAll();
+		for (Integer i : cids) {
+			o.playBlueCard(i.intValue());
+		}
+	}
+	
 	public void opponentPlayBlueCard(int pid, int cid) {
 		Opponent o = opponents.get(new Integer(pid));
 		o.playBlueCard(cid);
@@ -143,7 +154,10 @@ public class Player {
 	public void startTurn() {
 		turn = true;
 		zappedThisTurn = false;
-		drawCards(2);
+		
+		if (inJail) {
+			drawCards(1);
+		}
 	}
 
 	public void endTurn() {
@@ -275,22 +289,43 @@ public class Player {
 	////////////////////////////////////////////////////
 	// THE BELOW PUBLIC FUNCTIONS ARE CALLED WHEN AN OPPONENT INITIATES AN ACTION
 	
-	public void missOrLife() {
+	//TEST THEM ALL
+	public void onZap() {
 		//TODO: user has choice of playing miss or taking a life (player getting zapped)
 		//TODO: let him use a beer if this is a lethal hit
 	}
 	
-	public void zapOrLife() {
+	public void onAliens() {
 		//TODO: user has choice of playing zap or taking a life (player getting dueled or aliens)
 		//TODO: let him use a beer if this is a lethal hit
 	}
 	
-	public void receiveLife() {
+	public void onSaloon() {
 		if (lives < maxLives) {
 			setLives(lives + 1);;
 		}
 	}
+	
+	public void onPanic(int cid) {
+		discardCard(cid);
+	}
+	
+	public void onCatBalou(int cid) {
+		discardCard(cid);
+	}
 
+	public void onJail() {
+		inJail = true;
+	}
+	
+	public void onDuel() {
+		
+	}
+	
+	public void onGeneralStore() {
+		
+	}
+	
 ///////////////////////////////////////////////////////
 
 	private void zapOpponent(int pid) {
