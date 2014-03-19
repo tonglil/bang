@@ -5,8 +5,9 @@
 #include <time.h>
 #include <assert.h>
 #include <sys/time.h>
-#include "Player.h"
+#include <unistd.h>
 
+#include "Player.h"
 #include "Field.h"
 #include "Draw.h"
 #include "Card.h"
@@ -21,7 +22,12 @@
 #define PS 256
 
 int main() {
-    printf("hey!\n");
+    // INIT COMS
+	printf("Started, waiting 5 secs\n");
+	usleep(5000000);
+    cd = (Comm_data*) malloc(sizeof(Comm_data));
+    uart = init_clear_uart(cd);
+
     alt_timestamp_start();
     srand(alt_timestamp());
     CardCtrl *cardCtrl = (CardCtrl*)malloc(sizeof(CardCtrl));
@@ -41,18 +47,16 @@ int main() {
     alt_up_pixel_buffer_dma_dev *pixelBuffer = initPixelBuffer();
     initField(field, playerCtrl, cardCtrl, charBuffer);
 
-    while (1) {
-    	*leds = *switches;
-    	alt_timestamp_start();
-    	alt_up_char_buffer_clear(charBuffer);
-    	runField(field);
-    	srand(alt_timestamp());
-    }
+	*leds = *switches;
+	alt_timestamp_start();
+	srand(alt_timestamp());
 
     while (1){
         int listening = 1;
         while (listening) {
             Message message = receivedFromAndroid();
+        	printf("received/interpreted\n");
+        	printf("message.type: %d\n", message.type);
             switch (message.type) {
             case DRAW_CARDS:
                 drawCardsForId(message.fromId, cardCtrl, message.count);
@@ -99,8 +103,11 @@ int main() {
             case END_TURN:
                 listening = 0;
             default:
+            	printf("garbage\n");
                 break;
             }
+        	alt_up_char_buffer_clear(charBuffer);
+        	runField(field);
         }
         endTurn(playerCtrl);
     }
