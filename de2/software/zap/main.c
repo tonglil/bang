@@ -51,6 +51,7 @@ int main() {
 	alt_timestamp_start();
 	srand(alt_timestamp());
 
+    tell_user_their_turn(0);
     while (1){
         int listening = 1;
         while (listening) {
