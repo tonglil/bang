@@ -30,4 +30,32 @@ void tell_user_zap_or_lose_life(int pid);
 
 void tell_user_get_life(int pid);
 
+void receive_interpret_android(void);
+
+void tell_de2_user_cards(int pid, int ncards, int* cards);
+
+void tell_de2_blue_cards(int pid, int nbcards, int* bcards);
+
+void tell_de2_user_beer(int pid);
+
+void tell_de2_user_gatling(int pid);
+
+void tell_de2_user_aliens(int pid);
+
+void tell_de2_user_general_store(int pid);
+
+void tell_de2_user_zap(int pid, int pid1);
+
+void tell_de2_user_panic(int pid, int pid1);
+
+void tell_de2_user_cat(int pid, int pid1);
+
+void tell_de2_user_duel(int pid, int pid1);
+
+void tell_de2_user_jail(int pid, int pid1);
+
+void tell_de2_end_turn(int pid);
+
+void tell_de2_new_card(int pid);
+
 #endif

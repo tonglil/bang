@@ -179,3 +179,87 @@ void tell_user_get_life(int pid) {
 
     send_data_to_middleman(uart, cd);
 }
+
+void receive_interpret_android(void) {
+    receive_data_from_middleman(uart, cd);
+    int msg_type = cd->r_message[0];
+    switch(msg_type) {
+        case 0x11:
+            int pid = cd->r_message[1];
+            int ncards = cd->r_message[2];
+            int i, j = 0;
+            int cards[ncards];
+            for (i = 3; i < ncards; i++) {
+                card[j++] = r_message[i];
+            }
+            tell_de2_user_cards(pid, ncards, cards);
+            break;
+        case 0x12:
+            int pid = cd->r_message[1];
+            int nbcards = cd->r_message[2];
+            int i, j = 0;
+            int bcards[nbcards];
+            for (i = 3; i < nbcards; i++) {
+                bcard[j++] = r_message[i];
+            }
+            tell_de2_blue_cards(pid, nbcards, bcards);
+            break;
+        case 0x13:
+            int pid = cd->r_message[1];
+            int card_type = cd->r_message[2];
+            switch (card_type) {
+                case 0x01:
+                    tell_de2_user_beer(pid);
+                    break;
+                case 0x02:
+                    tell_de2_user_gatling(pid);
+                    break;
+                case 0x03:
+                    tell_de2_user_aliens(pid);
+                    break;
+                case 0x04:
+                    tell_de2_user_general_store(pid);
+                    break;
+                case 0x05:
+                    tell_de2_user_saloon(pid);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case 0x14:
+            int pid = cd->r_message[1];
+            int pid1 = cd->r_message[2];
+            int card_type = cd->r_message[3];
+            switch (card_type) {
+                case 0x01:
+                    tell_de2_user_zap(pid, pid1);
+                    break;
+                case 0x02:
+                    tell_de2_user_panic(pid, pid1);
+                    break;
+                case 0x03:
+                    tell_de2_user_cat(pid, pid1);
+                    break;
+                case 0x04:
+                    tell_de2_user_duel(pid, pid1);
+                    break;
+                case 0x05:
+                    tell_de2_user_jail(pid, pid1);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case 0x15:
+            int pid = cd->r_message[1];
+            tell_de2_end_turn(pid);
+            break;
+        case 0x16:
+            int pid = cd->r_message[1];
+            tell_de2_new_card(pid);
+            break;
+        default:
+            break;
+    }
+}
