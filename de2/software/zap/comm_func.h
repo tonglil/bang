@@ -12,11 +12,11 @@
 extern alt_up_rs232_dev* uart;
 extern Comm_data* cd;
 
-void tell_user_pid_role(int pid, Player p);
+void tell_user_pid_role(int pid, Player* p);
 
-void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi);
+void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi, int alive_players);
 
-void tell_user_all_opponent_blue_lives(int pid, PlayersInfo* pi);
+void tell_user_all_opponent_blue_lives(int pid, PlayersInfo* pi, int alive_players);
 
 void tell_user_new_card(int pid, int cid);
 
