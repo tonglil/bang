@@ -7,30 +7,15 @@ void tell_user_pid_role(int pid, Player* p) {
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
     cd->s_message[0] = 0x01;
-    switch(p->role) {
-        case NONE:
-            cd->s_message[1] = 0x00;
-            break;
-        case SHERIFF:
-            cd->s_message[1] = 0x01;
-            break;
-        case DEPUTY:
-            cd->s_message[1] = 0x02;
-            break;
-        case OUTLAW:
-            cd->s_message[1] = 0x03;
-            break;
-        case RENEGADE:
-            cd->s_message[1] = 0x04;
-            break;
-    }
+    cd->s_message[1] = pid;
+    cd->s_message[2] = p->role;
 
-    cd->s_len = 2;
+    cd->s_len = 3;
 
     send_data_to_middleman(uart, cd);
 }
 
-void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi, int alive_players) {
+void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi) {
     cd->client_id = pid;
 
     // Clear message buffer
@@ -39,28 +24,11 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi, int alive_playe
     cd->s_message[0] = 0x02;
 
     int i;
-    for (i = 0; i < alive_players; i++) {
-        // if (pi->players[i]->lives > 0) {
-            cd->s_message[3*i + 1] = pi->players[i]->id;
-            cd->s_message[3*i + 2] = pi->distance[i];
-            switch(pi->players[i]->role) {
-                case NONE:
-                    cd->s_message[3*i + 3] = 0x00;
-                    break;
-                case SHERIFF:
-                    cd->s_message[3*i + 3] = 0x01;
-                    break;
-                case DEPUTY:
-                    cd->s_message[3*i + 3] = 0x02;
-                    break;
-                case OUTLAW:
-                    cd->s_message[3*i + 3] = 0x03;
-                    break;
-                case RENEGADE:
-                    cd->s_message[3*i + 3] = 0x04;
-                    break;
-            }
-        // }
+    //TODO: change to numplayers
+    for (i = 0; i < 7; i++) {
+        cd->s_message[3*i + 1] = pi->players[i]->id;
+        cd->s_message[3*i + 2] = pi->distance[i];
+        cd->s_message[3*i + 3] = pi->players[i]->role;
     }
 
     cd->s_len = 1 + 3*i;
@@ -141,7 +109,7 @@ void tell_user_their_turn(int pid) {
     send_data_to_middleman(uart, cd);
 }
 
-void tell_user_play_or_lose_life(int pid) {
+void tell_user_miss_or_lose_life(int pid) {
     cd->client_id = pid;
 
     // Clear message buffer
@@ -257,7 +225,8 @@ void receive_interpret_android(void) {
             break;
         case 0x16:
             int pid = cd->r_message[1];
-            tell_de2_new_card(pid);
+            int ncards = cd->r_message[2];
+            tell_de2_new_card(pid, ncards);
             break;
         default:
             break;

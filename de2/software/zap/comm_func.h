@@ -24,7 +24,7 @@ void tell_user_lost_card(int pid, int cid);
 
 void tell_user_their_turn(int pid);
 
-void tell_user_play_or_lose_life(int pid);
+void tell_user_miss_or_lose_life(int pid);
 
 void tell_user_zap_or_lose_life(int pid);
 
