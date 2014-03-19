@@ -86,7 +86,7 @@ public class Opponent {
 		}
 	}
 	
-	private void discardAll() {
+	public void discardAll() {
 		blueCards.clear();
 	}
 }
