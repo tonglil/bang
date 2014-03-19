@@ -12,7 +12,7 @@
 extern alt_up_rs232_dev* uart;
 extern Comm_data* cd;
 
-void tell_user_pid_role(int pid, int role);
+void tell_user_pid_role(int pid, Player p);
 
 void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi);
 
