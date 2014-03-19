@@ -148,48 +148,47 @@ void tell_user_get_life(int pid) {
     send_data_to_middleman(uart, cd);
 }
 
-void receive_interpret_android(void) {
+Message receive_interpret_android(void) {
     receive_data_from_middleman(uart, cd);
+    int cards[MAX_CARDS];
     int msg_type = cd->r_message[0];
     switch(msg_type) {
         case 0x11:
             int pid = cd->r_message[1];
             int ncards = cd->r_message[2];
             int i, j = 0;
-            int cards[ncards];
             for (i = 3; i < ncards; i++) {
-                card[j++] = r_message[i];
+                cards[j++] = r_message[i];
             }
-            tell_de2_user_cards(pid, ncards, cards);
+            return create_message(UPDATE_HAND, pid, pid, ncards, cards);
             break;
         case 0x12:
             int pid = cd->r_message[1];
             int nbcards = cd->r_message[2];
             int i, j = 0;
-            int bcards[nbcards];
             for (i = 3; i < nbcards; i++) {
-                bcard[j++] = r_message[i];
+                cards[j++] = r_message[i];
             }
-            tell_de2_blue_cards(pid, nbcards, bcards);
+            return create_message(UPDATE_BLUE, pid, pid, nbcards, cards);
             break;
         case 0x13:
             int pid = cd->r_message[1];
             int card_type = cd->r_message[2];
             switch (card_type) {
                 case 0x01:
-                    tell_de2_user_beer(pid);
+                    return create_message(BEER, pid, pid, 0, cards);
                     break;
                 case 0x02:
-                    tell_de2_user_gatling(pid);
+                    return create_message(GATLING, pid, pid, 0, cards);
                     break;
                 case 0x03:
-                    tell_de2_user_aliens(pid);
+                    return create_message(ALIENS, pid, pid, 0, cards);
                     break;
                 case 0x04:
-                    tell_de2_user_general_store(pid);
+                    return create_message(GENERAL_STORE, pid, pid, 0, cards);
                     break;
                 case 0x05:
-                    tell_de2_user_saloon(pid);
+                    return create_message(SALOON, pid, pid, 0, cards);
                     break;
                 default:
                     break;
@@ -201,19 +200,19 @@ void receive_interpret_android(void) {
             int card_type = cd->r_message[3];
             switch (card_type) {
                 case 0x01:
-                    tell_de2_user_zap(pid, pid1);
+                    return create_message(ZAP, pid, pid1, 0, cards);
                     break;
                 case 0x02:
-                    tell_de2_user_panic(pid, pid1);
+                    return create_message(PANIC, pid, pid1, 0, cards);
                     break;
                 case 0x03:
-                    tell_de2_user_cat(pid, pid1);
+                    return create_message(CAT_BALOU, pid, pid1, 0, cards);
                     break;
                 case 0x04:
-                    tell_de2_user_duel(pid, pid1);
+                    return create_message(DUEL, pid, pid1, 0, cards);
                     break;
                 case 0x05:
-                    tell_de2_user_jail(pid, pid1);
+                    return create_message(JAIL, pid, pid1, 0, cards);
                     break;
                 default:
                     break;
@@ -221,14 +220,35 @@ void receive_interpret_android(void) {
             break;
         case 0x15:
             int pid = cd->r_message[1];
-            tell_de2_end_turn(pid);
+            return create_message(END_TURN, pid, pid, 0, cards);
             break;
         case 0x16:
             int pid = cd->r_message[1];
             int ncards = cd->r_message[2];
-            tell_de2_new_card(pid, ncards);
+            return create_message(DRAW_CARDS, pid, pid, ncards, cards);
             break;
+        case 0x17:
+            int pid = cd->r_message[1];
+            int lives = cd->r_message[2];
+            return create_message(UPDATE_LIVES, pid, pid, lives, cards);
+        case 0x18:
+            int pid = cd->r_message[1];
+            cards[0] = cd->r_message[2];
+            return create_message(CHOOSE, pid, pid, 0, cards);
+        case 0x19:
+            int pid = cd->r_message[1];
+            cards[0] = cd->r_message[2];
+            return create_message(TRANSFER, pid, pid, 0, cards);
         default:
             break;
     }
+}
+
+Message create_message(messageType type, int fromId, int toId, int count, Card cards[]) {
+    Message msg;
+    msg.type = type;
+    msg.fromId = fromId;
+    msg.toId = toId;
+    msg.count = count;
+    msg.cards = cards;
 }

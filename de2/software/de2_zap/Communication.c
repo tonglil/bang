@@ -59,14 +59,20 @@ void startGatling(PlayerCtrl* playerCtrl, int id) {
     missOrLose(getSubTurn(playerCtrl));
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
-        switch (message.action) {
-        case DISCARD:
+        switch (message.messageType) {
+        case UPDATE_BLUE:
+            updateBlueCardsForId(playerCtrl, message.id, message.cards);
+            endSubTurn(playerCtrl);
+            if (getSubTurn(playerCtrl) != id)
+                missOrLose(getSubTurn(playerCtrl));
+            break;
+        case UPDATE_HAND:
             updateHandForId(playerCtrl, message.id, message.cards);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
                 missOrLose(getSubTurn(playerCtrl));
             break;
-        case LOSE_LIFE:
+        case UPDATE_LIVES:
             updateLivesForId(playerCtrl, message.id, message.count);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
@@ -85,14 +91,14 @@ void startDuel(PlayerCtrl* playerCtrl, int to, int from) {
         missOrLose(turn);
         while (1) {
             Message message = receivedFromAndroid();
-            if (message.action == DISCARD) {
+            if (message.messageType == UPDATE_HAND) {
                 updateHandForId(playerCtrl, message.id, message.cards);
                 if (turn == to)
                     turn = from;
                 else
                     turn = to;
                 break;
-            } else if (message.action == LOSE_LIFE) {
+            } else if (message.messageType == UPDATE_LIVES) {
                 updateLivesForId(playerCtrl, message.id, message.count);
                 loop = 0;
                 break;
@@ -105,10 +111,10 @@ void startZap(PlayerCtrl* playerCtrl, int to) {
     missOrLose(to);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.action == DISCARD) {
+        if (message.messageType == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.action == LOSE_LIFE) {
+        } else if (message.messageType == UPDATE_LIVES) {
             updateLivesForId(playerCtrl, message.id, message.count);
             break;
         }
@@ -121,14 +127,14 @@ void startAliens(PlayerCtrl* playerCtrl, int id) {
     zapOrLose(getSubTurn(playerCtrl));
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
-        switch (message.action) {
-        case DISCARD:
+        switch (message.messageType) {
+        case UPDATE_HAND:
             updateHandForId(playerCtrl, message.id, message.cards);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
                 zapOrLose(getSubTurn(playerCtrl));
             break;
-        case LOSE_LIFE:
+        case UPDATE_LIVES:
             updateLivesForId(playerCtrl, message.id, message.count);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
@@ -147,7 +153,7 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
     int loop = 1;
     while (loop) {
         Message message = receivedFromAndroid();
-        switch (message.action) {
+        switch (message.messageType) {
         case CHOOSE:
             sendCard(getSubTurn(playerCtrl), message.cards[0]);
             removeCardFromStore(cardCtrl, message.cards[0]);
@@ -160,7 +166,7 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
     }
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
-        switch (message.action) {
+        switch (message.messageType) {
         case CHOOSE:
             sendCard(getSubTurn(playerCtrl), message.cards[0]);
             removeCardFromStore(cardCtrl, message.cards[0]);
@@ -194,17 +200,17 @@ void startPanic(PlayerCtrl* playerCtrl, int to, int from) {
     sendPanic(to);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.action == TRANSFER_CARDS) {
+        if (message.messageType == TRANSFER_CARDS) {
             transfer = message.cards[0];
             break;
         }
     }
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.action == UPDATE_HAND) {
+        if (message.messageType == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.action == UPDATE_BLUE) {
+        } else if (message.messageType == UPDATE_BLUE) {
             updateBlueCardsForId(playerCtrl, message.id, message.cards);
             break;
         }
@@ -212,10 +218,10 @@ void startPanic(PlayerCtrl* playerCtrl, int to, int from) {
     sendCard(from, transfer);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.action == UPDATE_HAND) {
+        if (message.messageType == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.action == UPDATE_BLUE) {
+        } else if (message.messageType == UPDATE_BLUE) {
             updateBlueCardsForId(playerCtrl, message.id, message.cards);
             break;
         }
@@ -226,10 +232,10 @@ void startCatBalou(PlayerCtrl* playerCtrl, int to) {
     sendCatBalou(to);
     while (1) {
         Message message = receivedFromAndroid();
-        if (message.action == UPDATE_HAND) {
+        if (message.messageType == UPDATE_HAND) {
             updateHandForId(playerCtrl, message.id, message.cards);
             break;
-        } else if (message.action == UPDATE_BLUE) {
+        } else if (message.messageType == UPDATE_BLUE) {
             updateBlueCardsForId(playerCtrl, message.id, message.cards);
             break;
         }

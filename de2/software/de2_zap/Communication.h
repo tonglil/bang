@@ -3,15 +3,7 @@
 
 #include "Player.h"
 
-typedef enum action{
-    DISCARD,
-    CHOOSE,
-    LOSE_LIFE,
-    TRANSFER_CARDS
-} action;
-
 typedef enum messageType{
-    DRAW_CARDS,
     UPDATE_HAND,
     UPDATE_BLUE,
     UPDATE_LIVES,
@@ -25,13 +17,16 @@ typedef enum messageType{
     CAT_BALOU,
     DUEL,
     JAIL,
-    END_TURN
+    END_TURN,
+    CHOOSE,
+    TRANSFER_CARDS,
+    DRAW_CARDS
 } messageType;
 
 typedef struct Message{
     messageType type;
-    action action;
-    int id;
+    int fromId;
+    int toId;
     int count;
     Card cards[MAX_CARDS];
 } Message;
