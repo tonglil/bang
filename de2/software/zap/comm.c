@@ -53,6 +53,7 @@ void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     // Write the message length
     alt_up_rs232_write_data(uart, cd->s_len);
     // Write the message
+    int i;
     for (i = 0; i < cd->s_len; i++) {
         alt_up_rs232_write_data(uart, cd->s_message[i]);
     }

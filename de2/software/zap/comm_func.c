@@ -3,9 +3,11 @@
 void tell_user_pid_role(int pid, int role) {
     cd->client_id = pid;
 
-    s_message[128] = {0};
+    cd->s_message[128] = {0};
 
-    s_message[0] = role;
+    cd->s_message[0] = role;
+
+    cd->s_len = 1;
 
     send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd);
 }
