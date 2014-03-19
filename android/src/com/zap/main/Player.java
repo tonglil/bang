@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 //TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
-//TODO Amitoj: Implement onEvent functions, implement dynamite
+//TODO Amitoj: Implement onEvent functions, test dynamite and jail
 
 public class Player {
 	private CardController cc;
@@ -16,7 +16,6 @@ public class Player {
 	private boolean turn;
 	private boolean dead;
 	private boolean zappedThisTurn;
-	private boolean inJail;
 	
 	public String test_call;
 
@@ -27,6 +26,7 @@ public class Player {
 	private static final String DUEL = "Duel";
 	private static final String ALIENS = "Aliens";
 	private static final String GENERAL_STORE = "General Store";
+	private static final String DYNAMITE = "Dynamite";
 	
 	public Player() {
 		cc = new CardController();
@@ -37,7 +37,6 @@ public class Player {
 		dead = false;
 		zappedThisTurn = false;
 		test_call = "";
-		inJail = false;
 	}
 	
 	public void setLives(int lives) {
@@ -155,9 +154,35 @@ public class Player {
 		turn = true;
 		zappedThisTurn = false;
 		
-		if (inJail) {
-			drawCards(1);
+		//Draw for jail, if in jail
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(JAIL) == 0) {
+				cc.discardCard(c.cid);
+				Card t = drawOneCard();
+				if (t.suit != 'H') {
+					forceEndTurn();
+					return;
+				}
+				break;
+			}
 		}
+
+		//Draw for dynamite, if there is dynamite
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(DYNAMITE) == 0) {
+				Card t = drawOneCard();
+				if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
+					//TODO: take 3 hits here
+					cc.discardCard(c.cid);
+				} else {
+					//TODO: pass dynamite to next player
+					cc.discardCard(c.cid);
+				}
+				break;
+			}
+		}
+		
+		drawCards(2);
 	}
 
 	public void endTurn() {
@@ -168,6 +193,12 @@ public class Player {
 			//TODO: tell de2 that my turn is over
 			turn = false;
 		}
+	}
+	
+	public void forceEndTurn() {
+		//TODO: tell de2 that my turn is over
+		test_call = "forceEndTurn";
+		turn = false;
 	}
 	
 	public int getFixedRange() {
@@ -238,6 +269,13 @@ public class Player {
 							//TODO Tony: tell user he can't jail the sheriff
 							test_call = "cant jail sheriff";
 						} else {
+							for (Card t : o.getBlueCards()) {
+								if (t.name.compareTo(JAIL) == 0) {
+									//TODO Tony: tell user he can't jail someone who is already in jail
+									test_call = "cant jail jailed";
+									return;
+								}
+							}
 							throwInJail(pid);
 							cc.discardCard(cid);
 						}
@@ -315,7 +353,7 @@ public class Player {
 	}
 
 	public void onJail() {
-		inJail = true;
+		//Nothing needs to be done
 	}
 	
 	public void onDuel() {
@@ -362,6 +400,12 @@ public class Player {
 		//TODO: tell de2 that this player needs numCards cards
 		//This function shouldn't return until de2 says everything is good
 		test_call = "drawCards";
+	}
+	
+	private Card drawOneCard() {
+		//TODO: tell de2 that this player needs 1 card
+		test_call = "drawOneCard";
+		return CardController.getValidCard(1);
 	}
 	
 	private void panicOpponent(int pid) {
