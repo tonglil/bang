@@ -56,7 +56,10 @@ ENTITY zap IS
         SD_DAT3 : INOUT STD_LOGIC;
         SD_CLK : OUT STD_LOGIC;
 		  PS2_CLK : INOUT STD_LOGIC;
-		  PS2_DAT : INOUT STD_LOGIC
+		  PS2_DAT : INOUT STD_LOGIC;
+		  -- RS 232
+		  UART_RXD : IN STD_LOGIC;
+		  UART_TXD : OUT STD_LOGIC
         );
 END zap;
 
@@ -113,7 +116,10 @@ ARCHITECTURE Structure OF zap IS
         sd_card_b_SD_cmd : inout std_logic;
         sd_card_b_SD_dat : inout std_logic;
         sd_card_b_SD_dat3 : inout std_logic;
-        sd_card_o_SD_clock : out std_logic
+        sd_card_o_SD_clock : out std_logic;
+		  -- RS 232
+		  rs232_external_interface_RXD : in std_logic;
+		  rs232_external_interface_TXD : out std_logic
         );
     END COMPONENT;
 	 
@@ -179,6 +185,9 @@ BEGIN
             sd_card_b_SD_cmd => SD_CMD,
             sd_card_b_SD_dat => SD_DAT,
             sd_card_b_SD_dat3 => SD_DAT3,
-            sd_card_o_SD_clock => SD_CLK
-        );
+            sd_card_o_SD_clock => SD_CLK,
+				-- RS 232
+				rs232_external_interface_RXD => UART_RXD,
+				rs232_external_interface_TXD => UART_TXD
+				);
 END Structure;
