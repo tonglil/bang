@@ -1,22 +1,55 @@
+# Append ` > /dev/null` to hide output
+
 language: java
 
 jdk:
+    # Instead of openjdk7 for stability
     - oraclejdk7
-    - openjdk7
-    - openjdk6
+
+env:
+    matrix:
+    - ANDROID_SDKS=android-11           ANDROID_TARGET=android-11   ANDROID_ABI=armeabi
+    - ANDROID_SDKS=android-19,sysimg-19 ANDROID_TARGET=android-19   ANDROID_ABI=armeabi-v7a
 
 before_install:
-    # download the latest android sdk and unzip
-    - wget http://dl.google.com/android/android-sdk_r18-linux.tgz
-    - tar -zxf android-sdk_r18-linux.tgz
-    - export ANDROID_HOME=`pwd`/android-sdk-linux
+    # Install 32-bit drivers
+    - sudo apt-get update -qq
+    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch; fi
+
+    # Install base Android SDK
+    - wget http://dl.google.com/android/android-sdk_r22.6.1-linux.tgz
+    - tar xzf android-sdk_r22.6.1-linux.tgz
+    #- wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
+    #- tar xzf android-sdk_r22.3-linux.tgz
+    - export ANDROID_HOME=$PWD/android-sdk-linux
     - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-    # only update the sdk for the tools and platform-tools (1,2) and whatever api level you are building for android (run "android list sdk" to get the full list. 9 = 2.3.3 or API level 10
-    - android update sdk --filter 1,2,9,19 --no-ui --force
+
+    # Install android build tools
+    - wget https://dl-ssl.google.com/android/repository/build-tools_r19.0.1-linux.zip
+    - unzip build-tools_r19.0.1-linux.zip -d $ANDROID_HOME
+    - mkdir -p $ANDROID_HOME/build-tools/
+    - mv $ANDROID_HOME/android-4.4.2 $ANDROID_HOME/build-tools/19.0.1
+
+    # Install required Android components
+    - echo yes | android update sdk --filter platform-tools --no-ui --force
+    - echo yes | android update sdk --filter $ANDROID_SDKS --no-ui --force
+    - echo yes | android update sdk --filter extra-android-support --no-ui --force
+    - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force
+
+    # This is the SDK against we build
+    - echo yes | android update sdk --filter android-19 --no-ui --force
+
+    # Create and start emulator
+    - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+    - emulator -avd test -no-skin -no-audio -no-window &
+
+before_script:
+    # Make sure the emulator has started before running tests
+    - ./emulator-wait.sh > /dev/null
 
 install:
     - cd android
-    - mvn clean install
+    - pwd
 
 script:
-    - mvn test
+    - mvn clean install
