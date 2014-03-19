@@ -3,7 +3,7 @@
 void tell_user_pid_role(int pid, int role) {
     cd->client_id = pid;
 
-    cd->s_message[128] = {0};
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
     cd->s_message[0] = role;
 
