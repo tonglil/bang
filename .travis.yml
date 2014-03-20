@@ -8,7 +8,6 @@ jdk:
 
 env:
     matrix:
-    - ANDROID_SDKS=android-11           ANDROID_TARGET=android-11   ANDROID_ABI=armeabi
     - ANDROID_SDKS=android-19,sysimg-19 ANDROID_TARGET=android-19   ANDROID_ABI=armeabi-v7a
 
 before_install:
