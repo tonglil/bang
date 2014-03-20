@@ -7,8 +7,8 @@
 
 Message receivedFromAndroid();
 void sendStore(int id, CardCtrl* cardCtrl);
-void sendPanic(int id);
-void sendCatBalou(int id);
+void sendPanic(int id, Card hand[], Card blueCards[]);
+void sendCatBalou(int from, Card hand[], Card blueCards[]);
 void sendJail(int id);
 void discardCard(int id, Card card);
 void getLife(int id);
@@ -24,6 +24,6 @@ void startAliens(PlayerCtrl* playerCtrl, int id);
 void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl);
 void startSaloon(PlayerCtrl* playerCtrl);
 void startPanic(PlayerCtrl* playerCtrl, int to, int from);
-void startCatBalou(PlayerCtrl* playerCtrl, int to);
+void startCatBalou(PlayerCtrl* playerCtrl, int to, int from);
 
 #endif /* COMMUNICATION_H_ */

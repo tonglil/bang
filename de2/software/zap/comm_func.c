@@ -151,7 +151,7 @@ void tell_user_get_life(int pid) {
 
 Message receive_interpret_android(void) {
     receive_data_from_middleman(uart, cd);
-    int cards[MAX_CARDS];
+    int cards[MAX_CARDS] = {0};
     int msg_type = cd->r_message[0];
     switch(msg_type) {
         case 0x11:
@@ -159,7 +159,7 @@ Message receive_interpret_android(void) {
             int pid = cd->r_message[1];
             int ncards = cd->r_message[2];
             int i, j = 0;
-            for (i = 3; i < ncards; i++) {
+            for (i = 3; i < ncards + 3; i++) {
                 cards[j++] = cd->r_message[i];
             }
             return create_message(UPDATE_HAND, pid, pid, ncards, cards);
@@ -170,7 +170,7 @@ Message receive_interpret_android(void) {
             int pid = cd->r_message[1];
             int nbcards = cd->r_message[2];
             int i, j = 0;
-            for (i = 3; i < nbcards; i++) {
+            for (i = 3; i < nbcards + 3; i++) {
                 cards[j++] = cd->r_message[i];
             }
             return create_message(UPDATE_BLUE, pid, pid, nbcards, cards);

@@ -13,7 +13,7 @@ void sendPanic(int id, Card hand[], Card blueCards[]) {
     return;
 }
 
-void sendCatBalou(int id) {
+void sendCatBalou(int from, Card hand[], Card blueCards[]) {
     return;
 }
 
@@ -205,7 +205,7 @@ void startPanic(PlayerCtrl* playerCtrl, int to, int from) {
             break;
         }
     }
-    tell_user_lost_card(to, transfer)
+    tell_user_lost_card(to, transfer);
     while (1) {
         Message message = receivedFromAndroid();
         if (message.type == UPDATE_HAND) {
@@ -239,7 +239,7 @@ void startCatBalou(PlayerCtrl* playerCtrl, int to, int from) {
             break;
         }
     }
-    tell_user_lost_card(to, transfer)
+    tell_user_lost_card(to, transfer);
     while (1) {
         Message message = receivedFromAndroid();
         if (message.type == UPDATE_HAND) {

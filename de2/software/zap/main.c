@@ -36,9 +36,9 @@ int main() {
     initPlayers(playerCtrl, 7);
     int i, j;
     for (i = 0; i < NUM_PLAYERS; i++) {
-        for (j = 0; j < 3; j++) {
-            playerCtrl->players[i].blueCards[j] = testDrawCard(cardCtrl);
-            printf("The drawn card is %d\n", playerCtrl->players[i].blueCards[j]);
+        for (j = 0; j < 2; j++) {
+            playerCtrl->players[i].hand[j] = testDrawCard(cardCtrl);
+            printf("The drawn card is %d\n", playerCtrl->players[i].hand[j]);
         }
     }
 
@@ -52,9 +52,11 @@ int main() {
 	srand(alt_timestamp());
 
     tell_user_their_turn(0);
+    runField(field);
     while (1){
         int listening = 1;
         while (listening) {
+        	printf("Waiting for Command\n");
             Message message = receivedFromAndroid();
         	printf("received/interpreted\n");
         	printf("message.type: %d\n", message.type);
@@ -66,8 +68,12 @@ int main() {
                 updateHandForId(playerCtrl, message.fromId, message.cards);
                 break;
             case UPDATE_BLUE:
+            {
+            	printf("message.fromId:%d %d %d %d %d %d", message.fromId, message.cards[0], message.cards[1], message.cards[2], message.cards[3], message.cards[4]);
                 updateBlueCardsForId(playerCtrl, message.fromId, message.cards);
+                printf("Came back from bluecards\n");
                 break;
+            }
             case UPDATE_LIVES:
                 updateLivesForId(playerCtrl, message.fromId, message.count);
                 break;
@@ -93,7 +99,7 @@ int main() {
                 startPanic(playerCtrl, message.toId, message.fromId);
                 break;
             case CAT_BALOU:
-                startCatBalou(playerCtrl, message.toId);
+                startCatBalou(playerCtrl, message.toId, message.fromId);
                 break;
             case DUEL:
                 startDuel(playerCtrl, message.toId, message.fromId);
@@ -103,6 +109,7 @@ int main() {
                 break;
             case END_TURN:
                 listening = 0;
+                break;
             default:
             	printf("garbage\n");
                 break;
@@ -110,7 +117,10 @@ int main() {
         	alt_up_char_buffer_clear(charBuffer);
         	runField(field);
         }
+        printf("exited while loops\n");
         endTurn(playerCtrl);
+        alt_up_char_buffer_clear(charBuffer);
+        runField(field);
     }
     return 0;
 }

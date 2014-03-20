@@ -6,6 +6,8 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
         return;
     }
 
+    playerCtrl->turn = 0;
+
     Player defaultPlayer;
     defaultPlayer.id = -1;
     defaultPlayer.pos = -1;
