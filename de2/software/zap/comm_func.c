@@ -10,10 +10,9 @@ void tell_user_pid_role(int pid, Player* p) {
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
     cd->s_message[0] = 0x01;
-    cd->s_message[1] = pid;
-    cd->s_message[2] = p->role;
+    cd->s_message[1] = p->role;
 
-    cd->s_len = 3;
+    cd->s_len = 2;
 
     send_data_to_middleman(uart, cd);
 }
