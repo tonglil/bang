@@ -1,12 +1,13 @@
-package com.zap;
+package com.zap.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 //TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
+//TODO Amitoj: Implement onEvent functions, test dynamite and jail
 
 public class Player {
+    private String name;
 	private CardController cc;
 	private int lives;
 	private int maxLives;
@@ -26,18 +27,28 @@ public class Player {
 	private static final String DUEL = "Duel";
 	private static final String ALIENS = "Aliens";
 	private static final String GENERAL_STORE = "General Store";
-	
-	public Player() {
-		cc = new CardController();
-		opponents = new HashMap<Integer, Opponent>();
-		lives = 4;
-		maxLives = 4;
-		turn = false;
-		dead = false;
-		zappedThisTurn = false;
-		test_call = "";
-	}
-	
+	private static final String DYNAMITE = "Dynamite";
+
+    public Player(String newName) {
+        name = newName;
+        cc = new CardController();
+        opponents = new HashMap<Integer, Opponent>();
+        lives = 4;
+        maxLives = 4;
+        turn = false;
+        dead = false;
+        zappedThisTurn = false;
+        test_call = "";
+    }	
+    
+    public Player() {
+        this("name");
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
 	public void setLives(int lives) {
 		if (!dead) {
 			if (lives <= 0) {
@@ -121,6 +132,15 @@ public class Player {
 		o.setLives(lives);
 	}
 	
+	//TEST
+	public void setOpponentBlueCards(int pid, ArrayList<Integer> cids) {
+		Opponent o = opponents.get(new Integer(pid));
+		o.discardAll();
+		for (Integer i : cids) {
+			o.playBlueCard(i.intValue());
+		}
+	}
+	
 	public void opponentPlayBlueCard(int pid, int cid) {
 		Opponent o = opponents.get(new Integer(pid));
 		o.playBlueCard(cid);
@@ -143,6 +163,35 @@ public class Player {
 	public void startTurn() {
 		turn = true;
 		zappedThisTurn = false;
+		
+		//Draw for jail, if in jail
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(JAIL) == 0) {
+				cc.discardCard(c.cid);
+				Card t = drawOneCard();
+				if (t.suit != 'H') {
+					forceEndTurn();
+					return;
+				}
+				break;
+			}
+		}
+
+		//Draw for dynamite, if there is dynamite
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(DYNAMITE) == 0) {
+				Card t = drawOneCard();
+				if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
+					//TODO: take 3 hits here
+					cc.discardCard(c.cid);
+				} else {
+					//TODO: pass dynamite to next player
+					cc.discardCard(c.cid);
+				}
+				break;
+			}
+		}
+		
 		drawCards(2);
 	}
 
@@ -154,6 +203,12 @@ public class Player {
 			//TODO: tell de2 that my turn is over
 			turn = false;
 		}
+	}
+	
+	public void forceEndTurn() {
+		//TODO: tell de2 that my turn is over
+		test_call = "forceEndTurn";
+		turn = false;
 	}
 	
 	public int getFixedRange() {
@@ -224,6 +279,13 @@ public class Player {
 							//TODO Tony: tell user he can't jail the sheriff
 							test_call = "cant jail sheriff";
 						} else {
+							for (Card t : o.getBlueCards()) {
+								if (t.name.compareTo(JAIL) == 0) {
+									//TODO Tony: tell user he can't jail someone who is already in jail
+									test_call = "cant jail jailed";
+									return;
+								}
+							}
 							throwInJail(pid);
 							cc.discardCard(cid);
 						}
@@ -275,22 +337,43 @@ public class Player {
 	////////////////////////////////////////////////////
 	// THE BELOW PUBLIC FUNCTIONS ARE CALLED WHEN AN OPPONENT INITIATES AN ACTION
 	
-	public void missOrLife() {
+	//TEST THEM ALL
+	public void onZap() {
 		//TODO: user has choice of playing miss or taking a life (player getting zapped)
 		//TODO: let him use a beer if this is a lethal hit
 	}
 	
-	public void zapOrLife() {
+	public void onAliens() {
 		//TODO: user has choice of playing zap or taking a life (player getting dueled or aliens)
 		//TODO: let him use a beer if this is a lethal hit
 	}
 	
-	public void receiveLife() {
+	public void onSaloon() {
 		if (lives < maxLives) {
 			setLives(lives + 1);;
 		}
 	}
+	
+	public void onPanic(int cid) {
+		discardCard(cid);
+	}
+	
+	public void onCatBalou(int cid) {
+		discardCard(cid);
+	}
 
+	public void onJail() {
+		//Nothing needs to be done
+	}
+	
+	public void onDuel() {
+		
+	}
+	
+	public void onGeneralStore() {
+		
+	}
+	
 ///////////////////////////////////////////////////////
 
 	private void zapOpponent(int pid) {
@@ -327,6 +410,12 @@ public class Player {
 		//TODO: tell de2 that this player needs numCards cards
 		//This function shouldn't return until de2 says everything is good
 		test_call = "drawCards";
+	}
+	
+	private Card drawOneCard() {
+		//TODO: tell de2 that this player needs 1 card
+		test_call = "drawOneCard";
+		return CardController.getValidCard(1);
 	}
 	
 	private void panicOpponent(int pid) {

@@ -1,4 +1,4 @@
-package com.zap;
+package com.zap.main;
 
 import java.util.ArrayList;
 
@@ -47,6 +47,14 @@ public class Opponent {
 		}
 	}
 	
+	public ArrayList<Card> getBlueCards() {
+		ArrayList<Card> r = new ArrayList<Card>();
+		for (Card c : blueCards) {
+			r.add(c);
+		}
+		return r;
+	}
+	
 	public void setRange(int range) {
 		this.range = range;
 	}
@@ -86,7 +94,7 @@ public class Opponent {
 		}
 	}
 	
-	private void discardAll() {
+	public void discardAll() {
 		blueCards.clear();
 	}
 }
