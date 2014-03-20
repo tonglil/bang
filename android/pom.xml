@@ -18,16 +18,38 @@
         </dependency>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
             <version>r7</version>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>android.support</groupId>-->
+            <!--<artifactId>compatibility-v7-appcompat</artifactId>-->
+            <!--<version>19.0.1</version>-->
+            <!--<type>apklib</type>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>android.support</groupId>-->
+            <!--<artifactId>compatibility-v7-appcompat</artifactId>-->
+            <!--<version>19.0.1</version>-->
+            <!--<type>jar</type>-->
+        <!--</dependency>-->
+
+        <!--Apparently Sonatype has this dependency...-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
+            <groupId>com.github.rchugunov</groupId>
+            <artifactId>appcompat-v7</artifactId>
+            <version>r19-SNAPSHOT</version>
+            <type>aar</type>
         </dependency>
     </dependencies>
 

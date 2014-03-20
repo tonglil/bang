@@ -25,6 +25,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.zap.PlayerActivity"
+            android:label="@string/title_activity_player" >
+        </activity>
+        <activity
             android:name="com.zap.GameActivity"
             android:label="@string/title_activity_game" >
         </activity>

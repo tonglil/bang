@@ -1,58 +1,61 @@
 package com.zap;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
-public class GameActivity extends FragmentActivity {
-    ViewPager Tab;
-    TabPagerAdapter TabAdapter;
-    ActionBar actionBar;
+public class GameActivity extends Activity {
+
+    Button makeGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        TabAdapter = new TabPagerAdapter(getSupportFragmentManager());
-        Tab = (ViewPager) findViewById(R.id.pager);
-        Tab.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        addButtonListenerNewGame();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.game, menu);
+        return true;
+    }
+
+    public void addButtonListenerNewGame() {
+        makeGame = (Button) findViewById(R.id.buttonMakeGame);
+        makeGame.setOnClickListener(new OnClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                actionBar = getActionBar();
-                actionBar.setSelectedNavigationItem(position);
+            public void onClick(View view) {
+                EditText player1NameValue = (EditText) findViewById(R.id.player1NameValue);
+                String player1Name = player1NameValue.getText().toString();
+                
+                Log.v("ZAP_TAG", "init new game info...");
+                Log.v("ZAP_TAG", player1Name);
+
+                setupGame(view);
             }
         });
-        Tab.setAdapter(TabAdapter);
-        actionBar = getActionBar();
-        // Enable Tabs on Action Bar
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            @Override
-            public void onTabReselected(android.app.ActionBar.Tab tab,
-                    FragmentTransaction ft) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                Tab.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(android.app.ActionBar.Tab tab,
-                    FragmentTransaction ft) {
-                // TODO Auto-generated method stub
-            }
-        };
-
-        // Add New Tab
-        actionBar.addTab(actionBar.newTab().setText("Stats")
-                .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText("Cards")
-                .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText("Done")
-                .setTabListener(tabListener));
     }
+
+    public void setupGame(View view) {
+        Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
+        // Pass over player information
+//      actionBar.addTab(actionBar.newTab().setText("Names").setTabListener(tabListener));
+//      actionBar.addTab(actionBar.newTab().setText("Roles").setTabListener(tabListener));
+//      actionBar.addTab(actionBar.newTab().setText("Characters").setTabListener(tabListener));
+//      actionBar.addTab(actionBar.newTab().setText("Done").setTabListener(tabListener));
+        
+//        Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
+//        String value = "A string value to pass.";
+//        setupIntent.putExtra("key", value);
+        startActivity(setupIntent);
+    }
+
 }

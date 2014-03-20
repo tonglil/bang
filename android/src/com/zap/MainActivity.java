@@ -40,8 +40,9 @@ public class MainActivity extends Activity {
 
     public void setupGame(View view) {
         Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
-        String value = "A string value to pass.";
-        setupIntent.putExtra("key", value);
+//        Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
+//        String value = "A string value to pass.";
+//        setupIntent.putExtra("key", value);
         startActivity(setupIntent);
     }
 

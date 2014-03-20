@@ -3,7 +3,8 @@
 
     <string name="app_name">Zap!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_game">Player</string>
+    <string name="title_activity_game">Create A New Game</string>
+    <string name="title_activity_player">Player X</string>
     <string name="passedMessage"></string>
 
     <!-- Player stats page -->
