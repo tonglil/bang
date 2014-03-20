@@ -355,6 +355,14 @@ public class PlayerTest {
 		assertTrue(p.getNumberOfBlueCards() == 0);
 		assertTrue(p.getNumberOfHandCards() == 0);
 	}
+
+    @Test
+    public void test_PlayerName() {
+        String name = "Test Name";
+        Player p = new Player(name);
+        p.startTurn();
+        assertTrue(p.getName() == name);
+    }
 	
 	@Test
 	public void test_EndTurn() {

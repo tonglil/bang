@@ -7,6 +7,7 @@ import java.util.HashMap;
 //TODO Amitoj: Implement onEvent functions, test dynamite and jail
 
 public class Player {
+    private String name;
 	private CardController cc;
 	private int lives;
 	private int maxLives;
@@ -27,18 +28,27 @@ public class Player {
 	private static final String ALIENS = "Aliens";
 	private static final String GENERAL_STORE = "General Store";
 	private static final String DYNAMITE = "Dynamite";
-	
-	public Player() {
-		cc = new CardController();
-		opponents = new HashMap<Integer, Opponent>();
-		lives = 4;
-		maxLives = 4;
-		turn = false;
-		dead = false;
-		zappedThisTurn = false;
-		test_call = "";
-	}
-	
+
+    public Player(String newName) {
+        name = newName;
+        cc = new CardController();
+        opponents = new HashMap<Integer, Opponent>();
+        lives = 4;
+        maxLives = 4;
+        turn = false;
+        dead = false;
+        zappedThisTurn = false;
+        test_call = "";
+    }	
+    
+    public Player() {
+        this("name");
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
 	public void setLives(int lives) {
 		if (!dead) {
 			if (lives <= 0) {
