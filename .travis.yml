@@ -13,7 +13,7 @@ env:
 before_install:
     # Install 32-bit drivers
     - sudo apt-get update -qq
-    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch; fi
+    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch; fi > /dev/null
 
     # Install base Android SDK
     - wget http://dl.google.com/android/android-sdk_r22.6.1-linux.tgz
@@ -23,7 +23,7 @@ before_install:
 
     # Install android build tools
     - wget https://dl-ssl.google.com/android/repository/build-tools_r19.0.1-linux.zip
-    - unzip build-tools_r19.0.1-linux.zip -d $ANDROID_HOME
+    - unzip build-tools_r19.0.1-linux.zip -d $ANDROID_HOME > /dev/null
     - mkdir -p $ANDROID_HOME/build-tools/
     - mv $ANDROID_HOME/android-4.4.2 $ANDROID_HOME/build-tools/19.0.1
 
@@ -53,6 +53,7 @@ before_script:
 install:
     - cd android
     - pwd
+    - mvn clean install
 
 script:
-    - mvn clean install
+    - mvn test

@@ -1,5 +1,7 @@
 package com.zap;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.zap.main.Player;
 
 public class GameActivity extends Activity {
 
@@ -33,11 +37,6 @@ public class GameActivity extends Activity {
         makeGame.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText player1NameValue = (EditText) findViewById(R.id.player1NameValue);
-                String player1Name = player1NameValue.getText().toString();
-                
-                Log.v("ZAP_TAG", "init new game info...");
-                Log.v("ZAP_TAG", player1Name);
 
                 setupGame(view);
             }
@@ -45,16 +44,48 @@ public class GameActivity extends Activity {
     }
 
     public void setupGame(View view) {
+        ArrayList<EditText> names = new ArrayList<EditText>();
+        // Get names
+        names.add((EditText) findViewById(R.id.player1NameValue));
+        names.add((EditText) findViewById(R.id.player2NameValue));
+        names.add((EditText) findViewById(R.id.player3NameValue));
+        names.add((EditText) findViewById(R.id.player4NameValue));
+        names.add((EditText) findViewById(R.id.player5NameValue));
+        names.add((EditText) findViewById(R.id.player6NameValue));
+        names.add((EditText) findViewById(R.id.player7NameValue));
+
+        ArrayList<Player> players = new ArrayList<Player>();
+        // Make players
+        for (EditText nameValue : names) {
+            String name = nameValue.getText().toString();
+
+            if (name.trim().length() > 0) {
+                players.add(new Player(name));
+            }
+        }
+
+        int pCount = players.size();
+        Log.v("MY_TAG", "number of players to initiate: " + pCount);
+
+        // Set roles randomly
+        // if 7 players: 1 sheriff, 2 deputies, 3 outlaws, 1 renegade
+        // if 6 players: 1 sheriff, 2 deputies, 2 outlaws, 1 renegade
+        // if 5 players: 1 sheriff, 1 deputy, 2 outlaws, 1 renegade
+        // if 4 players: 1 sheriff, 1 deputy, 2 outlaws
+        // if 3 players: 1 sheriff, 1 outlaw, 1 renegade
+
+        int role = (int) Math.random() * 4;
+        Log.v("MY_TAG", "rand role num: " + role);
+
+        // Assign characters
+
         Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
-        // Pass over player information
-//      actionBar.addTab(actionBar.newTab().setText("Names").setTabListener(tabListener));
-//      actionBar.addTab(actionBar.newTab().setText("Roles").setTabListener(tabListener));
-//      actionBar.addTab(actionBar.newTab().setText("Characters").setTabListener(tabListener));
-//      actionBar.addTab(actionBar.newTab().setText("Done").setTabListener(tabListener));
-        
-//        Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
-//        String value = "A string value to pass.";
-//        setupIntent.putExtra("key", value);
+
+        // Pass players to the player activity
+        // String value = "A string value to pass.";
+        // setupIntent.putExtra("key", value);
+
+        // Start the activity
         startActivity(setupIntent);
     }
 
