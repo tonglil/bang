@@ -1,23 +1,31 @@
 package com.example.ece381;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ece381.main.Comm;
+import com.example.ece381.main.Message;
+
 public class MainActivity extends Activity {
+
+    private static AssetManager assetManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,8 @@ public class MainActivity extends Activity {
         TCPReadTimerTask tcp_task = new TCPReadTimerTask();
         Timer tcp_timer = new Timer();
         tcp_timer.schedule(tcp_task, 3000, 500);
+
+        assetManager = getAssets();
     }
 
     @Override
@@ -49,10 +59,23 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    public static BufferedReader readCardTxt() {
+        InputStream inputStream;
+        try {
+            inputStream = assetManager.open("cards.txt");
+            return new BufferedReader(new InputStreamReader(inputStream));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // Route called when the user presses "connect"
 
     public void openSocket(View view) {
         MyApplication app = (MyApplication) getApplication();
+        Comm.setApp(app);
         TextView msgbox = (TextView) findViewById(R.id.error_message_box);
 
         // Make sure the socket is not already opened
@@ -72,37 +95,20 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        MyApplication app = (MyApplication) getApplication();
+        Log.i("colin", "sendMessage");
 
         // Get the message from the box
-
         EditText et = (EditText) findViewById(R.id.MessageText);
         String msg = et.getText().toString();
 
-        // Create an array of bytes. First byte will be the
-        // message length, and the next ones will be the message
+        Comm.sendMessage(msg);
 
-        byte buf[] = new byte[msg.length() + 1];
-        buf[0] = (byte) msg.length();
-        System.arraycopy(msg.getBytes(), 0, buf, 1, msg.length());
-
-        // byte buf[] = new byte[msg.length()];
-        // System.arraycopy(msg.getBytes(), 0, buf, 0, msg.length());
-
-        // Now send through the output stream of the socket
-
-        OutputStream out;
-        try {
-            out = app.sock.getOutputStream();
-            try {
-                out.write(buf, 0, msg.length() + 1);
-                // out.write(buf, 0, msg.length());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Message.getInstance();
+        while (Message.ready == false)
+            ;
+        Message.ready = false;
+        int card = Message.r_cinfo.get(0).get(0);
+        Log.i("colin", String.valueOf(card));
     }
 
     // Called when the user closes a socket
@@ -202,7 +208,10 @@ public class MainActivity extends Activity {
                         byte buf[] = new byte[bytes_avail];
                         in.read(buf);
 
-                        final String s = new String(buf, 0, bytes_avail, "US-ASCII");
+                        final String s = Comm.bth(buf);
+                        Log.i("r_msg", s);
+
+                        Comm.receiveInterpretDE2(buf);
 
                         // As explained in the tutorials, the GUI can not be
                         // updated in an asynchronous task. So, update the GUI
