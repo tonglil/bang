@@ -104,11 +104,11 @@ public class MainActivity extends Activity {
         Comm.sendMessage(msg);
 
         DE2Message.getInstance();
-        while (!DE2Message.isReady())
+        Log.i("colin", "wait for reply");
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
+        Log.i("colin", "got reply");
         DE2Message.setReady(false);
-        int card = DE2Message.getR_cinfo().get(0).get(0);
-        Log.i("colin", String.valueOf(card));
     }
 
     // Called when the user closes a socket

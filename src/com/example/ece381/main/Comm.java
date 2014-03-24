@@ -167,6 +167,14 @@ public class Comm {
         return;
     }
 
+    public static void tellDE2Handshake(int pid) {
+        String msg = "1a" + iths(pid);
+
+        sendMessage(msg);
+
+        return;
+    }
+
     public static void receiveInterpretDE2(byte buf[]) {
         // Message structure:
         // [0] Client_Id
@@ -174,7 +182,7 @@ public class Comm {
         // [2] Message_type
         // [3] ...
         int l = 0;
-        // int length = buf[l++];
+        int length = buf[l++];
         int fromId = buf[l++];
         int m_len = buf[l++];
         int type = buf[l++];
@@ -249,27 +257,60 @@ public class Comm {
         case 0x05: {
             // tell_user_lost_card
             // [3] cid
-            ArrayList<Integer> card = new ArrayList<Integer>();
-            card.add((int) buf[l++]);
-            r_cinfo.add(card);
+            // [4] 0x01 for Panic, 0x02 for Cat Balou
+            // ArrayList<Integer> card = new ArrayList<Integer>();
+            // card.add((int) buf[l++]);
+            // r_cinfo.add(card);
+            // Player p = retrivePlayer(pid);
+            // if (buf[l++ == 0x01) {
+            // p.onPanic((int) buf[l++]);
+            // } else {
+            // p.onCatBalou((int) buf[l++]);
+            // }
             break;
         }
         case 0x06:
             // tell_user_their_turn
             break;
-        case 0x07:
+        case 0x07: {
             // tell_user_miss_or_lose_life
+            // Player p = retrivePlayer(pid);
+            // p.onZap();
             break;
-        case 0x08:
+        }
+        case 0x08: {
             // tell_user_zap_or_lose_life
+            // [3] 0x01 for Aliens, 0x02 for Duel
+            // Player p = retrivePlayer(pid);
+            // if (buf[l++] == 0x01) {
+            // p.onAliens();
+            // } else {
+            // p.onDuel();
+            // }
             break;
-        case 0x09:
+        }
+        case 0x09: {
             // tell_user_get_life
+            // Player p = retrivePlayer(pid);
+            // p.onSaloon();
             break;
+        }
+        case 0x0a:
+            // tell_user_ok
+            break;
+        case 0x0b: {
+            // tell_user_handshake
+            tellDE2Handshake(fromId);
+            break;
+        }
         default:
             break;
         }
-        DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
+        if (type == 0x05 || type == 0x06 || type == 0x07 || type == 0x08 || type == 0x09 || type == 0x0b) {
+            DE2Message.setMessage(false, type, fromId, toId, count, r_pinfo, r_cinfo);
+        } else {
+            DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
+        }
         return;
     }
 }

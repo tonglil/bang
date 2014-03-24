@@ -346,12 +346,14 @@ public class Player {
         // TODO: user has choice of playing miss or taking a life (player
         // getting zapped)
         // TODO: let him use a beer if this is a lethal hit
+        Comm.tellDE2UserUpdateLives(this.pid, lives);
     }
 
     public void onAliens() {
         // TODO: user has choice of playing zap or taking a life (player getting
         // dueled or aliens)
         // TODO: let him use a beer if this is a lethal hit
+        Comm.tellDE2UserUpdateLives(this.pid, lives);
     }
 
     public void onSaloon() {
@@ -359,6 +361,7 @@ public class Player {
             setLives(lives + 1);
             ;
         }
+        Comm.tellDE2UserUpdateLives(this.pid, lives);
     }
 
     public void onPanic(int cid) {
@@ -374,7 +377,7 @@ public class Player {
     }
 
     public void onDuel() {
-
+        Comm.tellDE2UserUpdateLives(this.pid, lives);
     }
 
     public void onGeneralStore() {
@@ -390,6 +393,10 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, 0x00);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void zapAll() {
@@ -398,6 +405,10 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapAll";
         Comm.tellDE2UserUsedSelf(this.pid, 0x01);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void goToSaloon() {
@@ -405,6 +416,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "goToSaloon";
         Comm.tellDE2UserUsedSelf(this.pid, 0x04);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void drinkBeer() {
@@ -412,6 +427,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "drinkBeer";
         Comm.tellDE2UserUsedSelf(this.pid, 0x00);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void throwInJail(int pid) {
@@ -419,6 +438,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "throwInJail";
         Comm.tellDE2UserUsedOther(this.pid, pid, 0x04);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void drawCards(int numCards) {
@@ -426,6 +449,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "drawCards";
         Comm.tellDE2UserNeedsXCards(this.pid, numCards);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private Card drawOneCard() {
@@ -445,6 +472,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, 0x01);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void catBalouOpponentCard(int pid) {
@@ -452,6 +483,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
         Comm.tellDE2UserUsedOther(this.pid, pid, 0x02);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void duelOpponent(int pid) {
@@ -459,6 +494,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "duelOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, 0x03);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void releaseTheAliens() {
@@ -466,6 +505,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "releaseTheAliens";
         Comm.tellDE2UserUsedSelf(this.pid, 0x02);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private void generalStore() {
@@ -473,6 +516,10 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "generalStore";
         Comm.tellDE2UserUsedSelf(this.pid, 0x03);
+        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+            ;
+        DE2Message.setReady(false);
+        return;
     }
 
     private boolean checkFixedRange(int pid) {
