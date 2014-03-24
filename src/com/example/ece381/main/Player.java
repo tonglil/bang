@@ -433,10 +433,10 @@ public class Player {
         test_call = "drawOneCard";
         Comm.tellDE2UserNeedsXCards(this.pid, 1);
         // TODOCOLIN: get card
-        while (Message.ready == false)
+        while (!DE2Message.isReady())
             ;
-        Message.ready = false;
-        int card = Message.r_cinfo.get(0).get(0);
+        DE2Message.setReady(false);
+        int card = DE2Message.getR_cinfo().get(0).get(0);
         return CardController.getValidCard(card);
     }
 

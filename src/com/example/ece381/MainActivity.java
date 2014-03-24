@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ece381.main.Comm;
-import com.example.ece381.main.Message;
+import com.example.ece381.main.DE2Message;
 
 public class MainActivity extends Activity {
 
@@ -103,11 +103,11 @@ public class MainActivity extends Activity {
 
         Comm.sendMessage(msg);
 
-        Message.getInstance();
-        while (Message.ready == false)
+        DE2Message.getInstance();
+        while (!DE2Message.isReady())
             ;
-        Message.ready = false;
-        int card = Message.r_cinfo.get(0).get(0);
+        DE2Message.setReady(false);
+        int card = DE2Message.getR_cinfo().get(0).get(0);
         Log.i("colin", String.valueOf(card));
     }
 

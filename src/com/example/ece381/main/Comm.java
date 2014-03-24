@@ -168,10 +168,15 @@ public class Comm {
     }
 
     public static void receiveInterpretDE2(byte buf[]) {
+        // Message structure:
+        // [0] Client_Id
+        // [1] S_len
+        // [2] Message_type
+        // [3] ...
         int l = 0;
-        int length = buf[l++];
+        // int length = buf[l++];
         int fromId = buf[l++];
-        int m_length = buf[l++];
+        int m_len = buf[l++];
         int type = buf[l++];
         int toId = fromId;
         int count = 0;
@@ -179,12 +184,22 @@ public class Comm {
         ArrayList<ArrayList<Integer>> r_cinfo = new ArrayList<ArrayList<Integer>>();
         switch (type) {
         case 0x01: {
+            // tell_user_pid_role
+            // [3] role
             ArrayList<Integer> pinfo = new ArrayList<Integer>();
             pinfo.add((int) buf[l++]);
             r_pinfo.add(pinfo);
             break;
         }
         case 0x02: {
+            // tell_user_all_opponent_range_role
+            // [3] pid
+            // [4] distance
+            // [5] role
+            // ...
+            // [21] pid
+            // [22] distance
+            // [23] role
             for (int i = 0; i < 7; i++) {
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();
                 pinfo.add((int) buf[3 * i + l]);
@@ -195,6 +210,16 @@ public class Comm {
             break;
         }
         case 0x03: {
+            // tell_user_all_opponent_blue_lives
+            // [3] pid
+            // [4] lives
+            // [5] num_blues
+            // ...
+            // [21] pid
+            // [22] lives
+            // [23] num_blues
+            // [24] rest of array is cid for blue cards
+            // ...
             int i;
             for (i = 0; i < 7; i++) {
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();
@@ -214,26 +239,37 @@ public class Comm {
             break;
         }
         case 0x04: {
+            // tell_user_new_card
+            // [3] cid
             ArrayList<Integer> card = new ArrayList<Integer>();
             card.add((int) buf[l++]);
             r_cinfo.add(card);
             break;
         }
         case 0x05: {
+            // tell_user_lost_card
+            // [3] cid
             ArrayList<Integer> card = new ArrayList<Integer>();
             card.add((int) buf[l++]);
             r_cinfo.add(card);
             break;
         }
         case 0x06:
+            // tell_user_their_turn
             break;
         case 0x07:
+            // tell_user_miss_or_lose_life
             break;
         case 0x08:
+            // tell_user_zap_or_lose_life
             break;
         case 0x09:
+            // tell_user_get_life
+            break;
+        default:
+            break;
         }
-        Message.getInstance().setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
+        DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
         return;
     }
 }
