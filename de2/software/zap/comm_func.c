@@ -148,6 +148,40 @@ void tell_user_get_life(int pid) {
     send_data_to_middleman(uart, cd);
 }
 
+void tell_user_ok(int pid) {
+    cd->client_id = pid;
+
+    // Clear message buffer
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
+
+    cd->s_message[0] = 0x0a;
+
+    cd->s_len = 1;
+
+    send_data_to_middleman(uart, cd);
+}
+
+int tell_user_handshake(int pid) {
+    cd->client_id = pid;
+
+    // Clear message buffer
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
+
+    cd->s_message[0] = 0x0b;
+
+    cd->s_len = 1;
+
+    send_data_to_middleman(uart, cd);
+
+    receive_data_from_middleman(uart, cd);
+
+    if (cd->r_message[0] == 0x1a) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 Message receive_interpret_android(void) {
     receive_data_from_middleman(uart, cd);
     int cards[MAX_CARDS] = {0};

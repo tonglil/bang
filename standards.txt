@@ -1,3 +1,57 @@
+
+********************************************************************************
+
+Welcome to the Middleman program.
+
+This program allows you to pass data between the DE2 board and an Android
+device. The program supports four modes:
+
+        1. DE2 <--> Android: All data received from the DE2 will be send to the
+
+        Android device, and vice versa.
+
+        2. DE2 Loopback: All data received from the DE2 will be send back to
+        the DE2.
+
+        3. Android Loopback: All data received from the Android device will be
+        sent back to the Android device.
+
+        4. DE2 <--> Multiple Android Devices
+
+Press Ctrl-C at any time to stop the program.
+
+********************************************************************************
+
+
+Enter the mode (1, 2, 3, or 4): 4
+
+You have chosen DE2<-->Multiple Android devices.  In this mode, messages from
+the middleman to the DE2 will have the format:
+        byte[0]=ClientID
+        byte[1]=Message Size (does not include byte[0] or byte[1])
+        byte[2..]=Message
+Messages you construct from the DE2-->Middleman also must follow this format.
+To broadcast messages from the DE2 to all Android devices, use ClientID=0xFF
+
+Enter the COM # of the Serial Port (Device Manager->Ports): 6
+Opening COM6...Done
+
+Local IP interfaces (2):
+192.168.1.148 (Local Area Connection)
+127.0.0.1 (Loopback Pseudo-Interface 1)
+
+Listening on Port 50002.
+
+********************************************************************************
+
+Client connected, IP: 192.168.1.129, Assigned client ID: 1
+DE2 <-- Client 1 (5 bytes):
+        04 31 32 33 34
+DE2 --> Client 1 (4 bytes):
+        31 32 33 34
+
+(i sent 1234)
+
 0x00
 NOTHING
 
@@ -50,6 +104,8 @@ tell_user_get_life(pid)
 0x01 - 0x07 = pid
 
 0x0a
+tell_user_ok
+0x01 - 0x07 pid
 
 0x0b
 
@@ -70,6 +126,8 @@ tell_de2_user_cards(pid, ncards, *cards_array)
 array
     0x00 - 0xff = cid
 
+ex. 1100050102030405
+
 0x12
 tell_de2_blue_cards(pid, ncards, *blue_cards_array)
 0x01 - 0x07 = pid
@@ -78,12 +136,12 @@ array
     0x00 - 0xff = cid
 
 0x13
-tell_de2_used_card_self(pid, cid)
+tell_de2_used_card_self(pid, type)
 0x01 - 0x07 = pid
 if 0x00 then beer etc.
 
 0x14
-tell_de2_used_card_other(pid, cid, pid1)
+tell_de2_used_card_other(pid, pid1, type)
 0x01 - 0x07 = pid
 0x01 - 0x07 = pid1
 if 0x00 then zap etc.

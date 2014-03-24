@@ -31,6 +31,10 @@ void tell_user_zap_or_lose_life(int pid);
 
 void tell_user_get_life(int pid);
 
+void tell_user_ok(int pid);
+
+void tell_user_handshake(int pid);
+
 Message receive_interpret_android(void);
 
 Message create_message(messageType type, int fromId, int toId, int count, Card cards[]);
