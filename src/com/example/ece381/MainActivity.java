@@ -14,7 +14,6 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -95,7 +94,6 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        // Log.i("colin", "sendMessage");
         //
         // // Get the message from the box
         // EditText et = (EditText) findViewById(R.id.MessageText);
@@ -104,12 +102,11 @@ public class MainActivity extends Activity {
         // Comm.sendMessage(msg);
         //
         // DE2Message.getInstance();
-        // Log.i("colin", "wait for reply");
         // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
         // ;
-        // Log.i("colin", "got reply");
         // DE2Message.setReady(false);
         Player p = new Player();
+        p.startTurn();
         p.receiveCard(1);
         p.receiveCard(2);
         p.receiveCard(3);
@@ -214,9 +211,8 @@ public class MainActivity extends Activity {
                         in.read(buf);
 
                         final String s = Comm.bth(buf);
-                        Log.i("r_msg", s);
 
-                        Comm.receiveInterpretDE2(buf);
+                        // Comm.receiveInterpretDE2(buf);
 
                         // As explained in the tutorials, the GUI can not be
                         // updated in an asynchronous task. So, update the GUI

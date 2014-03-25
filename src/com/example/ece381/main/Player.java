@@ -333,10 +333,10 @@ public class Player {
                     cc.discardCard(cid);
                 }
             }
+            Log.i("colin", "sending tellDE2CardsInHand");
             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
             // Wait for OK
             // Comm.tellDE2BlueCardsInHand(pid, getNumberOfBlueCards(), getBlueCards());
-            Log.i("colin", "bottom of playCard");
         } else {
             // TODO Tony: tell player it isn't his turn
             test_call = "Not turn";

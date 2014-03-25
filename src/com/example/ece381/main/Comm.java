@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import android.util.Log;
-
 import com.example.ece381.MyApplication;
 
 public class Comm {
@@ -24,17 +22,14 @@ public class Comm {
         // Get the message from the box
 
         String msg = message;
-        Log.i("msg", msg);
         byte[] bmsg = hstba(msg);
 
         // Create an array of bytes. First byte will be the
         // message length, and the next ones will be the message
-        Log.i("msg", Integer.toString(bmsg.length));
         byte buf[] = new byte[bmsg.length + 1];
 
         buf[0] = (byte) bmsg.length;
         System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
-        Log.i("msg", "i crashed here");
 
         // Now send through the output stream of the socket
 

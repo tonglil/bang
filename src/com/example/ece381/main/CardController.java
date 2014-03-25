@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
-import android.util.Log;
-
 import com.example.ece381.MainActivity;
 
 public class CardController {
@@ -27,9 +25,7 @@ public class CardController {
             initValidCards(CARD_FILE);
         }
 
-        Log.i("colin", "got here");
         for (Entry<Integer, Card> e : validCards.entrySet()) {
-            Log.i("colin", e.getValue().name);
         }
     }
 
@@ -172,7 +168,6 @@ public class CardController {
             }
             input.close();
         } catch (FileNotFoundException fnfe) {
-            Log.i("colin", "file not found");
             System.err.println(CARD_FILE + " not found");
         }
 
