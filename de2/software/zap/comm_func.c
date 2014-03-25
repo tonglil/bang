@@ -122,15 +122,17 @@ void tell_user_miss_or_lose_life(int pid) {
     send_data_to_middleman(uart, cd);
 }
 
-void tell_user_zap_or_lose_life(int pid) {
+void tell_user_zap_or_lose_life(int pid, int aliensOrDuel) {
+    // 1 for Aliens, 0 for Duel
     cd->client_id = pid;
 
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
     cd->s_message[0] = 0x08;
+    cd->s_message[1] = aliensOrDuel;
 
-    cd->s_len = 1;
+    cd->s_len = 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -161,35 +163,94 @@ void tell_user_ok(int pid) {
     send_data_to_middleman(uart, cd);
 }
 
-int tell_user_handshake(int pid) {
+void tell_user_blue_play_infront(int pid, int cid) {
     cd->client_id = pid;
 
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
     cd->s_message[0] = 0x0b;
+    cd->s_message[1] = cid;
 
-    cd->s_len = 1;
+    cd->s_len = 2;
 
     send_data_to_middleman(uart, cd);
+}
 
-    receive_data_from_middleman(uart, cd);
+void tell_user_store(int pid, int ncards, int* cards) {
+    cd->client_id = pid;
 
-    if (cd->r_message[0] == 0x1a) {
-        return 1;
-    } else {
-        return 0;
+    // Clear message buffer
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
+
+    cd->s_message[0] = 0x0c;
+    cd->s_message[1] = ncards;
+
+    int i;
+    for (i = 0; i < ncards; i++) {
+        cd->s_message[i + 2] = cards[i];
     }
+
+    cd->s_len = 2 + i;
+
+    send_data_to_middleman(uart, cd);
+}
+
+void tell_user_panic(int pid, int pid1, int nbcards, int* bcards) {
+    cd->client_id = pid;
+
+    // Clear message buffer
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
+
+    cd->s_message[0] = 0x0c;
+    cd->s_message[1] = pid1;
+    cd->s_message[2] = nbcards;
+
+    int i;
+    for (i = 0; i < nbcards; i++) {
+        cd->s_message[i + 3] = bcards[i];
+    }
+
+    cd->s_len = 3 + i;
+
+    send_data_to_middleman(uart, cd);
+}
+
+void tel_user_cat_balou(int pid, int pid1, int nbcards, int* bcards) {
+    cd->client_id = pid;
+
+    // Clear message buffer
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
+
+    cd->s_message[0] = 0x0c;
+    cd->s_message[1] = pid1;
+    cd->s_message[2] = nbcards;
+
+    int i;
+    for (i = 0; i < nbcards; i++) {
+        cd->s_message[i + 3] = bcards[i];
+    }
+
+    cd->s_len = 3 + i;
+
+    send_data_to_middleman(uart, cd);
 }
 
 Message receive_interpret_android(void) {
+    // Message structure:
+    // [0] msg_type
+    // [1] pid
     receive_data_from_middleman(uart, cd);
     int cards[MAX_CARDS] = {0};
     int msg_type = cd->r_message[0];
+    int pid = cd->r_message[1];
     switch(msg_type) {
         case 0x11:
         {
-            int pid = cd->r_message[1];
+            // tellDE2CardsInHand
+            // [2] ncards
+            // [3] rest of array is cards
+            // ...
             int ncards = cd->r_message[2];
             int i, j = 0;
             for (i = 3; i < ncards + 3; i++) {
@@ -200,7 +261,10 @@ Message receive_interpret_android(void) {
         }
         case 0x12:
         {
-            int pid = cd->r_message[1];
+            // tellDE2BlueCardsInHand
+            // [2] ncards
+            // [3] rest of array is bcards
+            // ...
             int nbcards = cd->r_message[2];
             int i, j = 0;
             for (i = 3; i < nbcards + 3; i++) {
@@ -211,7 +275,13 @@ Message receive_interpret_android(void) {
         }
         case 0x13:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserUsedSelf
+            // [2] card_type
+            //      0x01 BEER
+            //      0x02 GATLING
+            //      0x03 ALIENS
+            //      0x04 GENERAL_STORE
+            //      0x05 SALOON
             int card_type = cd->r_message[2];
             switch (card_type) {
                 case 0x01:
@@ -236,7 +306,14 @@ Message receive_interpret_android(void) {
         }
         case 0x14:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserUsedOther
+            // [2] pid1 (victim)
+            // [3] card_type
+            //      0x01 ZAP
+            //      0x02 PANIC
+            //      0x03 CAT_BALOU
+            //      0x04 DUEL
+            //      0x05 JAIL
             int pid1 = cd->r_message[2];
             int card_type = cd->r_message[3];
             switch (card_type) {
@@ -262,34 +339,44 @@ Message receive_interpret_android(void) {
         }
         case 0x15:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserEndedTurn
             return create_message(END_TURN, pid, pid, 0, cards);
             break;
         }
         case 0x16:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserNeedsXCards
+            // [2] ncards
             int ncards = cd->r_message[2];
             return create_message(DRAW_CARDS, pid, pid, ncards, cards);
             break;
         }
         case 0x17:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserUpdateLives
+            // [2] lives
             int lives = cd->r_message[2];
             return create_message(UPDATE_LIVES, pid, pid, lives, cards);
         }
         case 0x18:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserPickedCard
+            // [2] cid
             cards[0] = cd->r_message[2];
             return create_message(CHOOSE, pid, pid, 0, cards);
         }
         case 0x19:
         {
-            int pid = cd->r_message[1];
+            // tellDE2UserTransferCard
+            // [2] cid
             cards[0] = cd->r_message[2];
             return create_message(TRANSFER, pid, pid, 0, cards);
+        }
+        case 0x1a:
+        {
+            // tellDE2OK
+            // TODO: custom message for OK
+            break;
         }
         default:
             break;

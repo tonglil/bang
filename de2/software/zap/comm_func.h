@@ -27,13 +27,20 @@ void tell_user_their_turn(int pid);
 
 void tell_user_miss_or_lose_life(int pid);
 
-void tell_user_zap_or_lose_life(int pid);
+void tell_user_zap_or_lose_life(int pid, int aliensOrDuel);
 
 void tell_user_get_life(int pid);
 
 void tell_user_ok(int pid);
 
-void tell_user_handshake(int pid);
+// Use this for jail and dynamite
+void tell_user_blue_play_infront(int pid, int cid);
+
+void tell_user_store(int pid, int ncards, int* cards);
+
+void tell_user_panic(int pid, int pid1, int nbcards, int* bcards);
+
+void tel_user_cat_balou(int pid, int pid1, int nbcards, int* bcards);
 
 Message receive_interpret_android(void);
 
