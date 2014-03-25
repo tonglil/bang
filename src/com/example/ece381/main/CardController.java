@@ -38,6 +38,11 @@ public class CardController {
         handCards.add(c);
     }
 
+    public void receiveBlueCard(int cid) {
+        Card c = validCards.get(Integer.valueOf(cid));
+        blueCards.add(c);
+    }
+
     public void discardCard(int cid) {
         for (int i = 0; i < handCards.size(); i++) {
             if (handCards.get(i).cid == cid) {
@@ -133,7 +138,7 @@ public class CardController {
     }
 
     public static Card getValidCard(int cid) {
-        return validCards.get(new Integer(cid));
+        return validCards.get(Integer.valueOf(cid));
     }
 
     private void initValidCards(String filename) {

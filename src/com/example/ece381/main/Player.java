@@ -23,7 +23,7 @@ public class Player {
 
     public static final String SHERIFF = "Sheriff";
     public static final String MUSTANG = "Mustang";
-    private static final String JAIL = "Space Jail";
+    public static final String JAIL = "Space Jail";
     private static final String SCOPE = "Scope";
     private static final String DUEL = "Duel";
     private static final String ALIENS = "Aliens";
@@ -108,26 +108,26 @@ public class Player {
     }
 
     public void initOpponent(int pid, int range, String role) {
-        if (opponents.get(new Integer(pid)) == null) {
-            opponents.put(new Integer(pid), new Opponent(pid, range, role));
+        if (opponents.get(Integer.valueOf(pid)) == null) {
+            opponents.put(Integer.valueOf(pid), new Opponent(pid, range, role));
         }
     }
 
     public void setOpponentRange(int pid, int range) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         if (o != null) {
             o.setRange(range);
         }
     }
 
     public void setOpponentLives(int pid, int lives) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         o.setLives(lives);
     }
 
     // TEST
     public void setOpponentBlueCards(int pid, ArrayList<Integer> cids) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         o.discardAll();
         for (Integer i : cids) {
             o.playBlueCard(i.intValue());
@@ -135,12 +135,12 @@ public class Player {
     }
 
     public void opponentPlayBlueCard(int pid, int cid) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         o.playBlueCard(cid);
     }
 
     public void opponentDiscardBlueCard(int pid, int cid) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         o.discardBlueCard(cid);
     }
 
@@ -148,6 +148,11 @@ public class Player {
     // card
     public void receiveCard(int cid) {
         cc.receiveCard(cid);
+    }
+
+    // TODO AMITOJ: add unit tests
+    public void receiveBlueCard(int cid) {
+        cc.receiveBlueCard(cid);
     }
 
     public void discardCard(int cid) {
@@ -272,7 +277,7 @@ public class Player {
                 } else if (c.border == 'L') {
                     if (c.name.compareTo(JAIL) == 0) { // space jail
                         int pid = 1; // TODO Tony: prompt user for target
-                        Opponent o = opponents.get(new Integer(pid));
+                        Opponent o = opponents.get(Integer.valueOf(pid));
                         if (o.getRole().compareTo(SHERIFF) == 0) {
                             // TODO Tony: tell user he can't jail the sheriff
                             test_call = "cant jail sheriff";
@@ -329,7 +334,8 @@ public class Player {
                 }
             }
             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-            Comm.tellDE2BlueCardsInHand(pid, getNumberOfBlueCards(), getBlueCards());
+            // Wait for OK
+            // Comm.tellDE2BlueCardsInHand(pid, getNumberOfBlueCards(), getBlueCards());
             Log.i("colin", "bottom of playCard");
         } else {
             // TODO Tony: tell player it isn't his turn
@@ -372,8 +378,9 @@ public class Player {
         discardCard(cid);
     }
 
-    public void onJail() {
+    public void onJail(int cid) {
         // Nothing needs to be done
+        // receiveBlueCard(cid);
     }
 
     public void onDuel() {
@@ -392,7 +399,7 @@ public class Player {
         // This function shouldn't return until either the opponent uses missed,
         // beer, or takes the hit
         test_call = "zapOpponent";
-        Comm.tellDE2UserUsedOther(this.pid, pid, 0x00);
+        Comm.tellDE2UserUsedOther(this.pid, pid, "ZAP");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -404,7 +411,7 @@ public class Player {
         // This function shouldn't return until every opponent uses missed,
         // beer, or takes the hit
         test_call = "zapAll";
-        Comm.tellDE2UserUsedSelf(this.pid, 0x01);
+        Comm.tellDE2UserUsedSelf(this.pid, "GATLING");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -415,7 +422,7 @@ public class Player {
         // TODO: tell de2 that everyone gets a life
         // This function shouldn't return until de2 says everything is good
         test_call = "goToSaloon";
-        Comm.tellDE2UserUsedSelf(this.pid, 0x04);
+        Comm.tellDE2UserUsedSelf(this.pid, "SALOON");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -426,7 +433,7 @@ public class Player {
         // TODO: tell de2 that you beered
         // This function shouldn't return until de2 says everything is good
         test_call = "drinkBeer";
-        Comm.tellDE2UserUsedSelf(this.pid, 0x00);
+        Comm.tellDE2UserUsedSelf(this.pid, "BEER");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -437,7 +444,7 @@ public class Player {
         // TODO: tell de2 that this opponent should be put in jail
         // This function shouldn't return until de2 says everything is good
         test_call = "throwInJail";
-        Comm.tellDE2UserUsedOther(this.pid, pid, 0x04);
+        Comm.tellDE2UserUsedOther(this.pid, pid, "JAIL");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -471,7 +478,7 @@ public class Player {
         // TODO: tell de2 that this player wants to panic opponent
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
-        Comm.tellDE2UserUsedOther(this.pid, pid, 0x01);
+        Comm.tellDE2UserUsedOther(this.pid, pid, "PANIC");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -482,7 +489,7 @@ public class Player {
         // TODO: tell de2 to randomly discard card from all opponents
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
-        Comm.tellDE2UserUsedOther(this.pid, pid, 0x02);
+        Comm.tellDE2UserUsedOther(this.pid, pid, "CAT_BALOU");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -493,7 +500,7 @@ public class Player {
         // TODO: tell de2 to begin duel with opponent
         // This function shouldn't return until de2 says everything is good
         test_call = "duelOpponent";
-        Comm.tellDE2UserUsedOther(this.pid, pid, 0x03);
+        Comm.tellDE2UserUsedOther(this.pid, pid, "DUEL");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -504,7 +511,7 @@ public class Player {
         // TODO: tell de2 to send aliens after everyone
         // This function shouldn't return until de2 says everything is good
         test_call = "releaseTheAliens";
-        Comm.tellDE2UserUsedSelf(this.pid, 0x02);
+        Comm.tellDE2UserUsedSelf(this.pid, "ALIENS");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -515,7 +522,7 @@ public class Player {
         // TODO: tell de2 to use general store
         // This function shouldn't return until de2 says everything is good
         test_call = "generalStore";
-        Comm.tellDE2UserUsedSelf(this.pid, 0x03);
+        Comm.tellDE2UserUsedSelf(this.pid, "GENERAL_STORE");
         while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
             ;
         DE2Message.setReady(false);
@@ -523,7 +530,7 @@ public class Player {
     }
 
     private boolean checkFixedRange(int pid) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         if (o.getRange() <= getFixedRange()) {
             return true;
         } else {
@@ -533,7 +540,7 @@ public class Player {
 
     // Check if opponent if within range to shoot
     private boolean checkRange(int pid) {
-        Opponent o = opponents.get(new Integer(pid));
+        Opponent o = opponents.get(Integer.valueOf(pid));
         if (o.getRange() <= getRange()) {
             return true;
         } else {

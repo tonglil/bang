@@ -111,16 +111,41 @@ public class Comm {
         return;
     }
 
-    public static void tellDE2UserUsedSelf(int pid, int type) {
-        String msg = "13" + iths(pid) + iths(type);
+    public static void tellDE2UserUsedSelf(int pid, String type) {
+        int itype = 0;
+        if (type.equals("BEER")) {
+            itype = 0x01;
+        } else if (type.equals("GATLING")) {
+            itype = 0x02;
+        } else if (type.equals("ALIENS")) {
+            itype = 0x03;
+        } else if (type.equals("GENERAL_STORE")) {
+            itype = 0x04;
+        } else if (type.equals("SALOON")) {
+            itype = 0x05;
+        }
+        String msg = "13" + iths(pid) + iths(itype);
 
         sendMessage(msg);
 
         return;
     }
 
-    public static void tellDE2UserUsedOther(int pid, int pid1, int type) {
-        String msg = "14" + iths(pid) + iths(pid1) + iths(type);
+    public static void tellDE2UserUsedOther(int pid, int pid1, String type) {
+        int itype = 0;
+        if (type.equals("ZAP")) {
+            itype = 0x01;
+        } else if (type.equals("PANIC")) {
+            itype = 0x02;
+        } else if (type.equals("CAT_BALOU")) {
+            itype = 0x03;
+        } else if (type.equals("DUEL")) {
+            itype = 0x04;
+        } else if (type.equals("JAIL")) {
+            itype = 0x05;
+        }
+
+        String msg = "14" + iths(pid) + iths(pid1) + iths(itype);
 
         sendMessage(msg);
 
@@ -167,7 +192,7 @@ public class Comm {
         return;
     }
 
-    public static void tellDE2Handshake(int pid) {
+    public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
 
         sendMessage(msg);
@@ -180,9 +205,8 @@ public class Comm {
         // [0] Client_Id
         // [1] S_len
         // [2] Message_type
-        // [3] ...
         int l = 0;
-        int length = buf[l++];
+        // int length = buf[l++];
         int fromId = buf[l++];
         int m_len = buf[l++];
         int type = buf[l++];
@@ -249,24 +273,16 @@ public class Comm {
         case 0x04: {
             // tell_user_new_card
             // [3] cid
-            ArrayList<Integer> card = new ArrayList<Integer>();
-            card.add((int) buf[l++]);
-            r_cinfo.add(card);
+            // Player p = retrievePlayer(pid);
+            // p.receiveCard(cid);
             break;
         }
         case 0x05: {
             // tell_user_lost_card
             // [3] cid
-            // [4] 0x01 for Panic, 0x02 for Cat Balou
-            // ArrayList<Integer> card = new ArrayList<Integer>();
-            // card.add((int) buf[l++]);
-            // r_cinfo.add(card);
-            // Player p = retrivePlayer(pid);
-            // if (buf[l++ == 0x01) {
-            // p.onPanic((int) buf[l++]);
-            // } else {
-            // p.onCatBalou((int) buf[l++]);
-            // }
+            // int cid = (int) buf[l++];
+            // Player p = retrievePlayer(pid);
+            // p.discardCard(cid);
             break;
         }
         case 0x06:
@@ -274,14 +290,14 @@ public class Comm {
             break;
         case 0x07: {
             // tell_user_miss_or_lose_life
-            // Player p = retrivePlayer(pid);
+            // Player p = retrievePlayer(pid);
             // p.onZap();
             break;
         }
         case 0x08: {
             // tell_user_zap_or_lose_life
             // [3] 0x01 for Aliens, 0x02 for Duel
-            // Player p = retrivePlayer(pid);
+            // Player p = retrievePlayer(pid);
             // if (buf[l++] == 0x01) {
             // p.onAliens();
             // } else {
@@ -291,7 +307,7 @@ public class Comm {
         }
         case 0x09: {
             // tell_user_get_life
-            // Player p = retrivePlayer(pid);
+            // Player p = retrievePlayer(pid);
             // p.onSaloon();
             break;
         }
@@ -299,9 +315,37 @@ public class Comm {
             // tell_user_ok
             break;
         case 0x0b: {
-            // tell_user_handshake
-            tellDE2Handshake(fromId);
+            // tell_user_blue_player_infront
+            // [3] cid
+            // int cid = (int) buf[l++];
+            // Card c = CardController.getValidCard(cid);
+            // Player p = retrievePlayer(pid);
+            // p.receiveBlueCard(cid);
+            // break;
             break;
+        }
+        case 0x0c: {
+            // tell_user_store
+            // [3] ncards
+            // [4] array for choice of cards, length depends on ncards
+            // ..
+            // Player p = retrievePlayer(pid);
+        }
+        case 0x0d: {
+            // tell_user_panic
+            // [3] toId
+            // [4] nbcards
+            // [5] array of blue cards
+            // ...
+            // Player p = retrievePlayer(pid);
+            // p.discardCard(cid);
+        }
+        case 0x0e: {
+            // tell_user_cat_balou
+            // [3] toId
+            // [4] nbcards
+            // [5] array of blue cards
+            // ...
         }
         default:
             break;

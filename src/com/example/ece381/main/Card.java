@@ -42,4 +42,16 @@ public class Card {
             return false;
         }
     }
+
+    public boolean isJail() {
+        return name.compareTo(Player.JAIL) == 0;
+    }
+
+    public boolean isBlue() {
+        return border == 'L';
+    }
+
+    public boolean isRegular() {
+        return border == 'R';
+    }
 }

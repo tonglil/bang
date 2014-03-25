@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ece381.main.Comm;
-import com.example.ece381.main.DE2Message;
+import com.example.ece381.main.Player;
 
 public class MainActivity extends Activity {
 
@@ -95,20 +95,25 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        Log.i("colin", "sendMessage");
-
-        // Get the message from the box
-        EditText et = (EditText) findViewById(R.id.MessageText);
-        String msg = et.getText().toString();
-
-        Comm.sendMessage(msg);
-
-        DE2Message.getInstance();
-        Log.i("colin", "wait for reply");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        Log.i("colin", "got reply");
-        DE2Message.setReady(false);
+        // Log.i("colin", "sendMessage");
+        //
+        // // Get the message from the box
+        // EditText et = (EditText) findViewById(R.id.MessageText);
+        // String msg = et.getText().toString();
+        //
+        // Comm.sendMessage(msg);
+        //
+        // DE2Message.getInstance();
+        // Log.i("colin", "wait for reply");
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // Log.i("colin", "got reply");
+        // DE2Message.setReady(false);
+        Player p = new Player();
+        p.receiveCard(1);
+        p.receiveCard(2);
+        p.receiveCard(3);
+        p.playCard(1);
     }
 
     // Called when the user closes a socket
