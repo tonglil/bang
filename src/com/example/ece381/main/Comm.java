@@ -19,6 +19,9 @@ public class Comm {
 
     // Called when the user wants to send a message
     public static void sendMessage(String message) {
+        // while (!DE2Message.isReadyToSend())
+        // ;
+        // DE2Message.setReadyToSend(false);
         // Get the message from the box
 
         String msg = message;
@@ -94,7 +97,7 @@ public class Comm {
         return;
     }
 
-    public static void tellDE2BlueCardsInHand(int pid, int ncards, ArrayList<Card> cards) {
+    public static void tellDE2BlueCardsInFront(int pid, int ncards, ArrayList<Card> cards) {
         String msg = "12" + iths(pid) + iths(ncards);
 
         for (Card c : cards) {
@@ -201,7 +204,7 @@ public class Comm {
         // [1] S_len
         // [2] Message_type
         int l = 0;
-        // int length = buf[l++];
+        int length = buf[l++];
         int fromId = buf[l++];
         int m_len = buf[l++];
         int type = buf[l++];
@@ -282,6 +285,8 @@ public class Comm {
         }
         case 0x06:
             // tell_user_their_turn
+            // Player p = retrievePlayer(pid);
+            // p.startTurn();
             break;
         case 0x07: {
             // tell_user_miss_or_lose_life
@@ -308,6 +313,7 @@ public class Comm {
         }
         case 0x0a:
             // tell_user_ok
+            DE2Message.setReadyToSend(true);
             break;
         case 0x0b: {
             // tell_user_blue_player_infront
@@ -325,6 +331,7 @@ public class Comm {
             // [4] array for choice of cards, length depends on ncards
             // ..
             // Player p = retrievePlayer(pid);
+            // p.onGeneralStore();
         }
         case 0x0d: {
             // tell_user_panic
@@ -333,7 +340,7 @@ public class Comm {
             // [5] array of blue cards
             // ...
             // Player p = retrievePlayer(pid);
-            // p.discardCard(cid);
+            // p.onPanic();
         }
         case 0x0e: {
             // tell_user_cat_balou
@@ -341,6 +348,7 @@ public class Comm {
             // [4] nbcards
             // [5] array of blue cards
             // ...
+            // p.onCatBalou();
         }
         default:
             break;

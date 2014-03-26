@@ -246,8 +246,10 @@ public class Player {
                 if (c.zap) {
                     if (c.onePlayerReachable) { // zap
                         if (!zappedThisTurn) {
-                            int pid = 1; // TODO Tony: prompt user for target
+                            int pid = 0; // TODO Tony: prompt user for target
+                            Log.i("colin", "going to checkRange");
                             if (checkRange(pid)) {
+                                Log.i("colin", "zapOpponent");
                                 zapOpponent(pid);
                                 zappedThisTurn = true;
                                 cc.discardCard(cid);
@@ -334,13 +336,14 @@ public class Player {
                 }
             }
             Log.i("colin", "sending tellDE2CardsInHand");
-            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+            // Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
             // Wait for OK
-            // Comm.tellDE2BlueCardsInHand(pid, getNumberOfBlueCards(), getBlueCards());
+            Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
         } else {
             // TODO Tony: tell player it isn't his turn
             test_call = "Not turn";
         }
+        Log.i("colin", test_call);
     }
 
     // //////////////////////////////////////////////////
@@ -352,14 +355,23 @@ public class Player {
         // TODO: user has choice of playing miss or taking a life (player
         // getting zapped)
         // TODO: let him use a beer if this is a lethal hit
+        // if (userplayedmiss) {
+        // Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+        // } else {
+        lives--;
         Comm.tellDE2UserUpdateLives(this.pid, lives);
+        // }
     }
 
     public void onAliens() {
         // TODO: user has choice of playing zap or taking a life (player getting
         // dueled or aliens)
         // TODO: let him use a beer if this is a lethal hit
-        Comm.tellDE2UserUpdateLives(this.pid, lives);
+        // if (userplayedbeer) {
+        // Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+        // } else {
+        // Comm.tellDE2UserUpdateLives(this.pid, lives);
+        // }
     }
 
     public void onSaloon() {
@@ -400,9 +412,9 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "ZAP");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -412,9 +424,9 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapAll";
         Comm.tellDE2UserUsedSelf(this.pid, "GATLING");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -423,9 +435,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "goToSaloon";
         Comm.tellDE2UserUsedSelf(this.pid, "SALOON");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -434,9 +446,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "drinkBeer";
         Comm.tellDE2UserUsedSelf(this.pid, "BEER");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -445,9 +457,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "throwInJail";
         Comm.tellDE2UserUsedOther(this.pid, pid, "JAIL");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -456,9 +468,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "drawCards";
         Comm.tellDE2UserNeedsXCards(this.pid, numCards);
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -467,9 +479,9 @@ public class Player {
         test_call = "drawOneCard";
         Comm.tellDE2UserNeedsXCards(this.pid, 1);
         // TODOCOLIN: get card
-        while (!DE2Message.isReady())
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady())
+        // ;
+        // DE2Message.setReady(false);
         int card = DE2Message.getR_cinfo().get(0).get(0);
         return CardController.getValidCard(card);
     }
@@ -479,9 +491,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "PANIC");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -490,9 +502,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
         Comm.tellDE2UserUsedOther(this.pid, pid, "CAT_BALOU");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -501,9 +513,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "duelOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "DUEL");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -512,9 +524,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "releaseTheAliens";
         Comm.tellDE2UserUsedSelf(this.pid, "ALIENS");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 
@@ -523,9 +535,9 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "generalStore";
         Comm.tellDE2UserUsedSelf(this.pid, "GENERAL_STORE");
-        while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-            ;
-        DE2Message.setReady(false);
+        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
+        // ;
+        // DE2Message.setReady(false);
         return;
     }
 

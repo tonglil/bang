@@ -14,6 +14,7 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -96,8 +97,8 @@ public class MainActivity extends Activity {
     public void sendMessage(View view) {
         //
         // // Get the message from the box
-        // EditText et = (EditText) findViewById(R.id.MessageText);
-        // String msg = et.getText().toString();
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
         //
         // Comm.sendMessage(msg);
         //
@@ -106,11 +107,15 @@ public class MainActivity extends Activity {
         // ;
         // DE2Message.setReady(false);
         Player p = new Player();
+        p.setPid(0);
+        Log.i("colin", "crash here");
+        // p.initOpponent(1, 1, "ASDF");
         p.startTurn();
-        p.receiveCard(1);
+        p.receiveCard(Integer.valueOf(msg));
         p.receiveCard(2);
         p.receiveCard(3);
-        p.playCard(1);
+        p.playCard(Integer.valueOf(msg));
+        // p.endTurn();
     }
 
     // Called when the user closes a socket
@@ -212,7 +217,7 @@ public class MainActivity extends Activity {
 
                         final String s = Comm.bth(buf);
 
-                        // Comm.receiveInterpretDE2(buf);
+                        Comm.receiveInterpretDE2(buf);
 
                         // As explained in the tutorials, the GUI can not be
                         // updated in an asynchronous task. So, update the GUI

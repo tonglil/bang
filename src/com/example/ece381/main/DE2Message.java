@@ -3,7 +3,8 @@ package com.example.ece381.main;
 import java.util.ArrayList;
 
 public class DE2Message {
-    private static boolean ready;
+    private static boolean readyToContinue;
+    private static boolean readyToSend = true;
     private static int type;
     private static int fromId;
     private static int toId;
@@ -14,7 +15,7 @@ public class DE2Message {
     private static DE2Message instance;
 
     private DE2Message(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {
-        DE2Message.ready = ready;
+        DE2Message.readyToContinue = ready;
         DE2Message.type = type;
         DE2Message.fromId = fromId;
         DE2Message.toId = toId;
@@ -31,7 +32,7 @@ public class DE2Message {
     }
 
     public static void setMessage(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {
-        DE2Message.ready = ready;
+        DE2Message.readyToContinue = ready;
         DE2Message.type = type;
         DE2Message.fromId = fromId;
         DE2Message.toId = toId;
@@ -40,12 +41,20 @@ public class DE2Message {
         DE2Message.r_cinfo = r_cinfo;
     }
 
-    public static boolean isReady() {
-        return ready;
+    public static boolean isReadyToContinue() {
+        return readyToContinue;
     }
 
-    public static void setReady(boolean ready) {
-        DE2Message.ready = ready;
+    public static void setReadyToContinue(boolean ready) {
+        DE2Message.readyToContinue = ready;
+    }
+
+    public static boolean isReadyToSend() {
+        return readyToSend;
+    }
+
+    public static void setReadyToSend(boolean readyToSend) {
+        DE2Message.readyToSend = readyToSend;
     }
 
     public static int getType() {
