@@ -2,7 +2,7 @@
 
 alt_up_rs232_dev* uart;
 Comm_data* cd;
-int pid_table[7];
+int pid_table[7] = {0, 1, 2, 3, 4, 5, 6};
 
 void tell_user_pid_role(int pid, Player* p) {
     cd->client_id = pid_table[pid];
