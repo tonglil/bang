@@ -246,7 +246,7 @@ public class Player {
                 if (c.zap) {
                     if (c.onePlayerReachable) { // zap
                         if (!zappedThisTurn) {
-                            int pid = 0; // TODO Tony: prompt user for target
+                            int pid = 1; // TODO Tony: prompt user for target
                             Log.i("colin", "going to checkRange");
                             if (checkRange(pid)) {
                                 Log.i("colin", "zapOpponent");

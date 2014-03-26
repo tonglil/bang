@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
     public void openSocket(View view) {
         MyApplication app = (MyApplication) getApplication();
         Comm.setApp(app);
+
         TextView msgbox = (TextView) findViewById(R.id.error_message_box);
 
         // Make sure the socket is not already opened
@@ -95,8 +96,7 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        //
-        // // Get the message from the box
+        // Get the message from the box
         EditText et = (EditText) findViewById(R.id.MessageText);
         String msg = et.getText().toString();
         //
@@ -106,10 +106,11 @@ public class MainActivity extends Activity {
         // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
         // ;
         // DE2Message.setReady(false);
+
         Player p = new Player();
         p.setPid(0);
         Log.i("colin", "crash here");
-        // p.initOpponent(1, 1, "ASDF");
+        p.initOpponent(1, 1, "ASDF");
         p.startTurn();
         p.receiveCard(Integer.valueOf(msg));
         p.receiveCard(2);
@@ -209,13 +210,13 @@ public class MainActivity extends Activity {
 
                     int bytes_avail = in.available();
                     if (bytes_avail > 0) {
-
                         // If so, read them in and create a string
 
                         byte buf[] = new byte[bytes_avail];
                         in.read(buf);
 
                         final String s = Comm.bth(buf);
+                        Log.i("colin", "TCPReadTimerTask run() got: " + s);
 
                         Comm.receiveInterpretDE2(buf);
 

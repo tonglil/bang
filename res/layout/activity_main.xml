@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="128" />
+            android:text="192" />
 
         <EditText
             android:id="@+id/ip2"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="189" />
+            android:text="168" />
 
         <EditText
             android:id="@+id/ip3"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="216" />
+            android:text="1" />
 
         <EditText
             android:id="@+id/ip4"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="200" />
+            android:text="148" />
     </LinearLayout>
 
     <LinearLayout

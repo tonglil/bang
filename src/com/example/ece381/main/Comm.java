@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import android.util.Log;
+
 import com.example.ece381.MyApplication;
 
 public class Comm {
@@ -19,10 +21,9 @@ public class Comm {
 
     // Called when the user wants to send a message
     public static void sendMessage(String message) {
-        // while (!DE2Message.isReadyToSend())
-        // ;
-        // DE2Message.setReadyToSend(false);
-        // Get the message from the box
+        while (!DE2Message.isReadyToSend())
+            ;
+        DE2Message.setReadyToSend(false);
 
         String msg = message;
         byte[] bmsg = hstba(msg);
@@ -199,12 +200,21 @@ public class Comm {
     }
 
     public static void receiveInterpretDE2(byte buf[]) {
-        // Message structure:
+        // Message structure for Acknowledgment
+        // [0] 0x0a
+        if (buf[0] == 0x0a) {
+            Log.i("colin", "DE2 acknowledged, Android can send more");
+            DE2Message.setReadyToSend(true);
+            return;
+        }
+
+        // Message structure for Instructions:
         // [0] Client_Id
         // [1] S_len
         // [2] Message_type
+
         int l = 0;
-        int length = buf[l++];
+        // int length = buf[l++];
         int fromId = buf[l++];
         int m_len = buf[l++];
         int type = buf[l++];
@@ -313,7 +323,7 @@ public class Comm {
         }
         case 0x0a:
             // tell_user_ok
-            DE2Message.setReadyToSend(true);
+            // this is actually taken care of at the top of the code;
             break;
         case 0x0b: {
             // tell_user_blue_player_infront
