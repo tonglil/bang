@@ -88,7 +88,7 @@ void startDuel(PlayerCtrl* playerCtrl, int to, int from) {
     int turn = to;
     int loop = 1;
     while (loop) {
-        tell_user_zap_or_lose_life(turn);
+        tell_user_zap_or_lose_life(turn, 0);
         while (1) {
             Message message = receivedFromAndroid();
             if (message.type == UPDATE_HAND) {
@@ -124,7 +124,7 @@ void startZap(PlayerCtrl* playerCtrl, int to) {
 void startAliens(PlayerCtrl* playerCtrl, int id) {
     setSubTurn(playerCtrl,id);
     endSubTurn(playerCtrl);
-    tell_user_zap_or_lose_life(getSubTurn(playerCtrl));
+    tell_user_zap_or_lose_life(getSubTurn(playerCtrl), 1);
     while (getSubTurn(playerCtrl) != id) {
         Message message = receivedFromAndroid();
         switch (message.type) {
@@ -132,13 +132,13 @@ void startAliens(PlayerCtrl* playerCtrl, int id) {
             updateHandForId(playerCtrl, message.fromId, message.cards);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
-                tell_user_zap_or_lose_life(getSubTurn(playerCtrl));
+                tell_user_zap_or_lose_life(getSubTurn(playerCtrl), 1);
             break;
         case UPDATE_LIVES:
             updateLivesForId(playerCtrl, message.fromId, message.count);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
-                tell_user_zap_or_lose_life(getSubTurn(playerCtrl));
+                tell_user_zap_or_lose_life(getSubTurn(playerCtrl), 1);
             break;
         default:
             break;
