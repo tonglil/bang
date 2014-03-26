@@ -196,7 +196,7 @@ void tell_user_get_life(int pid) {
     int l = 0;
 
     cd->s_message[l++] = pid;
-    l++:
+    l++;
     cd->s_message[l++] = 0x09;
 
     cd->s_len = l;
