@@ -10,10 +10,14 @@ void tell_user_pid_role(int pid, Player* p) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x01;
-    cd->s_message[1] = p->role;
+    int l = 0;
 
-    cd->s_len = 2;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x01;
+    cd->s_message[l++] = p->role;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -24,7 +28,11 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x02;
+    int l = 0;
+
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x02;
 
     int i;
     //TODO: change to numplayers
@@ -34,7 +42,7 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi) {
         cd->s_message[3*i + 3] = pi->players[i].role;
     }
 
-    cd->s_len = 1 + 3*i;
+    cd->s_len = l + 3*i;
 
     send_data_to_middleman(uart, cd);
 }
@@ -46,16 +54,20 @@ void tell_user_all_opponent_blue_lives(int pid, PlayersInfo* pi) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x03;
+    int l = 0;
+
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x03;
 
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
-        cd->s_message[3*i + 1] = pi->players[i].id;
-        cd->s_message[3*i + 2] = pi->players[i].lives;
-        cd->s_message[3*i + 3] = pi->players[i].num_blue;
+        cd->s_message[3*i + l] = pi->players[i].id;
+        cd->s_message[3*i + l + 1] = pi->players[i].lives;
+        cd->s_message[3*i + l + 2] = pi->players[i].num_blue;
     }
 
-    int j = 1 + 3*i;
+    int j = l + 3*i;
     int k;
     for (i = 0; i < NUM_PLAYERS; i++) {
         for (k = 0; i < pi->players[i].num_blue; k++)
@@ -75,10 +87,14 @@ void tell_user_new_card(int pid, int cid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x04;
-    cd->s_message[1] = cid;
+    int l = 0;
 
-    cd->s_len = 2;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x04;
+    cd->s_message[l++] = cid;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -89,10 +105,14 @@ void tell_user_lost_card(int pid, int cid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x05;
-    cd->s_message[1] = cid;
+    int l = 0;
 
-    cd->s_len = 2;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x05;
+    cd->s_message[l++] = cid;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -103,9 +123,13 @@ void tell_user_their_turn(int pid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x06;
+    int l = 0;
 
-    cd->s_len = 1;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x06;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -116,9 +140,13 @@ void tell_user_miss_or_lose_life(int pid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x07;
+    int l = 0;
 
-    cd->s_len = 1;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x07;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -130,10 +158,14 @@ void tell_user_zap_or_lose_life(int pid, int aliensOrDuel) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x08;
-    cd->s_message[1] = aliensOrDuel;
+    int l = 0;
 
-    cd->s_len = 2;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x08;
+    cd->s_message[l++] = aliensOrDuel;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -144,9 +176,13 @@ void tell_user_get_life(int pid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x09;
+    int l = 0;
 
-    cd->s_len = 1;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x09;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -157,9 +193,13 @@ void tell_user_ok(int pid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x0a;
+    int l = 0;
 
-    cd->s_len = 1;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x0a;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -170,10 +210,14 @@ void tell_user_blue_play_infront(int pid, int cid) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x0b;
-    cd->s_message[1] = cid;
+    int l = 0;
 
-    cd->s_len = 2;
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x0b;
+    cd->s_message[l++] = cid;
+
+    cd->s_len = l;
 
     send_data_to_middleman(uart, cd);
 }
@@ -184,15 +228,19 @@ void tell_user_store(int pid, int ncards, int* cards) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x0c;
-    cd->s_message[1] = ncards;
+    int l = 0;
+
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x0c;
+    cd->s_message[l++] = ncards;
 
     int i;
     for (i = 0; i < ncards; i++) {
-        cd->s_message[i + 2] = cards[i];
+        cd->s_message[i + l] = cards[i];
     }
 
-    cd->s_len = 2 + i;
+    cd->s_len = l + i;
 
     send_data_to_middleman(uart, cd);
 }
@@ -203,16 +251,20 @@ void tell_user_panic(int pid, int pid1, int nbcards, int* bcards) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x0c;
-    cd->s_message[1] = pid1;
-    cd->s_message[2] = nbcards;
+    int l = 0;
+
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x0c;
+    cd->s_message[l++] = pid1;
+    cd->s_message[l++] = nbcards;
 
     int i;
     for (i = 0; i < nbcards; i++) {
-        cd->s_message[i + 3] = bcards[i];
+        cd->s_message[i + l] = bcards[i];
     }
 
-    cd->s_len = 3 + i;
+    cd->s_len = l + i;
 
     send_data_to_middleman(uart, cd);
 }
@@ -223,16 +275,20 @@ void tel_user_cat_balou(int pid, int pid1, int nbcards, int* bcards) {
     // Clear message buffer
     memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
 
-    cd->s_message[0] = 0x0c;
-    cd->s_message[1] = pid1;
-    cd->s_message[2] = nbcards;
+    int l = 0;
+
+    cd->s_message[l++] = cd->client_id;
+    cd->s_message[l++] = cd->s_len;
+    cd->s_message[l++] = 0x0c;
+    cd->s_message[l++] = pid1;
+    cd->s_message[l++] = nbcards;
 
     int i;
     for (i = 0; i < nbcards; i++) {
-        cd->s_message[i + 3] = bcards[i];
+        cd->s_message[i + l] = bcards[i];
     }
 
-    cd->s_len = 3 + i;
+    cd->s_len = l + i;
 
     send_data_to_middleman(uart, cd);
 }
