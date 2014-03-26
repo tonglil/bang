@@ -19,7 +19,7 @@ void tell_user_pid_role(int pid, Player* p) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
 
     send_data_to_middleman(uart, cd);
@@ -47,7 +47,7 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi) {
 
     cd->s_len = l + 3*i;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -83,7 +83,7 @@ void tell_user_all_opponent_blue_lives(int pid, PlayersInfo* pi) {
 
     cd->s_len = j;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -103,7 +103,7 @@ void tell_user_new_card(int pid, int cid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -123,7 +123,7 @@ void tell_user_lost_card(int pid, int cid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -142,7 +142,7 @@ void tell_user_their_turn(int pid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -161,7 +161,7 @@ void tell_user_miss_or_lose_life(int pid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -182,7 +182,7 @@ void tell_user_zap_or_lose_life(int pid, int aliensOrDuel) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -201,7 +201,7 @@ void tell_user_get_life(int pid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -220,7 +220,7 @@ void tell_user_ok(int pid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -240,7 +240,7 @@ void tell_user_blue_play_infront(int pid, int cid) {
 
     cd->s_len = l;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -265,7 +265,7 @@ void tell_user_store(int pid, int ncards, int* cards) {
 
     cd->s_len = l + i;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -291,7 +291,7 @@ void tell_user_panic(int pid, int pid1, int nbcards, int* bcards) {
 
     cd->s_len = l + i;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
@@ -317,7 +317,7 @@ void tell_user_cat_balou(int pid, int pid1, int nbcards, int* bcards) {
 
     cd->s_len = l + i;
 
-    cd->s_message[1] = cd->s_len;
+    cd->s_message[1] = cd->s_len - 2;
 
     send_data_to_middleman(uart, cd);
 }
