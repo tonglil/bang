@@ -41,7 +41,7 @@ void tell_user_store(int pid, int ncards, int* cards);
 
 void tell_user_panic(int pid, int pid1, int nbcards, int* bcards);
 
-void tel_user_cat_balou(int pid, int pid1, int nbcards, int* bcards);
+void tell_user_cat_balou(int pid, int pid1, int nbcards, int* bcards);
 
 Message receive_interpret_android(void);
 

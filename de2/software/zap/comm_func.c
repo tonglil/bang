@@ -296,7 +296,7 @@ void tell_user_panic(int pid, int pid1, int nbcards, int* bcards) {
     send_data_to_middleman(uart, cd);
 }
 
-void tel_user_cat_balou(int pid, int pid1, int nbcards, int* bcards) {
+void tell_user_cat_balou(int pid, int pid1, int nbcards, int* bcards) {
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
