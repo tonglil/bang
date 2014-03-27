@@ -8,6 +8,11 @@ public class Opponent {
     private int maxLives;
     private int range;
     private String role;
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     private ArrayList<Card> blueCards;
     private boolean dead;
 

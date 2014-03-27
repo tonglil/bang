@@ -27,6 +27,16 @@ public class MainActivity extends Activity {
 
     private static AssetManager assetManager;
 
+    private Player p;
+
+    public void setP(Player p) {
+        this.p = p;
+    }
+
+    public Player getP() {
+        return p;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -99,24 +109,28 @@ public class MainActivity extends Activity {
         // Get the message from the box
         EditText et = (EditText) findViewById(R.id.MessageText);
         String msg = et.getText().toString();
-        //
-        // Comm.sendMessage(msg);
-        //
-        // DE2Message.getInstance();
-        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-        // ;
-        // DE2Message.setReady(false);
 
-        Player p = new Player();
+        // Comm.sendMessage(msg);
+
+        setP(new Player());
+        Player p = getP();
         p.setPid(0);
         Log.i("colin", "crash here");
-        p.initOpponent(1, 1, "ASDF");
+        for (int i = 1; i < 8; i++) {
+            p.initOpponent(i, 1, "ASDF");
+        }
         p.startTurn();
         p.receiveCard(Integer.valueOf(msg));
         p.receiveCard(2);
         p.receiveCard(3);
         p.playCard(Integer.valueOf(msg));
-        // p.endTurn();
+        p.endTurn();
+    }
+
+    public void sendMessage2(View view) {
+        setP(new Player());
+        Player p = getP();
+        p.setPid(1);
     }
 
     // Called when the user closes a socket
@@ -218,7 +232,7 @@ public class MainActivity extends Activity {
                         final String s = Comm.bth(buf);
                         Log.i("colin", "TCPReadTimerTask run() got: " + s);
 
-                        Comm.receiveInterpretDE2(buf);
+                        Comm.receiveInterpretDE2(buf, getP());
 
                         // As explained in the tutorials, the GUI can not be
                         // updated in an asynchronous task. So, update the GUI

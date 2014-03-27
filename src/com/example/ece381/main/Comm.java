@@ -21,6 +21,9 @@ public class Comm {
 
     // Called when the user wants to send a message
     public static void sendMessage(String message) {
+        // Send Message Structure:
+        // [0] length not including [0]
+        // [1] message type
         while (!DE2Message.isReadyToSend())
             ;
         DE2Message.setReadyToSend(false);
@@ -175,16 +178,16 @@ public class Comm {
         return;
     }
 
-    public static void tellDE2UserPickedCard(int pid, Card c) {
-        String msg = "18" + iths(pid) + iths(c.cid);
+    public static void tellDE2UserPickedCard(int pid, int cid) {
+        String msg = "18" + iths(pid) + iths(cid);
 
         sendMessage(msg);
 
         return;
     }
 
-    public static void tellDE2UserTransferCard(int pid, Card c) {
-        String msg = "19" + iths(pid) + iths(c.cid);
+    public static void tellDE2UserTransferCard(int pid, int cid) {
+        String msg = "19" + iths(pid) + iths(cid);
 
         sendMessage(msg);
 
@@ -199,7 +202,7 @@ public class Comm {
         return;
     }
 
-    public static void receiveInterpretDE2(byte buf[]) {
+    public static void receiveInterpretDE2(byte buf[], Player p) {
         // Message structure for Acknowledgment
         // [0] 0x0a
         if (buf[0] == 0x0a) {
@@ -226,26 +229,75 @@ public class Comm {
         case 0x01: {
             // tell_user_pid_role
             // [3] role
-            ArrayList<Integer> pinfo = new ArrayList<Integer>();
-            pinfo.add((int) buf[l++]);
-            r_pinfo.add(pinfo);
+            int int_role = (int) buf[l++];
+            String role = "NONE";
+            switch (int_role) {
+            case 0x00: {
+                role = "NONE";
+                break;
+            }
+            case 0x01: {
+                role = "SHERIFF";
+                break;
+            }
+            case 0x02: {
+                role = "DEPUTY";
+                break;
+            }
+            case 0x03: {
+                role = "OUTLAW";
+                break;
+            }
+            case 0x04: {
+                role = "RENEGADE";
+                break;
+            }
+            }
+            p.setPid(fromId);
+            p.setRole(role);
             break;
         }
         case 0x02: {
             // tell_user_all_opponent_range_role
             // [3] pid
-            // [4] distance
+            // [4] range
             // [5] role
             // ...
             // [21] pid
-            // [22] distance
+            // [22] range
             // [23] role
             for (int i = 0; i < 7; i++) {
-                ArrayList<Integer> pinfo = new ArrayList<Integer>();
-                pinfo.add((int) buf[3 * i + l]);
-                pinfo.add((int) buf[3 * i + l + 1]);
-                pinfo.add((int) buf[3 * i + l + 2]);
-                r_pinfo.add(pinfo);
+                int pid = (int) buf[3 * i + l + 1];
+                int range = (int) buf[3 * i + l + 1];
+                int int_role = (int) buf[3 * i + l + 2];
+                if (p.getPid() == pid) {
+                    break;
+                }
+                String role = "NONE";
+                switch (int_role) {
+                case 0x01: {
+                    role = "SHERIFF";
+                    break;
+                }
+                case 0x02: {
+                    role = "DEPUTY";
+                    break;
+                }
+                case 0x03: {
+                    role = "OUTLAW";
+                    break;
+                }
+                case 0x04: {
+                    role = "RENEGADE";
+                    break;
+                }
+                default: {
+                    role = "NONE";
+                    break;
+                }
+                }
+                p.setOpponentRole(pid, role);
+                p.setOpponentRange(pid, range);
             }
             break;
         }
@@ -262,63 +314,71 @@ public class Comm {
             // ...
             int i;
             for (i = 0; i < 7; i++) {
+                int pid = (int) buf[3 * i + l];
+                int lives = (int) buf[3 * i + l + 1];
+                int num_blues = (int) buf[3 * i + l + 2];
+
+                if (p.getPid() == pid) {
+                    break;
+                }
+
+                p.setOpponentLives(pid, lives);
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();
-                pinfo.add((int) buf[3 * i + l]);
-                pinfo.add((int) buf[3 * i + l + 1]);
-                pinfo.add((int) buf[3 * i + l + 2]);
+                pinfo.add(num_blues);
                 r_pinfo.add(pinfo);
             }
             int k = 3 * i + l;
             for (i = 0; i < 7; i++) {
+                if (p.getPid() == i) {
+                    break;
+                }
+
                 ArrayList<Integer> bcard = new ArrayList<Integer>();
-                for (int j = 0; j < r_pinfo.get(i).get(2); j++) {
+                for (int j = 0; j < r_pinfo.get(i).get(0); j++) {
                     bcard.add((int) buf[k++]);
                 }
-                r_cinfo.add(bcard);
+                p.setOpponentBlueCards(i, bcard);
             }
             break;
         }
         case 0x04: {
             // tell_user_new_card
             // [3] cid
-            // Player p = retrievePlayer(pid);
-            // p.receiveCard(cid);
+            int cid = (int) buf[l++];
+            p.receiveCard(cid);
             break;
         }
         case 0x05: {
             // tell_user_lost_card
             // [3] cid
-            // int cid = (int) buf[l++];
-            // Player p = retrievePlayer(pid);
-            // p.discardCard(cid);
+            int cid = (int) buf[l++];
+            p.discardCard(cid);
             break;
         }
         case 0x06:
             // tell_user_their_turn
-            // Player p = retrievePlayer(pid);
-            // p.startTurn();
+            p.startTurn();
             break;
         case 0x07: {
             // tell_user_miss_or_lose_life
-            // Player p = retrievePlayer(pid);
-            // p.onZap();
+            Log.i("colin", "Try to onZap");
+            p.onZap();
             break;
         }
         case 0x08: {
             // tell_user_zap_or_lose_life
             // [3] 0x01 for Aliens, 0x02 for Duel
-            // Player p = retrievePlayer(pid);
-            // if (buf[l++] == 0x01) {
-            // p.onAliens();
-            // } else {
-            // p.onDuel();
-            // }
+            int choice = (int) buf[l++];
+            if (choice == 0x01) {
+                p.onAliens();
+            } else {
+                p.onDuel();
+            }
             break;
         }
         case 0x09: {
             // tell_user_get_life
-            // Player p = retrievePlayer(pid);
-            // p.onSaloon();
+            p.onSaloon();
             break;
         }
         case 0x0a:
@@ -328,11 +388,8 @@ public class Comm {
         case 0x0b: {
             // tell_user_blue_player_infront
             // [3] cid
-            // int cid = (int) buf[l++];
-            // Card c = CardController.getValidCard(cid);
-            // Player p = retrievePlayer(pid);
-            // p.receiveBlueCard(cid);
-            // break;
+            int cid = (int) buf[l++];
+            p.receiveBlueCard(cid);
             break;
         }
         case 0x0c: {
@@ -340,8 +397,13 @@ public class Comm {
             // [3] ncards
             // [4] array for choice of cards, length depends on ncards
             // ..
-            // Player p = retrievePlayer(pid);
-            // p.onGeneralStore();
+            int ncards = (int) buf[l++];
+            ArrayList<Integer> card_choices = new ArrayList<Integer>();
+            for (int i = 0; i < ncards; i++) {
+                int cid = (int) buf[l++];
+                card_choices.add(cid);
+            }
+            p.onGeneralStore(card_choices);
         }
         case 0x0d: {
             // tell_user_panic
@@ -349,8 +411,14 @@ public class Comm {
             // [4] nbcards
             // [5] array of blue cards
             // ...
-            // Player p = retrievePlayer(pid);
-            // p.onPanic();
+            toId = (int) buf[l++];
+            int nbcards = (int) buf[l++];
+            ArrayList<Integer> card_choices = new ArrayList<Integer>();
+            for (int i = 0; i < nbcards; i++) {
+                int cid = (int) buf[l++];
+                card_choices.add(cid);
+            }
+            r_cinfo.add(card_choices);
         }
         case 0x0e: {
             // tell_user_cat_balou
@@ -358,7 +426,14 @@ public class Comm {
             // [4] nbcards
             // [5] array of blue cards
             // ...
-            // p.onCatBalou();
+            toId = (int) buf[l++];
+            int nbcards = (int) buf[l++];
+            ArrayList<Integer> card_choices = new ArrayList<Integer>();
+            for (int i = 0; i < nbcards; i++) {
+                int cid = (int) buf[l++];
+                card_choices.add(cid);
+            }
+            r_cinfo.add(card_choices);
         }
         default:
             break;

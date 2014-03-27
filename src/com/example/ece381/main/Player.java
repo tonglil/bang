@@ -113,6 +113,13 @@ public class Player {
         }
     }
 
+    public void setOpponentRole(int pid, String role) {
+        Opponent o = opponents.get(Integer.valueOf(pid));
+        if (o != null) {
+            o.setRole(role);
+        }
+    }
+
     public void setOpponentRange(int pid, int range) {
         Opponent o = opponents.get(Integer.valueOf(pid));
         if (o != null) {
@@ -336,8 +343,7 @@ public class Player {
                 }
             }
             Log.i("colin", "sending tellDE2CardsInHand");
-            // Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-            // Wait for OK
+            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
             Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
         } else {
             // TODO Tony: tell player it isn't his turn
@@ -399,7 +405,7 @@ public class Player {
         Comm.tellDE2UserUpdateLives(this.pid, lives);
     }
 
-    public void onGeneralStore() {
+    public void onGeneralStore(ArrayList<Integer> card_choices) {
 
     }
 
@@ -491,9 +497,14 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "PANIC");
-        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-        // ;
-        // DE2Message.setReady(false);
+        while (!DE2Message.isReadyToContinue() && DE2Message.getType() != 0x0d)
+            ;
+        DE2Message.setReadyToContinue(false);
+        // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
+        // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
+        // Put cid = 0 to indicate random card from hand
+        int cid = 0;
+        Comm.tellDE2UserPickedCard(pid, cid);
         return;
     }
 
@@ -502,9 +513,14 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
         Comm.tellDE2UserUsedOther(this.pid, pid, "CAT_BALOU");
-        // while (!DE2Message.isReady() && DE2Message.getType() != 0x0a)
-        // ;
-        // DE2Message.setReady(false);
+        while (!DE2Message.isReadyToContinue() && DE2Message.getType() != 0x0e)
+            ;
+        DE2Message.setReadyToContinue(false);
+        // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
+        // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
+        // Put cid = 0 to indicate random card from hand
+        int cid = 0;
+        Comm.tellDE2UserPickedCard(pid, cid);
         return;
     }
 
