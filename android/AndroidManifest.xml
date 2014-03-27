@@ -25,12 +25,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.zap.SetupActivity"
-            android:label="@string/title_activity_setup"
-            android:parentActivityName="com.zap.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.zap.MainActivity" />
+            android:name="com.zap.PlayerActivity"
+            android:label="@string/title_activity_player" >
+        </activity>
+        <activity
+            android:name="com.zap.GameActivity"
+            android:label="@string/title_activity_game" >
         </activity>
     </application>
 

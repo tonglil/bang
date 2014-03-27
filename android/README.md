@@ -12,3 +12,7 @@ Run all non-Android tests from the 'com.zap.main' package
     * Classpath
     * Android Library
     * Remove
+
+**Note:** You can also run tests from the command line using Maven:
+* `mvn clean install`
+* `mvn test`

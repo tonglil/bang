@@ -1,6 +1,6 @@
 # Other
 *.log
-/libs
+/target
 
 ### Eclipse Standard ###
 
