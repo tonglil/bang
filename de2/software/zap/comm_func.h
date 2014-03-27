@@ -16,6 +16,8 @@ extern int pid_table[7];
 
 void tell_user_pid_role(int pid, Player* p);
 
+// Don't worry about distinction between player vs opponent
+// Send all active players' range/roles and blue/lives
 void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi);
 
 void tell_user_all_opponent_blue_lives(int pid, PlayersInfo* pi);
