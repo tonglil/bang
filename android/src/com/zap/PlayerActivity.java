@@ -17,6 +17,16 @@ public class PlayerActivity extends FragmentActivity {
     ViewPager viewPager;
     TabsAdapter tabsAdapter;
 
+    String tabStats;
+
+    public void setTabStats(String data) {
+        tabStats = data;
+    }
+
+    public String getTabStats() {
+        return tabStats;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +51,7 @@ public class PlayerActivity extends FragmentActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        //super.onSaveInstanceState(outState);
         outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
     }
 
