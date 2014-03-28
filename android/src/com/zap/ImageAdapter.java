@@ -44,7 +44,7 @@ public class ImageAdapter extends BaseAdapter {
 
     // references to our images
     private Integer[] mThumbIds = {
-            R.drawable.poker_king_of_clubs, R.drawable.poker_king_of_diamonds,
-            R.drawable.poker_king_of_hearts, R.drawable.poker_king_of_spades
+            R.drawable.bang_1, R.drawable.beer_1,
+            R.drawable.missed_1, R.drawable.panic_1
     };
 }
