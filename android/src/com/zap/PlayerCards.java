@@ -11,7 +11,7 @@ public class PlayerCards extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View player = inflater.inflate(R.layout.fragment_player_cards, container, false);
-        ((TextView) player.findViewById(R.id.textView2)).setText("Your Cards");
+        //((TextView) player.findViewById(R.id.textView2)).setText("Your Cards");
         return player;
     }
 }

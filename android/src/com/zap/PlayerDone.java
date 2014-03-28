@@ -11,7 +11,7 @@ public class PlayerDone extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View player1 = inflater.inflate(R.layout.fragment_player_done, container, false);
-        ((TextView) player1.findViewById(R.id.textView1)).setText("Done?");
+        //((TextView) player1.findViewById(R.id.textView1)).setText("Done?");
         return player1;
     }
 }
