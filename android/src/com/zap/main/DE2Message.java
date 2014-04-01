@@ -1,0 +1,111 @@
+package com.zap.main;
+
+import java.util.ArrayList;
+
+public class DE2Message {
+    private static boolean readyToContinue;
+    private static boolean readyToSend = true;
+    private static int type;
+    private static int fromId;
+    private static int toId;
+    private static int count;
+    private static ArrayList<ArrayList<Integer>> r_pinfo;
+    private static ArrayList<ArrayList<Integer>> r_cinfo;
+
+    private static DE2Message instance;
+
+    private DE2Message(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {
+        DE2Message.readyToContinue = ready;
+        DE2Message.type = type;
+        DE2Message.fromId = fromId;
+        DE2Message.toId = toId;
+        DE2Message.count = count;
+        DE2Message.r_pinfo = r_pinfo;
+        DE2Message.r_cinfo = r_cinfo;
+    }
+
+    public static synchronized DE2Message getInstance() {
+        if (instance == null) {
+            instance = new DE2Message(false, 0, 0, 0, 0, new ArrayList<ArrayList<Integer>>(), new ArrayList<ArrayList<Integer>>());
+        }
+        return instance;
+    }
+
+    public static void setMessage(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {
+        DE2Message.readyToContinue = ready;
+        DE2Message.type = type;
+        DE2Message.fromId = fromId;
+        DE2Message.toId = toId;
+        DE2Message.count = count;
+        DE2Message.r_pinfo = r_pinfo;
+        DE2Message.r_cinfo = r_cinfo;
+    }
+
+    public static boolean isReadyToContinue() {
+        return readyToContinue;
+    }
+
+    public static void setReadyToContinue(boolean ready) {
+        DE2Message.readyToContinue = ready;
+    }
+
+    public static boolean isReadyToSend() {
+        return readyToSend;
+    }
+
+    public static void setReadyToSend(boolean readyToSend) {
+        DE2Message.readyToSend = readyToSend;
+    }
+
+    public static int getType() {
+        return type;
+    }
+
+    public static void setType(int type) {
+        DE2Message.type = type;
+    }
+
+    public static int getFromId() {
+        return fromId;
+    }
+
+    public static void setFromId(int fromId) {
+        DE2Message.fromId = fromId;
+    }
+
+    public static int getToId() {
+        return toId;
+    }
+
+    public static void setToId(int toId) {
+        DE2Message.toId = toId;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        DE2Message.count = count;
+    }
+
+    public static ArrayList<ArrayList<Integer>> getR_pinfo() {
+        return r_pinfo;
+    }
+
+    public static void setR_pinfo(ArrayList<ArrayList<Integer>> r_pinfo) {
+        DE2Message.r_pinfo = r_pinfo;
+    }
+
+    public static ArrayList<ArrayList<Integer>> getR_cinfo() {
+        return r_cinfo;
+    }
+
+    public static void setR_cinfo(ArrayList<ArrayList<Integer>> r_cinfo) {
+        DE2Message.r_cinfo = r_cinfo;
+    }
+
+    public static void setInstance(DE2Message instance) {
+        DE2Message.instance = instance;
+    }
+}

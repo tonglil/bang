@@ -1,10 +1,15 @@
 package com.zap.main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
+
+import com.zap.MainActivity;
 
 public class CardController {
     private static HashMap<Integer, Card> validCards = null;
@@ -19,11 +24,19 @@ public class CardController {
         if (validCards == null) {
             initValidCards(CARD_FILE);
         }
+
+        for (Entry<Integer, Card> e : validCards.entrySet()) {
+        }
     }
 
     public void receiveCard(int cid) {
         Card c = validCards.get(Integer.valueOf(cid));
         handCards.add(c);
+    }
+
+    public void receiveBlueCard(int cid) {
+        Card c = validCards.get(Integer.valueOf(cid));
+        blueCards.add(c);
     }
 
     public void discardCard(int cid) {
@@ -121,11 +134,28 @@ public class CardController {
     }
 
     public static Card getValidCard(int cid) {
-        return validCards.get(new Integer(cid));
+        return validCards.get(Integer.valueOf(cid));
     }
 
     private void initValidCards(String filename) {
         validCards = new HashMap<Integer, Card>();
+
+        BufferedReader br = MainActivity.readCardTxt();
+        try {
+            String s;
+            while ((s = br.readLine()) != null) {
+                if (s.charAt(0) != '-') {
+                    Card card = readCard(s);
+                    validCards.put(Integer.valueOf(card.cid), card);
+                }
+            }
+
+            br.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         File file = new File(filename);
         try {
             Scanner input = new Scanner(file);
@@ -140,6 +170,7 @@ public class CardController {
         } catch (FileNotFoundException fnfe) {
             System.err.println(CARD_FILE + " not found");
         }
+
     }
 
     private Card readCard(String s) {
@@ -192,8 +223,6 @@ public class CardController {
             onePlayerReachable = false;
         }
         int onePlayerFixed = Integer.parseInt(String.valueOf(l[i].charAt(11)));
-        return new Card(id, name, border, number, suit, zap, missed, life,
-                forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable,
-                onePlayerFixed);
+        return new Card(id, name, border, number, suit, zap, missed, life, forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable, onePlayerFixed);
     }
 }
