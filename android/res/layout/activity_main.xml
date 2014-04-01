@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="sendMessage2"
-            android:text="Send Messag2" />
+            android:text="Send Message 2" />
     </LinearLayout>
 
     <Button
