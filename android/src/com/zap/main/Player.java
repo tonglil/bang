@@ -623,6 +623,12 @@ public class Player {
         Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
     }
 
+    public void onReceiveRoleAndPid(int fromId, String role) {
+        setPid(fromId);
+        setRole(role);
+        Comm.tellDE2OK(pid);
+    }
+
     // /////////////////////////////////////////////////////
 
     public void zapOpponent(int pid) {

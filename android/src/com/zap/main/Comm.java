@@ -198,7 +198,32 @@ public class Comm {
     public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
 
-        sendMessage(msg);
+        // Send Message Structure:
+        // [0] length not including [0]
+        // [1] message type
+
+        byte[] bmsg = hstba(msg);
+
+        // Create an array of bytes. First byte will be the
+        // message length, and the next ones will be the message
+        byte buf[] = new byte[bmsg.length + 1];
+
+        buf[0] = (byte) bmsg.length;
+        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
+
+        // Now send through the output stream of the socket
+
+        OutputStream out;
+        try {
+            out = app.sock.getOutputStream();
+            try {
+                out.write(buf, 0, bmsg.length + 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return;
     }
@@ -262,8 +287,7 @@ public class Comm {
                 break;
             }
             }
-            p.setPid(fromId);
-            p.setRole(role);
+            p.onReceiveRoleAndPid(fromId, role);
             break;
         }
         case 0x02: {
@@ -308,6 +332,7 @@ public class Comm {
                 p.setOpponentRole(pid, role);
                 p.setOpponentRange(pid, range);
             }
+            Comm.tellDE2OK(fromId);
             break;
         }
         case 0x03: {
@@ -348,6 +373,7 @@ public class Comm {
                 }
                 p.setOpponentBlueCards(i, bcard);
             }
+            Comm.tellDE2OK(fromId);
             break;
         }
         case 0x04: {
