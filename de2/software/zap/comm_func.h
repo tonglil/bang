@@ -15,7 +15,6 @@ extern Comm_data* cd;
 extern int pid_table[7];
 extern int pid_connected[7];
 extern int connected_count;
-extern int send_last_msg;
 
 void tell_user_pid_role(int pid, Player p);
 

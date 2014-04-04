@@ -1,5 +1,7 @@
 #include "comm.h"
 
+int send_last_msg = 1;
+
 alt_up_rs232_dev* init_clear_uart(Comm_data* cd) {
     printf("UART Initialization\n");
     alt_up_rs232_dev* uart = alt_up_rs232_open_dev("/dev/rs232");
