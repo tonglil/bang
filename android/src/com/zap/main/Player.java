@@ -376,27 +376,8 @@ public class Player {
         // TODO: user has choice of playing miss or taking a life (player
         // getting zapped)
         // TODO: let him use a beer if this is a lethal hit
-        int missed_cid = 0;
-        for (Card c : getHandCards()) {
-            if (c.missed) {
-                missed_cid = c.cid;
-                break;
-            }
-        }
-
-        CharSequence choices[];
-        if (missed_cid != 0) {
-            choices = new CharSequence[] { "Take hit", "Use miss" };
-        } else {
-            choices = new CharSequence[] { "Take hit" };
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
-        builder.setTitle("Select an option");
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Boolean userplayedmiss = false;
-
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
                 int missed_cid = 0;
                 for (Card c : getHandCards()) {
                     if (c.missed) {
@@ -404,23 +385,45 @@ public class Player {
                         break;
                     }
                 }
-
-                if (which == 0) {
-                    userplayedmiss = false;
+                CharSequence choices[];
+                if (missed_cid != 0) {
+                    choices = new CharSequence[] { "Take hit", "Use miss" };
                 } else {
-                    userplayedmiss = true;
+                    choices = new CharSequence[] { "Take hit" };
                 }
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
+                builder.setTitle("Select an option");
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Boolean userplayedmiss = false;
 
-                if (userplayedmiss) {
-                    discardCard(missed_cid);
-                    Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-                } else {
-                    setLives(lives - 1);
-                    Comm.tellDE2UserUpdateLives(pid, lives);
-                }
+                        int missed_cid = 0;
+                        for (Card c : getHandCards()) {
+                            if (c.missed) {
+                                missed_cid = c.cid;
+                                break;
+                            }
+                        }
+
+                        if (which == 0) {
+                            userplayedmiss = false;
+                        } else {
+                            userplayedmiss = true;
+                        }
+
+                        if (userplayedmiss) {
+                            discardCard(missed_cid);
+                            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                        } else {
+                            setLives(lives - 1);
+                            Comm.tellDE2UserUpdateLives(pid, lives);
+                        }
+                    }
+                });
+                builder.show();
             }
         });
-        builder.show();
     }
 
     public void onAliens() {
