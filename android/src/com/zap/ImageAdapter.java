@@ -7,14 +7,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
+    private Context context;
+    private Integer[] cards;
 
-    public ImageAdapter(Context c) {
-        mContext = c;
+    public ImageAdapter(Context c, Integer[] cards) {
+        this.context = c;
+        this.cards = cards;
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return cards.length;
     }
 
     public Object getItem(int position) {
@@ -22,7 +24,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        return 0;
+        return cards[position];
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -30,7 +32,7 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(context);
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(4, 4, 4, 4);
@@ -38,13 +40,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(mThumbIds[position]);
+        imageView.setImageResource(cards[position]);
         return imageView;
     }
-
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.bang_1, R.drawable.beer_1,
-            R.drawable.missed_1, R.drawable.panic_1
-    };
 }

@@ -147,7 +147,7 @@ public class CardController {
         int id = Integer.parseInt(l[0]);
         String name = l[1];
         int i;
-        for (i = 2; i < l.length - 1; i++) {
+        for (i = 2; i < l.length - 2; i++) {
             name += " " + l[i];
         }
         char border = l[i].charAt(0);
@@ -192,8 +192,9 @@ public class CardController {
             onePlayerReachable = false;
         }
         int onePlayerFixed = Integer.parseInt(String.valueOf(l[i].charAt(11)));
+        String image = l[i];
         return new Card(id, name, border, number, suit, zap, missed, life,
                 forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable,
-                onePlayerFixed);
+                onePlayerFixed, image);
     }
 }
