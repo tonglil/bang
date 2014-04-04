@@ -192,6 +192,7 @@ public class CardController {
             onePlayerReachable = false;
         }
         int onePlayerFixed = Integer.parseInt(String.valueOf(l[i].charAt(11)));
+        i++;
         String image = l[i];
         return new Card(id, name, border, number, suit, zap, missed, life,
                 forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable,

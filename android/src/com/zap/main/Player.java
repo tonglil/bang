@@ -313,8 +313,10 @@ public class Player {
 				} else if (c.life == 1) {
 					if (c.allPlayers) { //saloon
 						goToSaloon();
+						cc.discardCard(cid);
 					} else if(lives < maxLives) { //beer
 						drinkBeer();
+                        cc.discardCard(cid);
 					} else {
 						//TODO Tony: tell user he has full lives, so he can't play beer
 						test_call = "cant beer";

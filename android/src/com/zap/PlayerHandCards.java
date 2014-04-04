@@ -2,10 +2,7 @@ package com.zap;
 
 import java.util.ArrayList;
 
-import com.zap.main.Card;
-
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,28 +19,38 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.zap.main.Card;
+import com.zap.main.CardController;
+import com.zap.main.Player;
+
 public class PlayerHandCards extends Fragment {
-    EditText cardInput;
-    Button cardButton;
+    
+    private Player player;
+
+    private EditText cardInput;
+    private Button cardButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View playerHandCards = inflater.inflate(R.layout.fragment_player_hand_cards, container, false);
-
-        cardInput = (EditText) playerHandCards.findViewById(R.id.cardInput);
-        cardButton = (Button) playerHandCards.findViewById(R.id.cardButton);
-        cardButton.setOnClickListener(cardButtonListener);
-
-        // Need to pass in a list of the player's cards
-        // ArrayList<Card> cards = Player.getHandCards
-        // Map cards to an integer array of cards
-        Integer[] cards = { R.drawable.bang_1, R.drawable.bang_2, R.drawable.bang_3, R.drawable.beer_1, R.drawable.missed_1, R.drawable.panic_1, R.drawable.stagecoach_1 };
+        
+        PlayerActivity parentActivity = (PlayerActivity) getActivity();
+        player = parentActivity.getPlayer();
+        final ArrayList<Card> cards = player.getHandCards();
+        ArrayList<Integer> images = new ArrayList<Integer>();
+        
+        Log.v("TONY", "# of hand cards: " + cards.size());
+        for (Card card : cards) {
+            Log.v("TONY", "A hand card exists: " + card.name + " image: " + card.image);
+            images.add(getResources().getIdentifier(card.image , "drawable", parentActivity.getPackageName()));
+        }
+   
         GridView cardGrid = (GridView) playerHandCards.findViewById(R.id.handCardGrid);
-        cardGrid.setAdapter(new ImageAdapter(getActivity(), cards));
-
+        cardGrid.setAdapter(new ArrayListImageAdapter(getActivity(), images));
         cardGrid.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getActivity(), "What we would actually do is zoom on card position: " + position + " id: " + id + " for actions and targets", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "What we would actually do is zoom on card position: " + position + " card: " + cards.get(position).name + " for actions and targets", Toast.LENGTH_SHORT).show();
+                Log.v("TONY", "The hand card choosen is: " + cards.get(position).name);
 
                 // TODO: determine if that card needs to be able to select (other) users => then show dialog
 
@@ -78,7 +85,11 @@ public class PlayerHandCards extends Fragment {
                 builderSingle.show();
             }
         });
-
+        
+        cardInput = (EditText) playerHandCards.findViewById(R.id.cardInput);
+        cardButton = (Button) playerHandCards.findViewById(R.id.cardButton);
+        cardButton.setOnClickListener(cardButtonListener);
+        
         return playerHandCards;
     }
 
