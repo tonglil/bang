@@ -329,8 +329,8 @@ public class Comm {
                     break;
                 }
                 }
-                p.setOpponentRole(pid, role);
-                p.setOpponentRange(pid, range);
+                // p.setOpponentRole(pid, role);
+                // p.setOpponentRange(pid, range);
             }
             Comm.tellDE2OK(fromId);
             break;
@@ -356,7 +356,7 @@ public class Comm {
                     break;
                 }
 
-                p.setOpponentLives(pid, lives);
+                // p.setOpponentLives(pid, lives);
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();
                 pinfo.add(num_blues);
                 r_pinfo.add(pinfo);
@@ -371,7 +371,7 @@ public class Comm {
                 for (int j = 0; j < r_pinfo.get(i).get(0); j++) {
                     bcard.add((int) buf[k++]);
                 }
-                p.setOpponentBlueCards(i, bcard);
+                // p.setOpponentBlueCards(i, bcard);
             }
             Comm.tellDE2OK(fromId);
             break;
