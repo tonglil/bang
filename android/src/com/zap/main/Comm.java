@@ -133,7 +133,7 @@ public class Comm {
         return;
     }
 
-    public static void tellDE2UserUsedOther(int pid, int pid1, String type) {
+    public static void tellDE2UserUsedOther(int pid, int pid1, String type, int cid) {
         int itype = 0;
         if (type.equals("ZAP")) {
             itype = 0x01;
@@ -147,7 +147,7 @@ public class Comm {
             itype = 0x05;
         }
 
-        String msg = "14" + iths(pid) + iths(pid1) + iths(itype);
+        String msg = "14" + iths(pid) + iths(pid1) + iths(itype) + iths(cid);
 
         sendMessage(msg);
 
@@ -345,14 +345,14 @@ public class Comm {
             // tell_user_new_card
             // [3] cid
             int cid = (int) buf[l++];
-            p.receiveCard(cid);
+            p.onReceiveCard(cid);
             break;
         }
         case 0x05: {
             // tell_user_lost_card
             // [3] cid
             int cid = (int) buf[l++];
-            p.discardCard(cid);
+            p.onLoseCard(cid);
             break;
         }
         case 0x06:
@@ -381,9 +381,9 @@ public class Comm {
             p.onSaloon();
             break;
         }
-        case 0x0a:
+        case 0x2a:
             // tell_user_ok
-            // this is actually taken care of at the top of the code;
+            DE2Message.setReadyToContinue(true);
             break;
         case 0x0b: {
             // tell_user_blue_player_infront
@@ -409,31 +409,57 @@ public class Comm {
             // tell_user_panic
             // [3] toId
             // [4] nbcards
-            // [5] array of blue cards
+            // [5] ncards
+            // [6] array of blue cards
+            // ...
+            // [6 + nbcards] array of cards
             // ...
             toId = (int) buf[l++];
             int nbcards = (int) buf[l++];
+            int ncards = (int) buf[l++];
             ArrayList<Integer> card_choices = new ArrayList<Integer>();
             for (int i = 0; i < nbcards; i++) {
                 int cid = (int) buf[l++];
                 card_choices.add(cid);
             }
+            for (int i = 0; i < ncards; i++) {
+                int cid = (int) buf[l++];
+                card_choices.add(cid);
+            }
             r_cinfo.add(card_choices);
+            p.onPanic();
         }
         case 0x0e: {
             // tell_user_cat_balou
             // [3] toId
             // [4] nbcards
-            // [5] array of blue cards
+            // [5] ncards
+            // [6] array of blue cards
+            // ...
+            // [6 + nbcards]
             // ...
             toId = (int) buf[l++];
             int nbcards = (int) buf[l++];
+            int ncards = (int) buf[l++];
             ArrayList<Integer> card_choices = new ArrayList<Integer>();
             for (int i = 0; i < nbcards; i++) {
                 int cid = (int) buf[l++];
                 card_choices.add(cid);
             }
+            for (int i = 0; i < ncards; i++) {
+                int cid = (int) buf[l++];
+                card_choices.add(cid);
+            }
             r_cinfo.add(card_choices);
+            p.onCatBalou();
+        }
+        case 0x0f: {
+            // tell_user_jail
+            // [3] toId
+            // [4] cid of jailcard
+            toId = (int) buf[l++];
+            int cid = (int) buf[l++];
+            p.onJail(cid);
         }
         default:
             break;

@@ -67,6 +67,8 @@ public class MainActivity extends Activity {
         assetManager = getAssets();
 
         addButtonListenerNewGame();
+
+        Player.activity = this;
     }
 
     @Override
@@ -118,21 +120,21 @@ public class MainActivity extends Activity {
 
         // Comm.sendMessage(msg);
 
-        Comm.tellDE2OK(0);
+        // Comm.tellDE2OK(0);
 
-        // setP(new Player());
-        // Player p = getP();
-        // p.setPid(0);
-        // Log.i("colin", "crash here");
-        // for (int i = 1; i < 8; i++) {
-        // p.initOpponent(i, 1, "ASDF");
-        // }
-        // p.startTurn();
-        // p.receiveCard(Integer.valueOf(msg));
-        // p.receiveCard(2);
-        // p.receiveCard(3);
-        // p.playCard(Integer.valueOf(msg));
-        // p.endTurn();
+        setP(new Player());
+        Player p = getP();
+        p.setPid(0);
+        Log.i("colin", "crash here");
+        for (int i = 1; i < 8; i++) {
+            p.initOpponent(i, 1, "ASDF");
+        }
+        p.startTurn();
+        p.receiveCard(Integer.valueOf(msg));
+        p.receiveCard(2);
+        p.receiveCard(3);
+        p.playCard(Integer.valueOf(msg));
+        p.endTurn();
     }
 
     public void sendMessage2(View view) {

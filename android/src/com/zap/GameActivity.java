@@ -23,6 +23,7 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         addButtonListenerNewGame();
+        Player.activity = this;
     }
 
     @Override

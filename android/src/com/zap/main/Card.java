@@ -54,4 +54,5 @@ public class Card {
     public boolean isRegular() {
         return border == 'R';
     }
+
 }
