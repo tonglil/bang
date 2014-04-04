@@ -35,9 +35,11 @@ int main() {
     initCards(cardCtrl);
     initPlayers(playerCtrl, 7);
 
+    printf("Waiting for players\n");
     while(connected_count < 2) {
     	receivedFromAndroid();
     }
+    printf("Got all players\n");
 
     int y;
     for (y = 0; y < connected_count; y++) {
@@ -70,16 +72,22 @@ int main() {
 	alt_timestamp_start();
 	srand(alt_timestamp());
 
-    tell_user_their_turn(0);
-    runField(field);
     Message message;
+
+    tell_user_their_turn(0);
+	message = receivedFromAndroid();
+	if (message.type == ACKNOWLEDGE);
+    runField(field);
     while (1){
-    	tell_user_all_opponent_range_role(playerCtrl->turn,getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+    	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
 		message = receivedFromAndroid();
 		if (message.type == ACKNOWLEDGE);
-    	tell_user_all_opponent_blue_lives(playerCtrl->turn,getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+    	tell_user_all_opponent_blue_lives(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
 		message = receivedFromAndroid();
 		if (message.type == ACKNOWLEDGE);
+
+		tell_user_ok(playerCtrl->turn);
+
         int listening = 1;
         while (listening) {
         	printf("Waiting for Command\n");
@@ -148,6 +156,8 @@ int main() {
         printf("exited while loops\n");
         endTurn(playerCtrl);
     	tell_user_their_turn(playerCtrl->turn);
+		message = receivedFromAndroid();
+		if (message.type == ACKNOWLEDGE);
         alt_up_char_buffer_clear(charBuffer);
         runField(field);
     }

@@ -7,8 +7,6 @@
 #include <string.h>
 #include <unistd.h>
 
-extern int send_last_msg;
-
 typedef struct Comm_data {
     unsigned char data;
     unsigned char parity;

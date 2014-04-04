@@ -1,7 +1,5 @@
 #include "comm.h"
 
-int send_last_msg = 1;
-
 alt_up_rs232_dev* init_clear_uart(Comm_data* cd) {
     printf("UART Initialization\n");
     alt_up_rs232_dev* uart = alt_up_rs232_open_dev("/dev/rs232");
@@ -34,7 +32,7 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     printf("Received %d characters.\n", cd->num_to_receive);
 
     int i;
-    for (i = 1; i < cd->num_to_receive; i++) {
+    for (i = 0; i < cd->num_to_receive; i++) {
         while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
         alt_up_rs232_read_data(uart, &(cd->data), &(cd->parity));
 
@@ -47,14 +45,10 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     printf("Message Complete\n");
 
     // Acknowledge message received
-    if (cd->r_message[0] == 0x2e) {
-		alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
-		alt_up_rs232_write_data(uart, 1);
-		alt_up_rs232_write_data(uart, 0x2a);
-		usleep(1000000);
-    } else if (cd->r_message[0] == 0x2f) {
-    	// do nothing
-    }
+    alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
+    alt_up_rs232_write_data(uart, 1);
+    alt_up_rs232_write_data(uart, 0x0a);
+    usleep(2000000);
 }
 
 void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
@@ -64,24 +58,9 @@ void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
     // Write the message length
     alt_up_rs232_write_data(uart, cd->s_len);
-    // If final message
-    if (send_last_msg == 1) {
-    	alt_up_rs232_write_data(uart, 0x2f);
-    } else if (send_last_msg == 0){
-    	alt_up_rs232_write_data(uart, 0x2e);
-    }
     // Write the message
     int i;
     for (i = 0; i < cd->s_len; i++) {
         alt_up_rs232_write_data(uart, cd->s_message[i]);
-    }
-    // wait for ack
-    // messages to DE2 with type NOT 0x2a will be lost
-    if (send_last_msg == 0) {
-    	do {
-    		receive_data_from_middleman(uart, cd);
-    	} while (cd->r_message[1] != 0x2a);
-    } else {
-    	// I just sent my last msg, don't care about ack
     }
 }

@@ -516,11 +516,6 @@ Message receive_interpret_android(void) {
 			pid_connected[new_pid] = 1;
 			break;
 		}
-        case 0x2a:
-		{
-			// fast ack
-			break;
-		}
         default:
             break;
     }
