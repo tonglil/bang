@@ -92,3 +92,7 @@ de2/software/zap/zap.map
 de2/software/zap/zap.objdump
 de2/software/zap_bsp/
 de2/software/zap/.force_relink
+
+# Generated/Binaries in appcompat_v7
+appcompat_v7/bin/*
+appcompat_v7/gen/*

@@ -1,3 +1,7 @@
+# Other
+*.log
+/target
+
 ### Eclipse Standard ###
 
 *.pydevproject

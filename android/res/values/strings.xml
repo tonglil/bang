@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Zap!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_game">Create A New Game</string>
+    <string name="title_activity_player">Player X</string>
+    <string name="passedMessage"></string>
+
+    <!-- Player stats page -->
+    <string name="player_stats_health">Health</string>
+    <string name="player_stats_health_value">5</string>
+    <string name="player_stats_range">Range</string>
+    <string name="player_stats_range_value">3</string>
+    <string name="player_stats_hidden">Hidden</string>
+    <string name="player_stats_hidden_value">-1</string>
+    <string name="player_stats_special">Special</string>
+    <string name="player_stats_special_value">Jail / Dynamite</string>
+
+</resources>

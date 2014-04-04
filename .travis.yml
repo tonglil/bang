@@ -1,0 +1,59 @@
+# Append ` > /dev/null` to hide output
+
+language: java
+
+jdk:
+    # Instead of openjdk7 for stability
+    - oraclejdk7
+
+env:
+    matrix:
+    - ANDROID_SDKS=android-19,sysimg-19 ANDROID_TARGET=android-19   ANDROID_ABI=armeabi-v7a
+
+before_install:
+    # Install 32-bit drivers
+    - sudo apt-get update -qq
+    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch; fi > /dev/null
+
+    # Install base Android SDK
+    - wget http://dl.google.com/android/android-sdk_r22.6.1-linux.tgz
+    - tar xzf android-sdk_r22.6.1-linux.tgz
+    - export ANDROID_HOME=$PWD/android-sdk-linux
+    - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+
+    # Install android build tools
+    - wget https://dl-ssl.google.com/android/repository/build-tools_r19.0.1-linux.zip
+    - unzip build-tools_r19.0.1-linux.zip -d $ANDROID_HOME > /dev/null
+    - mkdir -p $ANDROID_HOME/build-tools/
+    - mv $ANDROID_HOME/android-4.4.2 $ANDROID_HOME/build-tools/19.0.1
+
+    # Install required Android components
+    - echo 'yes' | android update sdk --filter platform-tools --no-ui --force > /dev/null
+    - echo 'yes' | android update sdk --filter $ANDROID_SDKS --no-ui --force > /dev/null
+    - echo 'yes' | android update sdk --filter extra-android-support --no-ui --force > /dev/null
+    - echo 'yes' | android update sdk --filter extra-android-m2repository --no-ui --force > /dev/null
+    - echo 'yes' | android update sdk --filter extra-google-m2repository --no-ui --force > /dev/null
+
+    # Install the SDK deployer (if using Maven Nexus)
+    #- git clone https://github.com/mosabua/maven-android-sdk-deployer.git
+    #- cd maven-android-sdk-deployer/extras/compatibility-v4
+    #- mvn clean install
+    #- cd ../compatibility-v7-appcompat
+    #- mvn clean install
+    #- cd ../../..
+
+    # Create and start emulator
+    - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+    - emulator -avd test -no-skin -no-audio -no-window &
+
+before_script:
+    # Make sure the emulator has started before running tests
+    - ./emulator-wait.sh > /dev/null
+
+install:
+    - cd android
+    - pwd
+    - mvn clean install
+
+script:
+    - mvn test
