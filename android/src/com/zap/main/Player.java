@@ -182,6 +182,10 @@ public class Player {
     }
 
     public void startTurn() {
+        while (!DE2Message.isReadyToContinue())
+            ;
+        DE2Message.setReadyToContinue(false);
+
         turn = true;
         zappedThisTurn = false;
 
