@@ -202,6 +202,14 @@ public class Comm {
         return;
     }
 
+    public static void tellDE2Connected(int pid) {
+        String msg = "1b" + iths(pid);
+
+        sendMessage(msg);
+
+        return;
+    }
+
     public static void receiveInterpretDE2(byte buf[], Player p) {
         // Message structure for Acknowledgment
         // [0] 0x0a

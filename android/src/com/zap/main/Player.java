@@ -625,7 +625,7 @@ public class Player {
 
     // /////////////////////////////////////////////////////
 
-    private void zapOpponent(int pid) {
+    public void zapOpponent(int pid) {
         // TODO: tell de2 that this player wants to zap the opponent with
         // playerid=pid
         // This function shouldn't return until either the opponent uses missed,

@@ -109,6 +109,10 @@ public class MainActivity extends Activity {
         // and executes the code in it.
 
         new SocketConnect().execute((Void) null);
+
+        setP(new Player());
+
+        Comm.tellDE2Connected(0);
     }
 
     // Called when the user wants to send a message
@@ -120,27 +124,11 @@ public class MainActivity extends Activity {
 
         // Comm.sendMessage(msg);
 
-        // Comm.tellDE2OK(0);
-
-        setP(new Player());
-        Player p = getP();
-        p.setPid(0);
-        Log.i("colin", "crash here");
-        for (int i = 1; i < 8; i++) {
-            p.initOpponent(i, 1, "ASDF");
-        }
-        p.startTurn();
-        p.receiveCard(Integer.valueOf(msg));
-        p.receiveCard(2);
-        p.receiveCard(3);
-        p.playCard(Integer.valueOf(msg));
-        p.endTurn();
+        p.zapOpponent(1);
     }
 
     public void sendMessage2(View view) {
-        setP(new Player());
-        Player p = getP();
-        p.setPid(1);
+
     }
 
     // Called when the user closes a socket
