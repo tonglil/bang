@@ -18,7 +18,6 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -184,6 +183,11 @@ public class MainActivity extends Activity {
 
     }
 
+    public void setupGame() {
+        Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
+        startActivity(setupIntent);
+    }
+
     // Called when the user closes a socket
 
     public void closeSocket(View view) {
@@ -304,23 +308,23 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void addButtonListenerNewGame() {
-        newGame = (Button) findViewById(R.id.buttonNewGame);
-        newGame.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.v("MY_TAG", "init new view...");
-                setupGame(view);
-            }
-        });
-    }
-
-    public void setupGame(View view) {
-        Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
-        // Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
-        // String value = "A string value to pass.";
-        // setupIntent.putExtra("key", value);
-        startActivity(setupIntent);
-    }
+    // public void addButtonListenerNewGame() {
+    // newGame = (Button) findViewById(R.id.buttonNewGame);
+    // newGame.setOnClickListener(new OnClickListener() {
+    // @Override
+    // public void onClick(View view) {
+    // Log.v("MY_TAG", "init new view...");
+    // setupGame(view);
+    // }
+    // });
+    // }
+    //
+    // public void setupGame(View view) {
+    // Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
+    // // Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
+    // // String value = "A string value to pass.";
+    // // setupIntent.putExtra("key", value);
+    // startActivity(setupIntent);
+    // }
 
 }

@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="220" />
+            android:text="223" />
 
         <EditText
             android:id="@+id/ip4"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="193" />
+            android:text="46" />
     </LinearLayout>
 
     <LinearLayout
@@ -88,9 +88,9 @@
             android:text="Disconnect" />
 
         <Button
-            android:id="@+id/buttonNewGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="setupGame"
             android:text="New Game" />
     </LinearLayout>
 
