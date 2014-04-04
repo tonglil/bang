@@ -15,11 +15,12 @@ public class Card {
 	public final boolean allPlayers;
 	public final boolean onePlayerReachable;
 	public final int onePlayerFixed;
+	public final String image;
 	//space duel, indians, general store
 	//space jail, dynamite, barrel, scope, mustang
 	Card(int cid, String name, char border, char number, char suit, boolean zap, 
 			boolean missed, int life, boolean forceDiscard, int draw, boolean onePlayer, 
-			boolean allPlayers, boolean onePlayerReachable, int onePlayerFixed) {
+			boolean allPlayers, boolean onePlayerReachable, int onePlayerFixed, String image) {
 		this.cid = cid;
 		this.name = name;
 		this.border = border;
@@ -34,6 +35,7 @@ public class Card {
 		this.allPlayers = allPlayers;
 		this.onePlayerReachable = onePlayerReachable;
 		this.onePlayerFixed = onePlayerFixed;
+		this.image = image;
 	}	
 	
 	public boolean isGunCard() {
