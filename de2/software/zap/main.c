@@ -72,9 +72,12 @@ int main() {
 	alt_timestamp_start();
 	srand(alt_timestamp());
 
-    tell_user_their_turn(0);
-    runField(field);
     Message message;
+
+    tell_user_their_turn(0);
+	message = receivedFromAndroid();
+	if (message.type == ACKNOWLEDGE);
+    runField(field);
     while (1){
     	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
 		message = receivedFromAndroid();
@@ -153,6 +156,8 @@ int main() {
         printf("exited while loops\n");
         endTurn(playerCtrl);
     	tell_user_their_turn(playerCtrl->turn);
+		message = receivedFromAndroid();
+		if (message.type == ACKNOWLEDGE);
         alt_up_char_buffer_clear(charBuffer);
         runField(field);
     }
