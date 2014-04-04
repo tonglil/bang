@@ -39,6 +39,7 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
         role temp = playerCtrl->players[j].role;
         playerCtrl->players[j].role = playerCtrl->players[i].role;
         playerCtrl->players[i].role = temp;
+        playerCtrl->players[i].num_blue = 0;
     }
 
     for (i = 0; i < NUM_PLAYERS; i++) {
