@@ -24,55 +24,13 @@ public class Comm {
         // Send Message Structure:
         // [0] length not including [0]
         // [1] message type
-        String msg = message;
-        if (DE2Message.isSendLastMsg()) {
-            msg = "2f" + msg;
-            DE2Message.setReadyToSend(true);
-        } else {
-            msg = "2e" + msg;
-        }
-
         Log.i("colin", "Waiting for Ack");
         while (!DE2Message.isReadyToSend())
             ;
         DE2Message.setReadyToSend(false);
         Log.i("colin", "Got Ack");
 
-        byte[] bmsg = hstba(msg);
-
-        // Create an array of bytes. First byte will be the
-        // message length, and the next ones will be the message
-        byte buf[] = new byte[bmsg.length + 1];
-
-        buf[0] = (byte) bmsg.length;
-        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
-
-        // Now send through the output stream of the socket
-
-        OutputStream out;
-        try {
-            out = app.sock.getOutputStream();
-            try {
-                out.write(buf, 0, bmsg.length + 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Called when the user wants to send a message without waiting for ack
-    public static void sendMessageNoWait(String message) {
-        // Send Message Structure:
-        // [0] length not including [0]
-        // [1] message type
-        Log.i("colin", "Not waiting for Ack");
-
         String msg = message;
-        // Don't want an ack back
-        msg = "2f" + msg;
-
         byte[] bmsg = hstba(msg);
 
         // Create an array of bytes. First byte will be the
@@ -240,7 +198,32 @@ public class Comm {
     public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
 
-        sendMessageNoWait(msg);
+        // Send Message Structure:
+        // [0] length not including [0]
+        // [1] message type
+
+        byte[] bmsg = hstba(msg);
+
+        // Create an array of bytes. First byte will be the
+        // message length, and the next ones will be the message
+        byte buf[] = new byte[bmsg.length + 1];
+
+        buf[0] = (byte) bmsg.length;
+        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
+
+        // Now send through the output stream of the socket
+
+        OutputStream out;
+        try {
+            out = app.sock.getOutputStream();
+            try {
+                out.write(buf, 0, bmsg.length + 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return;
     }
@@ -256,7 +239,7 @@ public class Comm {
     public static void receiveInterpretDE2(byte buf[], Player p) {
         // Message structure for Acknowledgment
         // [0] 0x0a
-        if (buf[0] == 0x2a) {
+        if (buf[0] == 0x0a) {
             DE2Message.setReadyToSend(true);
             Log.i("colin", "DE2 acknowledged, Android can send more");
             return;
@@ -269,13 +252,6 @@ public class Comm {
 
         int l = 0;
         // int length = buf[l++];
-        int last_msg = buf[l++];
-        if (last_msg == 0x2f) {
-            DE2Message.setReceivedLastMsg(true);
-        } else if (last_msg == 0x2e) {
-            DE2Message.setReceivedLastMsg(false);
-        }
-
         int fromId = buf[l++];
         int m_len = buf[l++];
         int type = buf[l++];
@@ -527,11 +503,6 @@ public class Comm {
             DE2Message.setMessage(false, type, fromId, toId, count, r_pinfo, r_cinfo);
         } else {
             DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
-        }
-        if (DE2Message.isReceivedLastMsg()) {
-            // don't send ack
-        } else {
-            sendMessageNoWait("2a");
         }
         return;
     }

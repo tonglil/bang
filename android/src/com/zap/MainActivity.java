@@ -18,11 +18,11 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.zap.main.Card;
 import com.zap.main.Comm;
 import com.zap.main.Player;
 
@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
 
         assetManager = getAssets();
 
-        addButtonListenerNewGame();
+        // addButtonListenerNewGame();
 
         Player.activity = this;
     }
@@ -114,22 +114,78 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        // Get the message from the box
-        EditText et = (EditText) findViewById(R.id.MessageText);
-        String msg = et.getText().toString();
-
-        // Comm.sendMessage(msg);
-
-        p.zapOpponent(1);
-    }
-
-    public void sendMessage2(View view) {
         setP(new Player());
         for (int i = 0; i < 7; i++) {
             p.initOpponent(i, 1, "ASDF");
         }
         // 7 is a magic number
         Comm.tellDE2Connected(7);
+    }
+
+    public void sendMessage2(View view) {
+        // Get the message from the box
+        // EditText et = (EditText) findViewById(R.id.MessageText);
+        // String msg = et.getText().toString();
+        // Comm.sendMessage(msg);
+
+        p.zapOpponent(1);
+    }
+
+    public void sendMessage3(View view) {
+        p.zapAll();
+    }
+
+    public void sendMessage4(View view) {
+        p.goToSaloon();
+    }
+
+    public void sendMessage5(View view) {
+        p.drinkBeer();
+    }
+
+    public void sendMessage6(View view) {
+        p.throwInJail(0, 1);
+    }
+
+    public void sendMessage7(View view) {
+        p.drawCards(3);
+    }
+
+    public void sendMessage8(View view) {
+        Card c = p.drawOneCard();
+    }
+
+    public void sendMessage9(View view) {
+        p.panicOpponent(1);
+    }
+
+    public void sendMessage10(View view) {
+        p.catBalouOpponentCard(1);
+    }
+
+    public void sendMessage11(View view) {
+        p.duelOpponent(1);
+    }
+
+    public void sendMessage12(View view) {
+        p.releaseTheAliens();
+    }
+
+    public void sendMessage13(View view) {
+        p.generalStore();
+    }
+
+    public void sendMessage14(View view) {
+
+    }
+
+    public void sendMessage15(View view) {
+
+    }
+
+    public void setupGame() {
+        Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
+        startActivity(setupIntent);
     }
 
     // Called when the user closes a socket
@@ -252,23 +308,23 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void addButtonListenerNewGame() {
-        newGame = (Button) findViewById(R.id.buttonNewGame);
-        newGame.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.v("MY_TAG", "init new view...");
-                setupGame(view);
-            }
-        });
-    }
-
-    public void setupGame(View view) {
-        Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
-        // Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
-        // String value = "A string value to pass.";
-        // setupIntent.putExtra("key", value);
-        startActivity(setupIntent);
-    }
+    // public void addButtonListenerNewGame() {
+    // newGame = (Button) findViewById(R.id.buttonNewGame);
+    // newGame.setOnClickListener(new OnClickListener() {
+    // @Override
+    // public void onClick(View view) {
+    // Log.v("MY_TAG", "init new view...");
+    // setupGame(view);
+    // }
+    // });
+    // }
+    //
+    // public void setupGame(View view) {
+    // Intent setupIntent = new Intent(getBaseContext(), GameActivity.class);
+    // // Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
+    // // String value = "A string value to pass.";
+    // // setupIntent.putExtra("key", value);
+    // startActivity(setupIntent);
+    // }
 
 }
