@@ -235,6 +235,45 @@ public class Player {
 		return range;
 	}
 	
+	//TODO AMITOJ: test cases
+	public int getRangeFromOpponent(int pid) {
+		Opponent o = opponents.get(Integer.valueOf(pid));
+		int range = o.getFixedRange();
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(MUSTANG) == 0) {
+				range++;
+			}
+		}
+		return range;
+	}
+	
+	public boolean hasJail() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(JAIL) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasDynamite() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(DYNAMITE) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasBarrel() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(JAIL) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void playCard(int cid) {
 		if (turn) {
 			Card c = cc.getHandCard(cid);

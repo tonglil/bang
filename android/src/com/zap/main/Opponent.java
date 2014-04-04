@@ -59,6 +59,10 @@ public class Opponent {
 		this.range = range;
 	}
 	
+	public int getFixedRange() {
+		return this.range;
+	}
+	
 	public int getLives() {
 		return lives;
 	}
