@@ -667,7 +667,7 @@ public class Player {
         return;
     }
 
-    private void zapAll() {
+    public void zapAll() {
         // TODO: tell de2 that this player wants to zap everyone
         // This function shouldn't return until every opponent uses missed,
         // beer, or takes the hit
@@ -679,7 +679,7 @@ public class Player {
         return;
     }
 
-    private void goToSaloon() {
+    public void goToSaloon() {
         // TODO: tell de2 that everyone gets a life
         // This function shouldn't return until de2 says everything is good
         test_call = "goToSaloon";
@@ -690,7 +690,7 @@ public class Player {
         return;
     }
 
-    private void drinkBeer() {
+    public void drinkBeer() {
         // TODO: tell de2 that you beered
         // This function shouldn't return until de2 says everything is good
         test_call = "drinkBeer";
@@ -701,7 +701,7 @@ public class Player {
         return;
     }
 
-    private void throwInJail(int pid, int cid) {
+    public void throwInJail(int pid, int cid) {
         // TODO: tell de2 that this opponent should be put in jail
         // This function shouldn't return until de2 says everything is good
         test_call = "throwInJail";
@@ -712,7 +712,7 @@ public class Player {
         return;
     }
 
-    private void drawCards(int numCards) {
+    public void drawCards(int numCards) {
         // TODO: tell de2 that this player needs numCards cards
         // This function shouldn't return until de2 says everything is good
         test_call = "drawCards";
@@ -723,7 +723,7 @@ public class Player {
         return;
     }
 
-    private Card drawOneCard() {
+    public Card drawOneCard() {
         // TODO: tell de2 that this player needs 1 card
         test_call = "drawOneCard";
         Comm.tellDE2UserNeedsXCards(this.pid, 1);
@@ -735,7 +735,7 @@ public class Player {
         return CardController.getValidCard(card);
     }
 
-    private void panicOpponent(int pid) {
+    public void panicOpponent(int pid) {
         // TODO: tell de2 that this player wants to panic opponent
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
@@ -751,7 +751,7 @@ public class Player {
         return;
     }
 
-    private void catBalouOpponentCard(int pid) {
+    public void catBalouOpponentCard(int pid) {
         // TODO: tell de2 to randomly discard card from all opponents
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
@@ -767,7 +767,7 @@ public class Player {
         return;
     }
 
-    private void duelOpponent(int pid) {
+    public void duelOpponent(int pid) {
         // TODO: tell de2 to begin duel with opponent
         // This function shouldn't return until de2 says everything is good
         test_call = "duelOpponent";
@@ -778,7 +778,7 @@ public class Player {
         return;
     }
 
-    private void releaseTheAliens() {
+    public void releaseTheAliens() {
         // TODO: tell de2 to send aliens after everyone
         // This function shouldn't return until de2 says everything is good
         test_call = "releaseTheAliens";
@@ -789,7 +789,7 @@ public class Player {
         return;
     }
 
-    private void generalStore() {
+    public void generalStore() {
         // TODO: tell de2 to use general store
         // This function shouldn't return until de2 says everything is good
         test_call = "generalStore";

@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.zap.main.Card;
 import com.zap.main.Comm;
 import com.zap.main.Player;
 
@@ -114,22 +115,73 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        // Get the message from the box
-        EditText et = (EditText) findViewById(R.id.MessageText);
-        String msg = et.getText().toString();
-
-        // Comm.sendMessage(msg);
-
-        p.zapOpponent(1);
-    }
-
-    public void sendMessage2(View view) {
         setP(new Player());
         for (int i = 0; i < 7; i++) {
             p.initOpponent(i, 1, "ASDF");
         }
         // 7 is a magic number
         Comm.tellDE2Connected(7);
+    }
+
+    public void sendMessage2(View view) {
+        // Get the message from the box
+        // EditText et = (EditText) findViewById(R.id.MessageText);
+        // String msg = et.getText().toString();
+        // Comm.sendMessage(msg);
+
+        p.zapOpponent(1);
+    }
+
+    public void sendMessage3(View view) {
+        p.zapAll();
+    }
+
+    public void sendMessage4(View view) {
+        p.goToSaloon();
+    }
+
+    public void sendMessage5(View view) {
+        p.drinkBeer();
+    }
+
+    public void sendMessage6(View view) {
+        p.throwInJail(0, 1);
+    }
+
+    public void sendMessage7(View view) {
+        p.drawCards(3);
+    }
+
+    public void sendMessage8(View view) {
+        Card c = p.drawOneCard();
+    }
+
+    public void sendMessage9(View view) {
+        p.panicOpponent(1);
+    }
+
+    public void sendMessage10(View view) {
+        p.catBalouOpponentCard(1);
+    }
+
+    public void sendMessage11(View view) {
+        p.duelOpponent(1);
+    }
+
+    public void sendMessage12(View view) {
+        p.releaseTheAliens();
+    }
+
+    public void sendMessage13(View view) {
+        p.generalStore();
+    }
+
+    public void sendMessage14(View view) {
+
+    }
+
+    public void sendMessage15(View view) {
+
     }
 
     // Called when the user closes a socket
