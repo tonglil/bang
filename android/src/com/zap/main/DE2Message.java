@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class DE2Message {
     private static boolean readyToContinue = false;
     private static boolean readyToSend = true;
+    private static boolean receivedLastMsg = false;
+    private static boolean sendLastMsg = false;
     private static int type;
     private static int fromId;
     private static int toId;
@@ -55,6 +57,22 @@ public class DE2Message {
 
     public static void setReadyToSend(boolean readyToSend) {
         DE2Message.readyToSend = readyToSend;
+    }
+
+    public static boolean isReceivedLastMsg() {
+        return receivedLastMsg;
+    }
+
+    public static void setReceivedLastMsg(boolean receivedLastMsg) {
+        DE2Message.receivedLastMsg = receivedLastMsg;
+    }
+
+    public static boolean isSendLastMsg() {
+        return sendLastMsg;
+    }
+
+    public static void setSendLastMsg(boolean sendLastMsg) {
+        DE2Message.sendLastMsg = sendLastMsg;
     }
 
     public static int getType() {
