@@ -3,7 +3,7 @@ package com.zap.main;
 import java.util.ArrayList;
 
 public class DE2Message {
-    private static boolean readyToContinue;
+    private static boolean readyToContinue = false;
     private static boolean readyToSend = true;
     private static int type;
     private static int fromId;

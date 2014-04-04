@@ -125,8 +125,11 @@ public class MainActivity extends Activity {
 
     public void sendMessage2(View view) {
         setP(new Player());
-
-        Comm.tellDE2Connected(0);
+        for (int i = 0; i < 7; i++) {
+            p.initOpponent(i, 1, "ASDF");
+        }
+        // 7 is a magic number
+        Comm.tellDE2Connected(7);
     }
 
     // Called when the user closes a socket

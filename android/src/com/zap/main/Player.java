@@ -430,27 +430,8 @@ public class Player {
         // TODO: user has choice of playing zap or taking a life (player getting
         // dueled or aliens)
         // TODO: let him use a beer if this is a lethal hit
-        int zap_cid = 0;
-        for (Card c : getHandCards()) {
-            if (c.zap) {
-                zap_cid = c.cid;
-                break;
-            }
-        }
-
-        CharSequence choices[];
-        if (zap_cid != 0) {
-            choices = new CharSequence[] { "Take hit", "Use zap" };
-        } else {
-            choices = new CharSequence[] { "Take hit" };
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
-        builder.setTitle("Select an option");
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Boolean userplayedzap = false;
-
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
                 int zap_cid = 0;
                 for (Card c : getHandCards()) {
                     if (c.zap) {
@@ -459,22 +440,45 @@ public class Player {
                     }
                 }
 
-                if (which == 0) {
-                    userplayedzap = false;
+                CharSequence choices[];
+                if (zap_cid != 0) {
+                    choices = new CharSequence[] { "Take hit", "Use zap" };
                 } else {
-                    userplayedzap = true;
+                    choices = new CharSequence[] { "Take hit" };
                 }
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
+                builder.setTitle("Select an option");
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Boolean userplayedzap = false;
 
-                if (userplayedzap) {
-                    discardCard(zap_cid);
-                    Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-                } else {
-                    setLives(lives - 1);
-                    Comm.tellDE2UserUpdateLives(pid, lives);
-                }
+                        int zap_cid = 0;
+                        for (Card c : getHandCards()) {
+                            if (c.zap) {
+                                zap_cid = c.cid;
+                                break;
+                            }
+                        }
+
+                        if (which == 0) {
+                            userplayedzap = false;
+                        } else {
+                            userplayedzap = true;
+                        }
+
+                        if (userplayedzap) {
+                            discardCard(zap_cid);
+                            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                        } else {
+                            setLives(lives - 1);
+                            Comm.tellDE2UserUpdateLives(pid, lives);
+                        }
+                    }
+                });
+                builder.show();
             }
         });
-        builder.show();
     }
 
     public void onSaloon() {
@@ -488,41 +492,49 @@ public class Player {
     public void onPanic() {
         // show dialog to pick
         // cards are in:
-        CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
-        int i = 0;
-        for (Integer cid : DE2Message.getR_cinfo().get(0)) {
-            choices[i++] = CardController.getValidCard(cid.intValue()).name;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
-        builder.setTitle("Select an card");
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int cid = DE2Message.getR_cinfo().get(0).get(which);
-                Comm.tellDE2UserTransferCard(pid, cid);
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
+                int i = 0;
+                for (Integer cid : DE2Message.getR_cinfo().get(0)) {
+                    choices[i++] = CardController.getValidCard(cid.intValue()).name;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
+                builder.setTitle("Select an card");
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int cid = DE2Message.getR_cinfo().get(0).get(which);
+                        Comm.tellDE2UserTransferCard(pid, cid);
+                    }
+                });
+                builder.show();
             }
         });
-        builder.show();
     }
 
     public void onCatBalou() {
         // show dialog to discard
         // cards are in:
-        CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
-        int i = 0;
-        for (Integer cid : DE2Message.getR_cinfo().get(0)) {
-            choices[i++] = CardController.getValidCard(cid.intValue()).name;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
-        builder.setTitle("Select an card");
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int cid = DE2Message.getR_cinfo().get(0).get(which);
-                Comm.tellDE2UserPickedCard(pid, cid);
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
+                int i = 0;
+                for (Integer cid : DE2Message.getR_cinfo().get(0)) {
+                    choices[i++] = CardController.getValidCard(cid.intValue()).name;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
+                builder.setTitle("Select an card");
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int cid = DE2Message.getR_cinfo().get(0).get(which);
+                        Comm.tellDE2UserPickedCard(pid, cid);
+                    }
+                });
+                builder.show();
             }
         });
-        builder.show();
     }
 
     public void onJail(int cid) {
@@ -535,27 +547,8 @@ public class Player {
         // TODO: user has choice of playing zap or taking a life (player getting
         // dueled or aliens)
         // TODO: let him use a beer if this is a lethal hit
-        int zap_cid = 0;
-        for (Card c : getHandCards()) {
-            if (c.zap) {
-                zap_cid = c.cid;
-                break;
-            }
-        }
-
-        CharSequence choices[];
-        if (zap_cid != 0) {
-            choices = new CharSequence[] { "Take hit", "Use zap" };
-        } else {
-            choices = new CharSequence[] { "Take hit" };
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
-        builder.setTitle("Select an option");
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Boolean userplayedzap = false;
-
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
                 int zap_cid = 0;
                 for (Card c : getHandCards()) {
                     if (c.zap) {
@@ -564,44 +557,71 @@ public class Player {
                     }
                 }
 
-                if (which == 0) {
-                    userplayedzap = false;
+                CharSequence choices[];
+                if (zap_cid != 0) {
+                    choices = new CharSequence[] { "Take hit", "Use zap" };
                 } else {
-                    userplayedzap = true;
+                    choices = new CharSequence[] { "Take hit" };
                 }
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
+                builder.setTitle("Select an option");
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Boolean userplayedzap = false;
 
-                if (userplayedzap) {
-                    discardCard(zap_cid);
-                    Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-                } else {
-                    setLives(lives - 1);
-                    Comm.tellDE2UserUpdateLives(pid, lives);
-                }
+                        int zap_cid = 0;
+                        for (Card c : getHandCards()) {
+                            if (c.zap) {
+                                zap_cid = c.cid;
+                                break;
+                            }
+                        }
+
+                        if (which == 0) {
+                            userplayedzap = false;
+                        } else {
+                            userplayedzap = true;
+                        }
+
+                        if (userplayedzap) {
+                            discardCard(zap_cid);
+                            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                        } else {
+                            setLives(lives - 1);
+                            Comm.tellDE2UserUpdateLives(pid, lives);
+                        }
+                    }
+                });
+                builder.show();
             }
         });
-        builder.show();
     }
 
     public void onGeneralStore(ArrayList<Integer> card_choices) {
         // pick something from card_choices;
         // show dialog to pick
         // cards are in:
-        CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
-        int i = 0;
-        for (Integer cid : DE2Message.getR_cinfo().get(0)) {
-            choices[i++] = CardController.getValidCard(cid.intValue()).name;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
-        builder.setTitle("Select an card");
-        builder.setItems(choices, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int cid = DE2Message.getR_cinfo().get(0).get(which);
-                receiveCard(cid);
-                Comm.tellDE2UserPickedCard(pid, cid);
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
+                int i = 0;
+                for (Integer cid : DE2Message.getR_cinfo().get(0)) {
+                    choices[i++] = CardController.getValidCard(cid.intValue()).name;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
+                builder.setTitle("Select an card");
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int cid = DE2Message.getR_cinfo().get(0).get(which);
+                        receiveCard(cid);
+                        Comm.tellDE2UserPickedCard(pid, cid);
+                    }
+                });
+                builder.show();
             }
         });
-        builder.show();
     }
 
     public void onLoseCard(int cid) {
