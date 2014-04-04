@@ -274,6 +274,15 @@ public class Player {
 		return false;
 	}
 	
+	public boolean hasMustang() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(MUSTANG) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void playCard(int cid) {
 		if (turn) {
 			Card c = cc.getHandCard(cid);
