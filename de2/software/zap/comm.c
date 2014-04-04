@@ -73,4 +73,13 @@ void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     for (i = 0; i < cd->s_len; i++) {
         alt_up_rs232_write_data(uart, cd->s_message[i]);
     }
+    // wait for ack
+    // messages to DE2 with type NOT 0x2a will be lost
+    if (send_last_msg == 0) {
+    	do {
+    		receive_data_from_middleman(uart, cd);
+    	} while (cd->r_message[1] != 0x2a);
+    } else {
+    	// I just sent my last msg, don't care about ack
+    }
 }
