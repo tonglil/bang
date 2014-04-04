@@ -13,8 +13,10 @@
 extern alt_up_rs232_dev* uart;
 extern Comm_data* cd;
 extern int pid_table[7];
+extern int pid_connected[7];
+extern int connected_count;
 
-void tell_user_pid_role(int pid, Player* p);
+void tell_user_pid_role(int pid, Player p);
 
 // Don't worry about distinction between player vs opponent
 // Send all active players' range/roles and blue/lives

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "altera_up_avalon_rs232.h"
 #include <string.h>
+#include <unistd.h>
 
 typedef struct Comm_data {
     unsigned char data;

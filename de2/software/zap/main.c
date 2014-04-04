@@ -34,11 +34,30 @@ int main() {
     PlayerCtrl* playerCtrl = (PlayerCtrl*)malloc(sizeof(PlayerCtrl));
     initCards(cardCtrl);
     initPlayers(playerCtrl, 7);
+
+    while(connected_count < 2) {
+    	receivedFromAndroid();
+    }
+
+    int y;
+    for (y = 0; y < connected_count; y++) {
+    	if (pid_connected[y] == 1) {
+    		tell_user_pid_role(y, playerCtrl->players[y]);
+    		Message message = receivedFromAndroid();
+			if (message.type == ACKNOWLEDGE);
+    	}
+    }
+
     int i, j;
-    for (i = 0; i < NUM_PLAYERS; i++) {
+    for (i = 0; i < connected_count; i++) {
         for (j = 0; j < 2; j++) {
             playerCtrl->players[i].hand[j] = testDrawCard(cardCtrl);
             printf("The drawn card is %d\n", playerCtrl->players[i].hand[j]);
+            tell_user_new_card(i, playerCtrl->players[i].hand[j]);
+            Message message = receivedFromAndroid();
+			if (message.type == UPDATE_HAND) {
+				updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
+			}
         }
     }
 
@@ -53,9 +72,14 @@ int main() {
 
     tell_user_their_turn(0);
     runField(field);
+    Message message;
     while (1){
     	tell_user_all_opponent_range_role(playerCtrl->turn,getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+		message = receivedFromAndroid();
+		if (message.type == ACKNOWLEDGE);
     	tell_user_all_opponent_blue_lives(playerCtrl->turn,getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+		message = receivedFromAndroid();
+		if (message.type == ACKNOWLEDGE);
         int listening = 1;
         while (listening) {
         	printf("Waiting for Command\n");

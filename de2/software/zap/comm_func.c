@@ -2,9 +2,15 @@
 
 alt_up_rs232_dev* uart;
 Comm_data* cd;
+
+// index is pid, value is client_id
 int pid_table[7] = {1, 2, 3, 4, 5, 6, 7};
 
-void tell_user_pid_role(int pid, Player* p) {
+// index is pid, value is bool_connected
+int pid_connected[7] = {0, 0, 0, 0, 0, 0, 0};
+int connected_count = 0;
+
+void tell_user_pid_role(int pid, Player p) {
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -15,7 +21,7 @@ void tell_user_pid_role(int pid, Player* p) {
     cd->s_message[l++] = pid;
     l++;
     cd->s_message[l++] = 0x01;
-    cd->s_message[l++] = p->role;
+    cd->s_message[l++] = p.role;
 
     cd->s_len = l;
 
@@ -40,9 +46,9 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo pi) {
     int i;
     //TODO: change to numplayers
     for (i = 0; i < NUM_PLAYERS; i++) {
-        cd->s_message[3*i + 1] = pi.players[i].id;
-        cd->s_message[3*i + 2] = pi.distance[i];
-        cd->s_message[3*i + 3] = pi.players[i].role;
+        cd->s_message[3*i + l] = pi.players[i].id;
+        cd->s_message[3*i + l + 1] = pi.distance[i];
+        cd->s_message[3*i + l + 2] = pi.players[i].role;
     }
 
     cd->s_len = l + 3*i;
@@ -362,6 +368,7 @@ Message receive_interpret_android(void) {
     int msg_type = cd->r_message[0];
     int pid = cd->r_message[1];
     pid_table[pid] = cd->client_id;
+
     switch(msg_type) {
         case 0x11:
         {
@@ -496,8 +503,17 @@ Message receive_interpret_android(void) {
         {
             // tellDE2OK
             // TODO: custom message for OK
+        	return create_message(ACKNOWLEDGE, pid, pid, 0, cards);
             break;
         }
+        case 0x1b:
+		{
+			// tellDE2Connected
+			// TODO: custom message for OK
+			int new_pid = connected_count++;
+			pid_connected[new_pid] = 1;
+			break;
+		}
         default:
             break;
     }

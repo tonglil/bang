@@ -10,6 +10,7 @@ typedef int Card;
 
 typedef enum messageType{
 	NO_TYPE,
+	ACKNOWLEDGE,
     UPDATE_HAND,
     UPDATE_BLUE,
     UPDATE_LIVES,

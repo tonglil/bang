@@ -48,6 +48,7 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
     alt_up_rs232_write_data(uart, 1);
     alt_up_rs232_write_data(uart, 0x0a);
+    usleep(1000000);
 }
 
 void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
