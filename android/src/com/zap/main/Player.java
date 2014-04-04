@@ -182,10 +182,9 @@ public class Player {
     }
 
     public void startTurn() {
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
-
+        Log.i("colin", pid + " turn started inside");
+        Comm.tellDE2OK(pid);
+        Log.i("colin", pid + " told ok");
         turn = true;
         zappedThisTurn = false;
 
@@ -216,7 +215,9 @@ public class Player {
                 break;
             }
         }
-
+        while (!DE2Message.isReadyToContinue())
+            ;
+        DE2Message.setReadyToContinue(false);
         drawCards(2);
     }
 
