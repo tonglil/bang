@@ -367,7 +367,9 @@ Message receive_interpret_android(void) {
     int cards[MAX_CARDS] = {0};
     int msg_type = cd->r_message[0];
     int pid = cd->r_message[1];
-    pid_table[pid] = cd->client_id;
+    if (pid < 7) {
+    	pid_table[pid] = cd->client_id;
+    }
 
     switch(msg_type) {
         case 0x11:
