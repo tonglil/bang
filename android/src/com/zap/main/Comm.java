@@ -24,9 +24,11 @@ public class Comm {
         // Send Message Structure:
         // [0] length not including [0]
         // [1] message type
+        Log.i("colin", "Waiting for Ack");
         while (!DE2Message.isReadyToSend())
             ;
         DE2Message.setReadyToSend(false);
+        Log.i("colin", "Got Ack");
 
         String msg = message;
         byte[] bmsg = hstba(msg);
@@ -91,13 +93,12 @@ public class Comm {
 
     public static void tellDE2CardsInHand(int pid, int ncards, ArrayList<Card> cards) {
         String msg = "11" + iths(pid) + iths(ncards);
-
         for (Card c : cards) {
             msg = msg + iths(c.cid);
         }
-
+        Log.i("colin", "Going to send message");
         sendMessage(msg);
-
+        Log.i("colin", "Sent message");
         return;
     }
 
@@ -214,8 +215,8 @@ public class Comm {
         // Message structure for Acknowledgment
         // [0] 0x0a
         if (buf[0] == 0x0a) {
-            Log.i("colin", "DE2 acknowledged, Android can send more");
             DE2Message.setReadyToSend(true);
+            Log.i("colin", "DE2 acknowledged, Android can send more");
             return;
         }
 
