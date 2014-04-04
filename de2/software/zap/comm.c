@@ -32,7 +32,7 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     printf("Received %d characters.\n", cd->num_to_receive);
 
     int i;
-    for (i = 0; i < cd->num_to_receive; i++) {
+    for (i = 1; i < cd->num_to_receive; i++) {
         while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
         alt_up_rs232_read_data(uart, &(cd->data), &(cd->parity));
 
@@ -45,10 +45,14 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     printf("Message Complete\n");
 
     // Acknowledge message received
-    alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
-    alt_up_rs232_write_data(uart, 1);
-    alt_up_rs232_write_data(uart, 0x0a);
-    usleep(1000000);
+    if (cd->r_message[0] == 0x2e) {
+		alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
+		alt_up_rs232_write_data(uart, 1);
+		alt_up_rs232_write_data(uart, 0x2a);
+		usleep(1000000);
+    } else if (cd->r_message[0] == 0x2f) {
+    	// do nothing
+    }
 }
 
 void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
@@ -58,6 +62,12 @@ void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
     // Write the message length
     alt_up_rs232_write_data(uart, cd->s_len);
+    // If final message
+    if (send_last_msg == 1) {
+    	alt_up_rs232_write_data(uart, 0x2f);
+    } else if (send_last_msg == 0){
+    	alt_up_rs232_write_data(uart, 0x2e);
+    }
     // Write the message
     int i;
     for (i = 0; i < cd->s_len; i++) {

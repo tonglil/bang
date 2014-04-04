@@ -9,6 +9,7 @@ int pid_table[7] = {1, 2, 3, 4, 5, 6, 7};
 // index is pid, value is bool_connected
 int pid_connected[7] = {0, 0, 0, 0, 0, 0, 0};
 int connected_count = 0;
+int send_last_msg = 1;
 
 void tell_user_pid_role(int pid, Player p) {
     cd->client_id = pid_table[pid];
@@ -514,6 +515,11 @@ Message receive_interpret_android(void) {
 			// TODO: custom message for OK
 			int new_pid = connected_count++;
 			pid_connected[new_pid] = 1;
+			break;
+		}
+        case 0x2a:
+		{
+			// fast ack
 			break;
 		}
         default:
