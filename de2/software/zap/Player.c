@@ -103,12 +103,20 @@ void removeCardFromStore(CardCtrl* cardCtrl, Card card) {
     }
 }
 
-void updateBlueCardsForId(PlayerCtrl* playerCtrl, int id, Card cards[]) {
+void updateBlueCardsForId(PlayerCtrl* playerCtrl, int id, int nbcards, Card cards[]) {
     memcpy(playerCtrl->players[id].blueCards, cards, sizeof(Card)*MAX_BLUE_CARDS);
+    playerCtrl->players[id].num_blue = nbcards;
 }
 
-void updateHandForId(PlayerCtrl* playerCtrl, int id, Card cards[]) {
+void updateHandForId(PlayerCtrl* playerCtrl, int id, int ncards, Card cards[]) {
     memcpy(playerCtrl->players[id].hand, cards, sizeof(Card)*MAX_CARDS);
+    playerCtrl->players[id].num_hand = ncards;
+}
+
+void addCard(PlayerCtrl* playerCtrl, int id, int cid) {
+	int num_hand = playerCtrl->players[id].num_hand;
+	playerCtrl->players[id].hand[num_hand] = cid;
+	playerCtrl->players[id].num_hand++;
 }
 
 Player getPlayerWithId(PlayerCtrl* playerCtrl, int id) {

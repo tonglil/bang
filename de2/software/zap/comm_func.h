@@ -18,9 +18,9 @@ void tell_user_pid_role(int pid, Player* p);
 
 // Don't worry about distinction between player vs opponent
 // Send all active players' range/roles and blue/lives
-void tell_user_all_opponent_range_role(int pid, PlayersInfo* pi);
+void tell_user_all_opponent_range_role(int pid, PlayersInfo pi);
 
-void tell_user_all_opponent_blue_lives(int pid, PlayersInfo* pi);
+void tell_user_all_opponent_blue_lives(int pid, PlayersInfo pi);
 
 void tell_user_new_card(int pid, int cid);
 
@@ -41,9 +41,11 @@ void tell_user_blue_play_infront(int pid, int cid);
 
 void tell_user_store(int pid, int ncards, int* cards);
 
-void tell_user_panic(int pid, int pid1, int nbcards, int* bcards);
+void tell_user_panic(int pid, int pid1, int ncards, int* cards, int nbcards, int* bcards);
 
-void tell_user_cat_balou(int pid, int pid1, int nbcards, int* bcards);
+void tell_user_cat_balou(int pid, int pid1, int ncards, int* cards, int nbcards, int* bcards);
+
+void tell_user_jail(int pid, int* cards);
 
 Message receive_interpret_android(void);
 

@@ -27,6 +27,7 @@ typedef struct Player {
     Card hand[MAX_CARDS];
     Card blueCards[MAX_BLUE_CARDS];
     int num_blue;
+    int num_hand;
 } Player;
 
 typedef struct PlayersInfo {
@@ -45,8 +46,9 @@ void initPlayers(PlayerCtrl* playerCtrl, int count);
 int getNumAlivePlayers(PlayerCtrl* playerCtrl);
 void updateStore(PlayerCtrl *playerCtrl, CardCtrl* cardCtrl);
 void removeCardFromStore(CardCtrl* cardCtrl, Card card);
-void updateBlueCardsForId(PlayerCtrl* playerCtrl, int id, Card cards[]);
-void updateHandForId(PlayerCtrl* playerCtrl, int id, Card cards[]);
+void updateBlueCardsForId(PlayerCtrl* playerCtrl, int id, int nbcards, Card cards[]);
+void updateHandForId(PlayerCtrl* playerCtrl, int id, int ncards, Card cards[]);
+void addCard(PlayerCtrl* playerCtrl, int id, int cid);
 Player getPlayerWithId(PlayerCtrl* playerCtrl, int id);
 PlayersInfo getPlayersInfoForId(PlayerCtrl* playerCtrl, int id);
 void endTurn(PlayerCtrl* playerCtrl);

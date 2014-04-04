@@ -54,6 +54,8 @@ int main() {
     tell_user_their_turn(0);
     runField(field);
     while (1){
+    	tell_user_all_opponent_range_role(playerCtrl->turn,getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+    	tell_user_all_opponent_blue_lives(playerCtrl->turn,getPlayersInfoForId(playerCtrl, playerCtrl->turn));
         int listening = 1;
         while (listening) {
         	printf("Waiting for Command\n");
@@ -65,12 +67,12 @@ int main() {
                 drawCardsForId(message.fromId, cardCtrl, message.count);
                 break;
             case UPDATE_HAND:
-                updateHandForId(playerCtrl, message.fromId, message.cards);
+                updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
                 break;
             case UPDATE_BLUE:
             {
             	printf("message.fromId:%d %d %d %d %d %d", message.fromId, message.cards[0], message.cards[1], message.cards[2], message.cards[3], message.cards[4]);
-                updateBlueCardsForId(playerCtrl, message.fromId, message.cards);
+                updateBlueCardsForId(playerCtrl, message.fromId, message.count, message.cards);
                 printf("Came back from bluecards\n");
                 break;
             }
@@ -84,6 +86,7 @@ int main() {
                 startAliens(playerCtrl, message.fromId);
                 break;
             case BEER:
+            	//TODO
                 updateLivesForId(playerCtrl, message.fromId, message.count);
                 break;
             case GENERAL_STORE:
@@ -105,7 +108,8 @@ int main() {
                 startDuel(playerCtrl, message.toId, message.fromId);
                 break;
             case JAIL:
-                sendJail(message.toId);
+            	//TODO
+                tell_user_jail(message.toId, message.cards);
                 break;
             case END_TURN:
                 listening = 0;
@@ -119,6 +123,7 @@ int main() {
         }
         printf("exited while loops\n");
         endTurn(playerCtrl);
+    	tell_user_their_turn(playerCtrl->turn);
         alt_up_char_buffer_clear(charBuffer);
         runField(field);
     }
