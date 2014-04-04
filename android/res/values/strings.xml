@@ -9,12 +9,12 @@
 
     <!-- Player stats page -->
     <string name="player_stats_health">Health</string>
-    <string name="player_stats_health_value">5</string>
+    <string name="player_stats_health_value">0</string>
     <string name="player_stats_range">Range</string>
-    <string name="player_stats_range_value">3</string>
+    <string name="player_stats_range_value">0</string>
     <string name="player_stats_hidden">Hidden</string>
-    <string name="player_stats_hidden_value">-1</string>
+    <string name="player_stats_hidden_value">-0</string>
     <string name="player_stats_special">Special</string>
-    <string name="player_stats_special_value">Jail / Dynamite</string>
+    <string name="player_stats_special_value">Barrel / Jail / Dynamite</string>
 
 </resources>

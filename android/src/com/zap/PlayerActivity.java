@@ -12,12 +12,17 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.zap.main.Player;
+
 public class PlayerActivity extends FragmentActivity {
+    
+    // TODO: player is the current player
+    private Player player = new Player("Tony");
+    
+    private ViewPager viewPager;
+    private TabsAdapter tabsAdapter;
 
-    ViewPager viewPager;
-    TabsAdapter tabsAdapter;
-
-    String tabStats;
+    private String tabStats;
 
     public void setTabStats(String data) {
         tabStats = data;
@@ -26,18 +31,40 @@ public class PlayerActivity extends FragmentActivity {
     public String getTabStats() {
         return tabStats;
     }
+    
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+    
+    public Player getPlayer() {
+        return this.player;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        player.startTurn();
+        player.receiveCard(1);
+        player.receiveCard(2);
+        player.receiveCard(3);
+        player.receiveCard(4);
+        player.receiveCard(5);
+        player.receiveCard(46);
+        player.receiveCard(78);
+        player.receiveCard(20);
+        player.receiveCard(21);
+        player.receiveCard(71);
+        player.playCard(1);
+        player.playCard(71);
+        
         viewPager = new ViewPager(this);
         viewPager.setId(R.id.pager);
         setContentView(viewPager);
 
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setTitle("Current Player: " + player.getName());
 
         tabsAdapter = new TabsAdapter(this, viewPager);
         tabsAdapter.addTab(bar.newTab().setText("Stats"), PlayerStats.class, null);
