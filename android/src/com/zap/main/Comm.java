@@ -529,7 +529,7 @@ public class Comm {
             DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
         }
         if (DE2Message.isReceivedLastMsg()) {
-            // don't send an ack
+            // don't send ack
         } else {
             sendMessageNoWait("2a");
         }
