@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 
         assetManager = getAssets();
 
-        addButtonListenerNewGame();
+        // addButtonListenerNewGame();
 
         Player.activity = this;
     }

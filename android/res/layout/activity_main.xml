@@ -63,11 +63,30 @@
 
         <EditText
             android:id="@+id/port"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="4"
             android:inputType="number"
             android:text="50002" />
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openSocket"
+        android:text="Connect" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="closeSocket"
+        android:text="Disconnect" />
+
+    <Button
+        android:id="@+id/buttonNewGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Game" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -175,30 +194,6 @@
             android:layout_height="wrap_content"
             android:onClick="sendMessage15"
             android:text="15" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="openSocket"
-            android:text="Connect" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="closeSocket"
-            android:text="Disconnect" />
-
-        <Button
-            android:id="@+id/buttonNewGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Game" />
     </LinearLayout>
 
     <TextView
