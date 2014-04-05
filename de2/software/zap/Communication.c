@@ -58,7 +58,11 @@ void startGatling(PlayerCtrl* playerCtrl, int id) {
     printf("GATLING ENDED\n");
 }
 
-void startDuel(PlayerCtrl* playerCtrl, int to, int from) {
+void startDuel(PlayerCtrl* playerCtrl, int to, int from, int self) {
+	if (self == 1) {
+		tell_user_ok(to);
+		Message message = receivedFromAndroid();
+	}
     int turn = to;
     int loop = 1;
     while (loop) {

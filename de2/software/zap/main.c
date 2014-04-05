@@ -145,7 +145,10 @@ int main() {
             	}
                 break;
             case DUEL:
-                startDuel(playerCtrl, message.toId, message.fromId);
+                startDuel(playerCtrl, message.toId, message.fromId, message.self);
+            	if (message.self == 0) {
+            		tell_user_ok(message.fromId);
+            	}
                 break;
             case JAIL:
             	//TODO
