@@ -24,6 +24,6 @@ void startAliens(PlayerCtrl* playerCtrl, int id);
 void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl);
 void startSaloon(PlayerCtrl* playerCtrl);
 void startPanic(PlayerCtrl* playerCtrl, int to, int from, int self);
-void startCatBalou(PlayerCtrl* playerCtrl, int to, int from);
+void startCatBalou(PlayerCtrl* playerCtrl, int to, int from, int self);
 
 #endif /* COMMUNICATION_H_ */

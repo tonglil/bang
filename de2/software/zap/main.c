@@ -139,7 +139,10 @@ int main() {
             	}
                 break;
             case CAT_BALOU:
-                startCatBalou(playerCtrl, message.toId, message.fromId);
+                startCatBalou(playerCtrl, message.toId, message.fromId, message.self);
+            	if (message.self == 0) {
+            		tell_user_ok(message.fromId);
+            	}
                 break;
             case DUEL:
                 startDuel(playerCtrl, message.toId, message.fromId);
