@@ -51,6 +51,6 @@ void tell_user_jail(int pid, int* cards);
 
 Message receive_interpret_android(void);
 
-Message create_message(messageType type, int fromId, int toId, int count, Card cards[]);
+Message create_message(messageType type, int fromId, int toId, int count, Card cards[], int self);
 
 #endif

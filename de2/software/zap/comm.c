@@ -48,10 +48,11 @@ void receive_data_from_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
     alt_up_rs232_write_data(uart, (unsigned char) cd->client_id);
     alt_up_rs232_write_data(uart, 1);
     alt_up_rs232_write_data(uart, 0x0a);
-    usleep(2000000);
+    usleep(1500000);
 }
 
 void send_data_to_middleman(alt_up_rs232_dev* uart, Comm_data* cd) {
+	usleep(500000);
     // Reply to the message
     printf("Send the message to the Middleman\n");
     // Write the client id
