@@ -161,7 +161,7 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
 
 void startSaloon(PlayerCtrl* playerCtrl) {
     int i;
-    for (i = 0; i < NUM_PLAYERS; ++i) {
+    for (i = 0; i < connected_count; ++i) {
         if (playerCtrl->players[i].lives > 0)
             tell_user_get_life(i);
         while (1) {

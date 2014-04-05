@@ -121,6 +121,7 @@ int main() {
                 break;
             case SALOON:
                 startSaloon(playerCtrl);
+                tell_user_ok(message.fromId);
                 break;
             case ZAP: {
             	startZap(playerCtrl, message.toId, message.self);
