@@ -1,5 +1,7 @@
 #include "Player.h"
 
+int connected_count = 0;
+
 void initPlayers(PlayerCtrl* playerCtrl, int count) {
     if (count < 4){
         printf("There has to be at least 4 players");
@@ -168,7 +170,7 @@ int getSubTurn(PlayerCtrl* playerCtrl) {
 void endSubTurn(PlayerCtrl* playerCtrl) {
     do {
         playerCtrl->subTurn++;
-        if (playerCtrl->subTurn >= NUM_PLAYERS)
+        if (playerCtrl->subTurn >= connected_count)
             playerCtrl->subTurn = 0;
     } while (playerCtrl->players[playerCtrl->subTurn].lives <= 0);
 }

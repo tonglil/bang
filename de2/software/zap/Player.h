@@ -9,6 +9,8 @@
 
 #define MAX_NAME 20
 
+extern int connected_count;
+
 typedef enum { false, true } bool;
 
 typedef enum role {

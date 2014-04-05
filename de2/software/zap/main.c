@@ -107,6 +107,7 @@ int main() {
                 break;
             case GATLING:
                 startGatling(playerCtrl, message.fromId);
+                tell_user_ok(message.fromId);
                 break;
             case ALIENS:
                 startAliens(playerCtrl, message.fromId);
