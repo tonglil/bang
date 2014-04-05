@@ -9,16 +9,12 @@ void drawCardsForId(int id, CardCtrl* cardCtrl, int count, PlayerCtrl* playerCtr
     int i;
     for (i = 0; i < count; i++) {
         tell_user_new_card(id, cardCtrl->deck[cardCtrl->deckIndex]);
-		printf("Waiting for Updated Hand\n");
 		Message message = receivedFromAndroid();
-		printf("received/interpreted\n");
-		printf("message.type: %d\n", message.type);
 		switch (message.type) {
 		case UPDATE_HAND:
 			updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
 			break;
 		default:
-			printf("garbage\n");
 			break;
 		}
         cardCtrl->deckIndex++;
@@ -30,7 +26,6 @@ void startGatling(PlayerCtrl* playerCtrl, int id) {
     endSubTurn(playerCtrl);
     tell_user_miss_or_lose_life(getSubTurn(playerCtrl));
     while (getSubTurn(playerCtrl) != id) {
-    	printf("%d,%d\n", getSubTurn(playerCtrl), id);
         Message message = receivedFromAndroid();
         switch (message.type) {
         case UPDATE_BLUE:
@@ -55,7 +50,6 @@ void startGatling(PlayerCtrl* playerCtrl, int id) {
             break;
         }
     }
-    printf("GATLING ENDED\n");
 }
 
 void startDuel(PlayerCtrl* playerCtrl, int to, int from, int self) {

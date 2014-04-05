@@ -10,6 +10,7 @@ int pid_table[7] = {1, 2, 3, 4, 5, 6, 7};
 int pid_connected[7] = {0, 0, 0, 0, 0, 0, 0};
 
 void tell_user_pid_role(int pid, Player p) {
+	printf("Sending tell_user_pid_role\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -31,6 +32,8 @@ void tell_user_pid_role(int pid, Player p) {
 }
 
 void tell_user_all_opponent_range_role(int pid, PlayersInfo pi) {
+	printf("Sending tell_user_all_opponent_range_role\n");
+
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -58,6 +61,7 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo pi) {
 }
 
 void tell_user_all_opponent_blue_lives(int pid, PlayersInfo pi) {
+	printf("Sending tell_user_all_opponent_blue_lives\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -93,6 +97,7 @@ void tell_user_all_opponent_blue_lives(int pid, PlayersInfo pi) {
 }
 
 void tell_user_new_card(int pid, int cid) {
+	printf("Sending tell_user_new_card\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -113,6 +118,7 @@ void tell_user_new_card(int pid, int cid) {
 }
 
 void tell_user_lost_card(int pid, int cid) {
+	printf("Sending tell_user_lost_card\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -133,6 +139,7 @@ void tell_user_lost_card(int pid, int cid) {
 }
 
 void tell_user_their_turn(int pid) {
+	printf("Sending tell_user_their_turn\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -152,6 +159,7 @@ void tell_user_their_turn(int pid) {
 }
 
 void tell_user_miss_or_lose_life(int pid) {
+	printf("Sending tell_user_miss_or_lose_life\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -171,6 +179,7 @@ void tell_user_miss_or_lose_life(int pid) {
 }
 
 void tell_user_zap_or_lose_life(int pid, int aliensOrDuel) {
+	printf("Sending tell_user_zap_or_lose_life\n");
     // 1 for Aliens, 0 for Duel
     cd->client_id = pid_table[pid];
 
@@ -192,6 +201,7 @@ void tell_user_zap_or_lose_life(int pid, int aliensOrDuel) {
 }
 
 void tell_user_get_life(int pid) {
+	printf("Sending tell_user_get_life\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -211,6 +221,7 @@ void tell_user_get_life(int pid) {
 }
 
 void tell_user_ok(int pid) {
+	printf("Sending tell_user_ok\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -230,6 +241,7 @@ void tell_user_ok(int pid) {
 }
 
 void tell_user_blue_play_infront(int pid, int cid) {
+	printf("Sending tell_user_blue_play_infront\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -250,6 +262,7 @@ void tell_user_blue_play_infront(int pid, int cid) {
 }
 
 void tell_user_store(int pid, int ncards, int* cards) {
+	printf("Sending tell_user_store\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -278,6 +291,7 @@ void tell_user_store(int pid, int ncards, int* cards) {
 }
 
 void tell_user_panic(int pid, int pid1, int ncards, int* cards, int nbcards, int* bcards) {
+	printf("Sending tell_user_panic\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -310,6 +324,7 @@ void tell_user_panic(int pid, int pid1, int ncards, int* cards, int nbcards, int
 }
 
 void tell_user_cat_balou(int pid, int pid1, int ncards, int* cards, int nbcards, int* bcards)  {
+	printf("Sending tell_user_cat_balou\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -342,6 +357,7 @@ void tell_user_cat_balou(int pid, int pid1, int ncards, int* cards, int nbcards,
 }
 
 void tell_user_jail(int pid, int* cards) {
+	printf("Sending tell_user_jail\n");
     cd->client_id = pid_table[pid];
 
     // Clear message buffer
@@ -376,6 +392,7 @@ Message receive_interpret_android(void) {
     switch(msg_type) {
         case 0x11:
         {
+        	printf("Doing tellDE2CardsInHand\n");
             // tellDE2CardsInHand
             // [2] ncards
             // [3] rest of array is cards
@@ -390,6 +407,7 @@ Message receive_interpret_android(void) {
         }
         case 0x12:
         {
+        	printf("Doing tellDE2BlueCardsInHand\n");
             // tellDE2BlueCardsInHand
             // [2] ncards
             // [3] rest of array is bcards
@@ -404,6 +422,7 @@ Message receive_interpret_android(void) {
         }
         case 0x13:
         {
+        	printf("Doing tellDE2UserUsedSelf\n");
             // tellDE2UserUsedSelf
             // [2] card_type
             //      0x01 BEER
@@ -435,6 +454,7 @@ Message receive_interpret_android(void) {
         }
         case 0x14:
         {
+        	printf("Doing tellDE2UserUsedOther\n");
             // tellDE2UserUsedOther
             // [2] pid1 (victim)
             // [3] card_type
@@ -471,12 +491,14 @@ Message receive_interpret_android(void) {
         }
         case 0x15:
         {
+        	printf("Doing tellDE2UserEndedTurn\n");
             // tellDE2UserEndedTurn
             return create_message(END_TURN, pid, pid, 0, cards, 0);
             break;
         }
         case 0x16:
         {
+        	printf("Doing tellDE2UserNeedsXCards\n");
             // tellDE2UserNeedsXCards
             // [2] ncards
             int ncards = cd->r_message[2];
@@ -485,6 +507,7 @@ Message receive_interpret_android(void) {
         }
         case 0x17:
         {
+        	printf("Doing tellDE2UserUpdateLives\n");
             // tellDE2UserUpdateLives
             // [2] lives
             int lives = cd->r_message[2];
@@ -492,6 +515,7 @@ Message receive_interpret_android(void) {
         }
         case 0x18:
         {
+        	printf("Doing tellDE2UserPickedCard\n");
             // tellDE2UserPickedCard
             // [2] cid
             cards[0] = cd->r_message[2];
@@ -499,6 +523,7 @@ Message receive_interpret_android(void) {
         }
         case 0x19:
         {
+        	printf("Doing tellDE2UserTransferCard\n");
             // tellDE2UserTransferCard
             // [2] cid
             cards[0] = cd->r_message[2];
@@ -506,6 +531,7 @@ Message receive_interpret_android(void) {
         }
         case 0x1a:
         {
+        	printf("Doing tellDE2OK\n");
             // tellDE2OK
             // TODO: custom message for OK
         	return create_message(ACKNOWLEDGE, pid, pid, 0, cards, 0);
@@ -513,6 +539,7 @@ Message receive_interpret_android(void) {
         }
         case 0x1b:
 		{
+			printf("Doing tellDE2Connected\n");
 			// tellDE2Connected
 			// TODO: custom message for OK
 			int new_pid = connected_count++;
@@ -521,6 +548,7 @@ Message receive_interpret_android(void) {
 			break;
 		}
         default:
+        	printf("Doing nothing\n");
             break;
     }
     return create_message(NO_TYPE, 0, 0, 0, cards, 0);

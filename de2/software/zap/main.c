@@ -54,7 +54,6 @@ int main() {
     for (i = 0; i < connected_count; i++) {
         for (j = 0; j < 2; j++) {
             playerCtrl->players[i].hand[j] = testDrawCard(cardCtrl);
-            printf("The drawn card is %d\n", playerCtrl->players[i].hand[j]);
             tell_user_new_card(i, playerCtrl->players[i].hand[j]);
             Message message = receivedFromAndroid();
 			if (message.type == UPDATE_HAND) {
@@ -84,10 +83,7 @@ int main() {
     while (1){
         int listening = 1;
         while (listening) {
-        	printf("Waiting for Command\n");
             Message message = receivedFromAndroid();
-        	printf("received/interpreted\n");
-        	printf("message.type: %d\n", message.type);
             switch (message.type) {
             case DRAW_CARDS:
                 drawCardsForId(message.fromId, cardCtrl, message.count, playerCtrl);
@@ -97,12 +93,9 @@ int main() {
                 updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
                 break;
             case UPDATE_BLUE:
-            {
-            	printf("message.fromId:%d %d %d %d %d %d", message.fromId, message.cards[0], message.cards[1], message.cards[2], message.cards[3], message.cards[4]);
                 updateBlueCardsForId(playerCtrl, message.fromId, message.count, message.cards);
-                printf("Came back from bluecards\n");
+                tell_user_ok(message.fromId);
                 break;
-            }
             case UPDATE_LIVES:
                 updateLivesForId(playerCtrl, message.fromId, message.count);
                 break;
@@ -154,19 +147,16 @@ int main() {
             case JAIL:
             	//TODO
                 tell_user_jail(message.toId, message.cards);
-                tell_user_ok(message.fromId);
                 break;
             case END_TURN:
                 listening = 0;
                 break;
             default:
-            	printf("garbage\n");
                 break;
             }
         	alt_up_char_buffer_clear(charBuffer);
         	runField(field);
         }
-        printf("exited while loops\n");
         endTurn(playerCtrl);
     	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
 		message = receivedFromAndroid();
