@@ -418,7 +418,8 @@ public class Player {
                         } else {
                             Log.i("colin", "took a hit");
                             setLives(lives - 1);
-                            Comm.tellDE2UserUpdateLives(pid, lives);
+                            // Don't need to send msg because setLives already sends one
+                            // Comm.tellDE2UserUpdateLives(pid, lives);
                         }
                     }
                 });
@@ -695,6 +696,7 @@ public class Player {
         // TODO: tell de2 that you beered
         // This function shouldn't return until de2 says everything is good
         test_call = "drinkBeer";
+        setLives(lives + 1);
         Comm.tellDE2UserUsedSelf(this.pid, "BEER");
         while (!DE2Message.isReadyToContinue())
             ;

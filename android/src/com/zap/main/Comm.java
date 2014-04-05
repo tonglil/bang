@@ -164,6 +164,11 @@ public class Comm {
     }
 
     public static void tellDE2UserUsedOther(int pid, int pid1, String type, int cid) {
+        if (pid == pid1) {
+            DE2Message.setDoingToSelf(true);
+        } else {
+            DE2Message.setDoingToSelf(false);
+        }
         int itype = 0;
         if (type.equals("ZAP")) {
             itype = 0x01;
@@ -202,7 +207,7 @@ public class Comm {
 
     public static void tellDE2UserUpdateLives(int pid, int lives) {
         String msg = "17" + iths(pid) + iths(lives);
-
+        Log.i("colin", "tellDE2UserUpdateLives " + msg);
         sendMessage(msg);
 
         return;
