@@ -112,6 +112,7 @@ int main() {
                 break;
             case ALIENS:
                 startAliens(playerCtrl, message.fromId);
+        		tell_user_ok(message.fromId);
                 break;
             case BEER:
             	//TODO
