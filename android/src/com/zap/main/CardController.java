@@ -1,10 +1,14 @@
 package com.zap.main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import com.zap.MainActivity;
 
 public class CardController {
     private static HashMap<Integer, Card> validCards = null;
@@ -126,6 +130,23 @@ public class CardController {
 
     private void initValidCards(String filename) {
         validCards = new HashMap<Integer, Card>();
+
+        BufferedReader br = MainActivity.readCardTxt();
+        try {
+            String s;
+            while ((s = br.readLine()) != null) {
+                if (s.charAt(0) != '-') {
+                    Card card = readCard(s);
+                    validCards.put(Integer.valueOf(card.cid), card);
+                }
+            }
+
+            br.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         File file = new File(filename);
         try {
             Scanner input = new Scanner(file);
@@ -147,7 +168,7 @@ public class CardController {
         int id = Integer.parseInt(l[0]);
         String name = l[1];
         int i;
-        for (i = 2; i < l.length - 1; i++) {
+        for (i = 2; i < l.length - 2; i++) {
             name += " " + l[i];
         }
         char border = l[i].charAt(0);
@@ -192,8 +213,10 @@ public class CardController {
             onePlayerReachable = false;
         }
         int onePlayerFixed = Integer.parseInt(String.valueOf(l[i].charAt(11)));
+        i++;
+        String image = l[i];
         return new Card(id, name, border, number, suit, zap, missed, life,
                 forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable,
-                onePlayerFixed);
+                onePlayerFixed, image);
     }
 }

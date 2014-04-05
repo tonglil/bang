@@ -1,0 +1,83 @@
+-name, number, suit, Bang, miss, life, forceDiscard,
+-draw, onePlayer, allPlayers, onePlayerReachable,
+-onePlayerFixed
+1 Schofield LJC000000002 schofield_3
+2 Schofield LQC000000002 schofield_2
+3 Rev Carabine LAC000000004 rev_carabine
+4 Winchester L8S000000005 winchester
+5 Volcanic L0S000000001 volcanic_2
+6 Volcanic L0C000000001 volcanic_1
+7 Schofield LKS000000002 schofield_1
+8 Remington LKC000000003 remington
+9 Bang! R2C100000010 bang_8
+10 Bang! R3C100000010 bang_7
+11 Bang! R4C100000010 bang_5
+12 Bang! R5C100000010 bang_1
+13 Bang! R6C100000010 bang_20
+14 Bang! R7C100000010 bang_22
+15 Bang! R8C100000010 bang_17
+16 Bang! R9C100000010 bang_21
+17 Bang! R2D100000010 bang_16
+18 Bang! R3D100000010 bang_15
+19 Bang! R4D100000010 bang_14
+20 Bang! R5D100000010 bang_13
+21 Bang! R6D100000010 bang_12
+22 Bang! R7D100000010 bang_11
+23 Bang! R8D100000010 bang_10
+24 Bang! R9D100000010 bang_9
+25 Bang! R0D100000010 bang_2
+26 Bang! RJD100000010 bang_6
+27 Bang! RQD100000010 bang_24
+28 Bang! RKD100000010 bang_18
+29 Bang! RAD100000010 bang_25
+30 Bang! RQH100000010 bang_4
+31 Bang! RKH100000010 bang_3
+32 Bang! RAH100000010 bang_19
+33 Bang! RAS100000010 bang_23
+34 Missed! R0C010000000 missed_11
+35 Missed! RJC010000000 missed_12
+36 Missed! RQC010000000 missed_10
+37 Missed! RKC010000000 missed_8
+38 Missed! RAC010000000 missed_9
+39 Missed! R2S010000000 missed_7
+40 Missed! R3S010000000 missed_6
+41 Missed! R4S010000000 missed_5
+42 Missed! R5S010000000 missed_4
+43 Missed! R6S010000000 missed_3
+44 Missed! R7S010000000 missed_2
+45 Missed! R8S010000000 missed_1
+46 Beer R6H001000000 beer_6
+47 Beer R7H001000000 beer_5
+48 Beer R8H001000000 beer_4
+49 Beer R9H001000000 beer_3
+50 Beer R0H001000000 beer_2
+51 Beer RJH001000000 beer_1
+52 Panic RJH000010001 panic_4
+53 Panic RQH000010001 panic_3
+54 Panic RAH000010001 panic_2
+55 Panic R8D000010001 panic_1
+56 Cat Balou R9D000101000 cat_balou_4
+57 Cat Balou R0D000101000 cat_balou_3
+58 Cat Balou RJD000101000 cat_balou_2
+59 Cat Balou RKH000101000 cat_balou_1
+60 Stagecoach R9S000020000 stagecoach_1
+61 Stagecoach R9S000020000 stagecoach_2
+62 Wells Fargo R3H000030000 wells_fargo
+63 Gatling R0H100000100 gatling
+64 Duel RQD000000000 duel_1
+65 Duel RJS000000000 duel_2
+66 Duel R8C000000000 duel_3
+67 Indians RKD000000000 indians_2
+68 Indians RAD000000000 indians_1
+69 General Store R9C000000000 general_store_2
+70 General Store RQS000000000 general_store_1
+71 Saloon R5H001000100 saloon
+72 Jail L0S000000000 jail_2
+73 Jail LJS000000000 jail_1
+74 Jail L4H000000000 jail_3
+75 Dynamite L2H000000000 dynamite
+76 Barrel LQS000000000 barrel_2
+77 Barrel LKS000000000 barrel_1
+78 Scope LAS000000000 scope
+79 Mustang L8H000000000 mustang_2
+80 Mustang L9H000000000 mustang_1
