@@ -55,6 +55,35 @@ public class Comm {
         }
     }
 
+    public static void sendMessageNoAck(String message) {
+        // Send Message Structure:
+        // [0] length not including [0]
+        // [1] message type
+        String msg = message;
+        byte[] bmsg = hstba(msg);
+
+        // Create an array of bytes. First byte will be the
+        // message length, and the next ones will be the message
+        byte buf[] = new byte[bmsg.length + 1];
+
+        buf[0] = (byte) bmsg.length;
+        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
+
+        // Now send through the output stream of the socket
+
+        OutputStream out;
+        try {
+            out = app.sock.getOutputStream();
+            try {
+                out.write(buf, 0, bmsg.length + 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // bytesToHexString
     final protected static char[] hexArray = "0123456789abcdef".toCharArray();
 
@@ -166,7 +195,7 @@ public class Comm {
     public static void tellDE2UserNeedsXCards(int pid, int ncards) {
         String msg = "16" + iths(pid) + iths(ncards);
 
-        sendMessage(msg);
+        sendMessageNoAck(msg);
 
         return;
     }
@@ -198,7 +227,7 @@ public class Comm {
     public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
 
-        sendMessage(msg);
+        sendMessageNoAck(msg);
 
         return;
     }

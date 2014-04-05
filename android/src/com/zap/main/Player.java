@@ -182,9 +182,6 @@ public class Player {
     }
 
     public void startTurn() {
-        Log.i("colin", pid + " turn started inside");
-        Comm.tellDE2OK(pid);
-        Log.i("colin", pid + " told ok");
         turn = true;
         zappedThisTurn = false;
 
@@ -215,9 +212,6 @@ public class Player {
                 break;
             }
         }
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
         drawCards(2);
     }
 
@@ -418,9 +412,11 @@ public class Player {
                         }
 
                         if (userplayedmiss) {
+                            Log.i("colin", "played a miss");
                             discardCard(missed_cid);
                             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                         } else {
+                            Log.i("colin", "took a hit");
                             setLives(lives - 1);
                             Comm.tellDE2UserUpdateLives(pid, lives);
                         }
@@ -722,9 +718,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "drawCards";
         Comm.tellDE2UserNeedsXCards(this.pid, numCards);
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
+
         return;
     }
 
