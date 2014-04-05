@@ -322,26 +322,26 @@ public class Comm {
             // tell_user_pid_role
             // [3] role
             int int_role = (int) buf[l++];
-            String role = "NONE";
+            String role = "None";
             switch (int_role) {
             case 0x00: {
-                role = "NONE";
+                role = "None";
                 break;
             }
             case 0x01: {
-                role = "SHERIFF";
+                role = "Sheriff";
                 break;
             }
             case 0x02: {
-                role = "DEPUTY";
+                role = "Deputy";
                 break;
             }
             case 0x03: {
-                role = "OUTLAW";
+                role = "Outlaw";
                 break;
             }
             case 0x04: {
-                role = "RENEGADE";
+                role = "Renegade";
                 break;
             }
             }
