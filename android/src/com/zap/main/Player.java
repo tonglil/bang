@@ -609,7 +609,7 @@ public class Player {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int cid = DE2Message.getCard_choices().get(which);
-                        Comm.tellDE2UserTransferCard(pid, cid);
+                        Comm.tellDE2UserPickedCard(pid, cid);
                     }
                 });
                 builder.show();

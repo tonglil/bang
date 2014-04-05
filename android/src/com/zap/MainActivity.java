@@ -175,7 +175,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage14(View view) {
-
+        p.endTurn();
     }
 
     public void sendMessage15(View view) {
