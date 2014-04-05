@@ -372,26 +372,26 @@ public class Comm {
                 if (p.getPid() == pid) {
                     break;
                 }
-                String role = "NONE";
+                String role = "None";
                 switch (int_role) {
                 case 0x01: {
-                    role = "SHERIFF";
+                    role = "Sheriff";
                     break;
                 }
                 case 0x02: {
-                    role = "DEPUTY";
+                    role = "Deputy";
                     break;
                 }
                 case 0x03: {
-                    role = "OUTLAW";
+                    role = "Outlaw";
                     break;
                 }
                 case 0x04: {
-                    role = "RENEGADE";
+                    role = "Renegade";
                     break;
                 }
                 default: {
-                    role = "NONE";
+                    role = "None";
                     break;
                 }
                 }
