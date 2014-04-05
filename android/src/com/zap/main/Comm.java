@@ -24,6 +24,36 @@ public class Comm {
         // Send Message Structure:
         // [0] length not including [0]
         // [1] message type
+        Log.i("colin", "Message to Middleman: " + message);
+        String msg = message;
+        byte[] bmsg = hstba(msg);
+
+        // Create an array of bytes. First byte will be the
+        // message length, and the next ones will be the message
+        byte buf[] = new byte[bmsg.length + 1];
+
+        buf[0] = (byte) bmsg.length;
+        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
+
+        // Now send through the output stream of the socket
+
+        OutputStream out;
+        try {
+            out = app.sock.getOutputStream();
+            try {
+                out.write(buf, 0, bmsg.length + 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendMessageWait(String message) {
+        // Send Message Structure:
+        // [0] length not including [0]
+        // [1] message type
 
         Boolean once = true;
         while (!DE2Message.getReadyToSend(once)) {
@@ -60,11 +90,21 @@ public class Comm {
         }
     }
 
-    public static void sendMessageNoAck(String message) {
+    public static void sendMessageWaitNoChange(String message) {
         // Send Message Structure:
         // [0] length not including [0]
         // [1] message type
+
+        Boolean once = true;
+        while (!DE2Message.getReadyToSend(once)) {
+            if (once) {
+                Log.i("colin", "Waiting to send " + message);
+                once = false;
+            }
+        }
+        DE2Message.setReadyToSend(false);
         Log.i("colin", "Message to Middleman: " + message);
+
         String msg = message;
         byte[] bmsg = hstba(msg);
 
@@ -132,7 +172,7 @@ public class Comm {
             msg = msg + iths(c.cid);
         }
         Log.i("colin", "Going to send tellDE2CardsInHand");
-        sendMessage(msg);
+        sendMessageWait(msg);
         Log.i("colin", "Sent tellDE2CardsInHand");
         return;
     }
@@ -210,7 +250,7 @@ public class Comm {
     public static void tellDE2UserNeedsXCards(int pid, int ncards) {
         String msg = "16" + iths(pid) + iths(ncards);
         Log.i("colin", "Going to send tellDE2UserNeedsXCards");
-        sendMessageNoAck(msg);
+        sendMessage(msg);
         Log.i("colin", "Sent tellDE2UserNeedsXCards");
         return;
     }
@@ -242,7 +282,7 @@ public class Comm {
     public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
         Log.i("colin", "Going to send tellDE2OK");
-        sendMessageNoAck(msg);
+        sendMessage(msg);
         Log.i("colin", "Sent tellDE2OK");
         return;
     }
@@ -454,13 +494,15 @@ public class Comm {
             Log.i("colin", "Did onSaloon");
             break;
         }
-        case 0x2a:
+        case 0x2a: {
             // tell_user_ok
             Log.i("colin", "Doing setReadyToContinue and setReadyToSend");
             DE2Message.setReadyToContinue(true);
             DE2Message.setReadyToSend(true);
             Log.i("colin", "Did setReadyToContinue and setReadyToSend");
+            tellDE2OK(p.getPid());
             break;
+        }
         case 0x0b: {
             // tell_user_blue_player_infront
             // [3] cid
