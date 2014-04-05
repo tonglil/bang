@@ -742,16 +742,21 @@ public class Player {
         return;
     }
 
-    public Card drawOneCard() {
+    public void drawOneCard() {
         // TODO: tell de2 that this player needs 1 card
         test_call = "drawOneCard";
         Comm.tellDE2UserNeedsXCards(this.pid, 1);
         // TODOCOLIN: get card
-        // while (!DE2Message.isReady())
-        // ;
-        // DE2Message.setReady(false);
-        int card = DE2Message.getR_cinfo().get(0).get(0);
-        return CardController.getValidCard(card);
+        Boolean once = true;
+        DE2Message.setReadyToContinue(false);
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
+        DE2Message.setReadyToContinue(false);
+        return;
     }
 
     public void panicOpponent(int pid) {
@@ -766,6 +771,7 @@ public class Player {
                 once = false;
             }
         }
+        DE2Message.setReadyToContinue(false);
         // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
         // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
         // Put cid = 0 to indicate random card from hand
@@ -786,6 +792,7 @@ public class Player {
                 once = false;
             }
         }
+        DE2Message.setReadyToContinue(false);
         // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
         // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
         // Put cid = 0 to indicate random card from hand
@@ -806,6 +813,7 @@ public class Player {
                 once = false;
             }
         }
+        DE2Message.setReadyToContinue(false);
         return;
     }
 
@@ -836,6 +844,7 @@ public class Player {
                 once = false;
             }
         }
+        DE2Message.setReadyToContinue(false);
         return;
     }
 
