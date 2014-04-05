@@ -523,9 +523,11 @@ public class Comm {
                 int cid = (int) buf[l++];
                 card_choices.add(cid);
             }
+            DE2Message.setCard_choices(card_choices);
             Log.i("colin", "Doing onGeneralStore");
-            p.onGeneralStore(card_choices);
+            p.onGeneralStore();
             Log.i("colin", "Did onGeneralStore");
+            break;
         }
         case 0x0d: {
             // tell_user_panic
@@ -549,9 +551,11 @@ public class Comm {
                 card_choices.add(cid);
             }
             r_cinfo.add(card_choices);
+            DE2Message.setCard_choices(card_choices);
             Log.i("colin", "Doing onPanic");
             p.onPanic();
             Log.i("colin", "Did onPanic");
+            break;
         }
         case 0x0e: {
             // tell_user_cat_balou
@@ -575,9 +579,11 @@ public class Comm {
                 card_choices.add(cid);
             }
             r_cinfo.add(card_choices);
+            DE2Message.setCard_choices(card_choices);
             Log.i("colin", "Doing onCatBalou");
             p.onCatBalou();
             Log.i("colin", "Did onCatBalou");
+            break;
         }
         case 0x0f: {
             // tell_user_jail
@@ -588,6 +594,7 @@ public class Comm {
             Log.i("colin", "Doing onJail");
             p.onJail(cid);
             Log.i("colin", "Did onJail");
+            break;
         }
         default:
             Log.i("colin", "Doing nothing");

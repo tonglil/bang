@@ -63,6 +63,16 @@ public class DE2Message {
     private static ArrayList<ArrayList<Integer>> r_pinfo;
     private static ArrayList<ArrayList<Integer>> r_cinfo;
 
+    private static ArrayList<Integer> card_choices;
+
+    public static ArrayList<Integer> getCard_choices() {
+        return card_choices;
+    }
+
+    public static void setCard_choices(ArrayList<Integer> card_choices) {
+        DE2Message.card_choices = card_choices;
+    }
+
     private static DE2Message instance;
 
     private DE2Message(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {

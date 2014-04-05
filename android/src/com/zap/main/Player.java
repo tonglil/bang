@@ -189,11 +189,11 @@ public class Player {
         for (Card c : cc.getBlueCards()) {
             if (c.name.compareTo(JAIL) == 0) {
                 cc.discardCard(c.cid);
-                Card t = drawOneCard();
-                if (t.suit != 'H') {
-                    forceEndTurn();
-                    return;
-                }
+                // Card t = drawOneCard(); BUTTON8
+                // if (t.suit != 'H') {
+                // forceEndTurn();
+                // return;
+                // }
                 break;
             }
         }
@@ -201,14 +201,14 @@ public class Player {
         // Draw for dynamite, if there is dynamite
         for (Card c : cc.getBlueCards()) {
             if (c.name.compareTo(DYNAMITE) == 0) {
-                Card t = drawOneCard();
-                if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
-                    // TODO: take 3 hits here
-                    cc.discardCard(c.cid);
-                } else {
-                    // TODO: pass dynamite to next player
-                    cc.discardCard(c.cid);
-                }
+                // Card t = drawOneCard(); BUTTON8
+                // if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
+                // // TODO: take 3 hits here
+                // cc.discardCard(c.cid);
+                // } else {
+                // // TODO: pass dynamite to next player
+                // cc.discardCard(c.cid);
+                // }
                 break;
             }
         }
@@ -490,9 +490,9 @@ public class Player {
         // cards are in:
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
+                CharSequence choices[] = new CharSequence[DE2Message.getCard_choices().size()];
                 int i = 0;
-                for (Integer cid : DE2Message.getR_cinfo().get(0)) {
+                for (Integer cid : DE2Message.getCard_choices()) {
                     choices[i++] = CardController.getValidCard(cid.intValue()).name;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
@@ -500,7 +500,7 @@ public class Player {
                 builder.setItems(choices, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int cid = DE2Message.getR_cinfo().get(0).get(which);
+                        int cid = DE2Message.getCard_choices().get(which);
                         Comm.tellDE2UserTransferCard(pid, cid);
                     }
                 });
@@ -514,9 +514,9 @@ public class Player {
         // cards are in:
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
+                CharSequence choices[] = new CharSequence[DE2Message.getCard_choices().size()];
                 int i = 0;
-                for (Integer cid : DE2Message.getR_cinfo().get(0)) {
+                for (Integer cid : DE2Message.getCard_choices()) {
                     choices[i++] = CardController.getValidCard(cid.intValue()).name;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
@@ -524,8 +524,8 @@ public class Player {
                 builder.setItems(choices, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int cid = DE2Message.getR_cinfo().get(0).get(which);
-                        Comm.tellDE2UserPickedCard(pid, cid);
+                        int cid = DE2Message.getCard_choices().get(which);
+                        Comm.tellDE2UserTransferCard(pid, cid);
                     }
                 });
                 builder.show();
@@ -594,15 +594,15 @@ public class Player {
         });
     }
 
-    public void onGeneralStore(ArrayList<Integer> card_choices) {
+    public void onGeneralStore() {
         // pick something from card_choices;
         // show dialog to pick
         // cards are in:
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                CharSequence choices[] = new CharSequence[DE2Message.getR_cinfo().get(0).size()];
+                CharSequence choices[] = new CharSequence[DE2Message.getCard_choices().size()];
                 int i = 0;
-                for (Integer cid : DE2Message.getR_cinfo().get(0)) {
+                for (Integer cid : DE2Message.getCard_choices()) {
                     choices[i++] = CardController.getValidCard(cid.intValue()).name;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
@@ -610,9 +610,8 @@ public class Player {
                 builder.setItems(choices, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int cid = DE2Message.getR_cinfo().get(0).get(which);
-                        receiveCard(cid);
-                        Comm.tellDE2UserPickedCard(pid, cid);
+                        int cid = DE2Message.getCard_choices().get(which);
+                        Comm.tellDE2UserTransferCard(pid, cid);
                     }
                 });
                 builder.show();
@@ -765,18 +764,13 @@ public class Player {
         test_call = "panicOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "PANIC", 0);
         Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once) && DE2Message.getType() != 0x0d) {
+        while (!DE2Message.getReadyToContinue(once)) {
             if (once) {
                 Log.i("colin", "Waiting for readyToContinue");
                 once = false;
             }
         }
         DE2Message.setReadyToContinue(false);
-        // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
-        // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
-        // Put cid = 0 to indicate random card from hand
-        int cid = 0;
-        Comm.tellDE2UserPickedCard(pid, cid);
         return;
     }
 
@@ -786,18 +780,13 @@ public class Player {
         test_call = "catBalouOpponentCard";
         Comm.tellDE2UserUsedOther(this.pid, pid, "CAT_BALOU", 0);
         Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once) && DE2Message.getType() != 0x0e) {
+        while (!DE2Message.getReadyToContinue(once)) {
             if (once) {
                 Log.i("colin", "Waiting for readyToContinue");
                 once = false;
             }
         }
         DE2Message.setReadyToContinue(false);
-        // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
-        // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
-        // Put cid = 0 to indicate random card from hand
-        int cid = 0;
-        Comm.tellDE2UserPickedCard(pid, cid);
         return;
     }
 
