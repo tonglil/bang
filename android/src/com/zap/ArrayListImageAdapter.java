@@ -10,15 +10,15 @@ import android.widget.ImageView;
 
 public class ArrayListImageAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<Integer> cards;
+    private ArrayList<Integer> images;
 
-    public ArrayListImageAdapter(Context c, ArrayList<Integer> cards) {
+    public ArrayListImageAdapter(Context c, ArrayList<Integer> images) {
         this.context = c;
-        this.cards = cards;
+        this.images = images;
     }
 
     public int getCount() {
-        return cards.size();
+        return images.size();
     }
 
     public Object getItem(int position) {
@@ -26,7 +26,7 @@ public class ArrayListImageAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        return cards.get(position);
+        return images.get(position);
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -42,7 +42,7 @@ public class ArrayListImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(cards.get(position));
+        imageView.setImageResource(images.get(position));
         return imageView;
     }
 }
