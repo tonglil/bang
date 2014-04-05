@@ -15,26 +15,26 @@ public class Player {
     public static Activity activity;
 
     private String name;
-    private CardController cc;
-    private int lives;
-    private int maxLives;
-    private HashMap<Integer, Opponent> opponents;
-    private String role;
-    private int pid;
-    private boolean turn;
-    private boolean dead;
-    private boolean zappedThisTurn;
+	private CardController cc;
+	private int lives;
+	private int maxLives;
+	private HashMap<Integer, Opponent> opponents;
+	private String role;
+	private int pid;
+	private boolean turn;
+	private boolean dead;
+	private boolean zappedThisTurn;
 
-    public String test_call;
+	public String test_call;
 
-    public static final String SHERIFF = "Sheriff";
-    public static final String MUSTANG = "Mustang";
-    public static final String JAIL = "Space Jail";
-    private static final String SCOPE = "Scope";
-    private static final String DUEL = "Duel";
-    private static final String ALIENS = "Aliens";
-    private static final String GENERAL_STORE = "General Store";
-    private static final String DYNAMITE = "Dynamite";
+	public static final String SHERIFF = "Sheriff";
+	public static final String MUSTANG = "Mustang";
+	private static final String JAIL = "Space Jail";
+	private static final String SCOPE = "Scope";
+	private static final String DUEL = "Duel";
+	private static final String ALIENS = "Aliens";
+	private static final String GENERAL_STORE = "General Store";
+	private static final String DYNAMITE = "Dynamite";
 
     public Player(String newName) {
         name = newName;
@@ -56,6 +56,7 @@ public class Player {
         return name;
     }
 
+<<<<<<< HEAD
     public void setLives(int lives) {
         if (!dead) {
             if (lives <= 0) {
@@ -290,8 +291,10 @@ public class Player {
                 } else if (c.life == 1) {
                     if (c.allPlayers) { // saloon
                         goToSaloon();
+                        cc.discardCard(cid);
                     } else if (lives < maxLives) { // beer
                         drinkBeer();
+                        cc.discardCard(cid);
                     } else {
                         // TODO Tony: tell user he has full lives, so he can't
                         // play beer
@@ -318,6 +321,7 @@ public class Player {
                         }
                     } else { // the other blue cards
                         cc.placeBlueCard(cid);
+                        //TODO: tell de2 the player's new set of blue cards
                         test_call = "blue card";
                     }
                 } else if (c.missed) { // missed
@@ -820,4 +824,52 @@ public class Player {
             return false;
         }
     }
+
+	//TODO AMITOJ: test cases
+	public int getRangeFromOpponent(int pid) {
+		Opponent o = opponents.get(Integer.valueOf(pid));
+		int range = o.getFixedRange();
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(MUSTANG) == 0) {
+				range++;
+			}
+		}
+		return range;
+	}
+
+	public boolean hasJail() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(JAIL) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasDynamite() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(DYNAMITE) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasBarrel() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(JAIL) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasMustang() {
+		for (Card c : cc.getBlueCards()) {
+			if (c.name.compareTo(MUSTANG) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

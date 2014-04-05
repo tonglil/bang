@@ -16,10 +16,13 @@ import com.zap.main.Player;
 
 public class PlayerActivity extends FragmentActivity {
 
-    ViewPager viewPager;
-    TabsAdapter tabsAdapter;
+    // TODO: player is the current player
+    private Player player = new Player("Tony");
 
-    String tabStats;
+    private ViewPager viewPager;
+    private TabsAdapter tabsAdapter;
+
+    private String tabStats;
 
     public void setTabStats(String data) {
         tabStats = data;
@@ -29,9 +32,31 @@ public class PlayerActivity extends FragmentActivity {
         return tabStats;
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        player.startTurn();
+        player.receiveCard(1);
+        player.receiveCard(2);
+        player.receiveCard(3);
+        player.receiveCard(4);
+        player.receiveCard(5);
+        player.receiveCard(46);
+        player.receiveCard(78);
+        player.receiveCard(20);
+        player.receiveCard(21);
+        player.receiveCard(71);
+        player.playCard(1);
+        player.playCard(71);
 
         viewPager = new ViewPager(this);
         viewPager.setId(R.id.pager);
@@ -39,12 +64,14 @@ public class PlayerActivity extends FragmentActivity {
 
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setTitle("Current Player: " + player.getName());
 
         tabsAdapter = new TabsAdapter(this, viewPager);
+        tabsAdapter.addTab(bar.newTab().setText("Hand Cards"), PlayerHandCards.class, null);
         tabsAdapter.addTab(bar.newTab().setText("Stats"), PlayerStats.class, null);
-        tabsAdapter.addTab(bar.newTab().setText("Cards"), PlayerCards.class, null);
-        tabsAdapter.addTab(bar.newTab().setText("Done"), PlayerDone.class, null);
+        tabsAdapter.addTab(bar.newTab().setText("Table Cards"), PlayerTableCards.class, null);
+
+        bar.setSelectedNavigationItem(1);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));

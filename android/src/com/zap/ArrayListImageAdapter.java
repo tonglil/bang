@@ -1,20 +1,24 @@
 package com.zap;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
+public class ArrayListImageAdapter extends BaseAdapter {
+    private Context context;
+    private ArrayList<Integer> images;
 
-    public ImageAdapter(Context c) {
-        mContext = c;
+    public ArrayListImageAdapter(Context c, ArrayList<Integer> images) {
+        this.context = c;
+        this.images = images;
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return images.size();
     }
 
     public Object getItem(int position) {
@@ -22,7 +26,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        return 0;
+        return images.get(position);
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -30,7 +34,7 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(context);
             imageView.setAdjustViewBounds(true);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(4, 4, 4, 4);
@@ -38,13 +42,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(mThumbIds[position]);
+        imageView.setImageResource(images.get(position));
         return imageView;
     }
-
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.bang_1, R.drawable.beer_1,
-            R.drawable.missed_1, R.drawable.panic_1
-    };
 }

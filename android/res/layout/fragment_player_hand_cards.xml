@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/FragmentPlayerCards"
+    android:id="@+id/FragmentPlayerHandCards"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,19 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" >
 
-    <EditText
-        android:id="@+id/cardInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/cardButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Send something to the stats fragment" />
-
     <GridView
-        android:id="@+id/cardGrid"
+        android:id="@+id/handCardGrid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnWidth="90dp"
