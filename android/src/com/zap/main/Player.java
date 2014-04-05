@@ -189,11 +189,13 @@ public class Player {
         for (Card c : cc.getBlueCards()) {
             if (c.name.compareTo(JAIL) == 0) {
                 cc.discardCard(c.cid);
-                // Card t = drawOneCard(); BUTTON8
-                // if (t.suit != 'H') {
-                // forceEndTurn();
-                // return;
-                // }
+                drawOneCard();
+                Card t = getHandCards().get(getHandCards().size() - 1);
+                discardCard(t.cid);
+                if (t.suit != 'H') {
+                    forceEndTurn();
+                    return;
+                }
                 break;
             }
         }
@@ -201,14 +203,16 @@ public class Player {
         // Draw for dynamite, if there is dynamite
         for (Card c : cc.getBlueCards()) {
             if (c.name.compareTo(DYNAMITE) == 0) {
-                // Card t = drawOneCard(); BUTTON8
-                // if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
-                // // TODO: take 3 hits here
-                // cc.discardCard(c.cid);
-                // } else {
-                // // TODO: pass dynamite to next player
-                // cc.discardCard(c.cid);
-                // }
+                drawOneCard();
+                Card t = getHandCards().get(getHandCards().size() - 1);
+                discardCard(t.cid);
+                if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
+                    // TODO: take 3 hits here
+                    cc.discardCard(c.cid);
+                } else {
+                    // TODO: pass dynamite to next player
+                    cc.discardCard(c.cid);
+                }
                 break;
             }
         }
@@ -534,10 +538,8 @@ public class Player {
 
     public void onJail(int cid) {
         // Nothing needs to be done
-        Log.i("b6", "crash on receiving");
         receiveBlueCard(cid);
-        Log.i("b6", "crash on receiving");
-        Comm.tellDE2BlueCardsInFront(cid, getNumberOfBlueCards(), getBlueCards());
+        Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
     }
 
     public void onDuel() {

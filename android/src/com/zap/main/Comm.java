@@ -181,8 +181,10 @@ public class Comm {
         String msg = "12" + iths(pid) + iths(ncards);
 
         if (cards == null) {
+            Log.i("b6", "card is null");
             msg = msg + iths(0);
         } else {
+            Log.i("b6", "card not null");
             for (Card c : cards) {
                 msg = msg + iths(c.cid);
             }
@@ -591,7 +593,6 @@ public class Comm {
         }
         case 0x0f: {
             // tell_user_jail
-            // [3] toId
             // [4] cid of jailcard
             int cid = (int) buf[l++];
             Log.i("colin", "Doing onJail");
@@ -601,7 +602,6 @@ public class Comm {
         }
         default:
             Log.i("colin", "Doing nothing");
-            break;
         }
         if (false) {
             DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
