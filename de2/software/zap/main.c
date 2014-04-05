@@ -91,6 +91,7 @@ int main() {
             switch (message.type) {
             case DRAW_CARDS:
                 drawCardsForId(message.fromId, cardCtrl, message.count, playerCtrl);
+                tell_user_ok(message.fromId);
                 break;
             case UPDATE_HAND:
                 updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
