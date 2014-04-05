@@ -5,6 +5,17 @@ import java.util.ArrayList;
 public class DE2Message {
     private static boolean readyToContinue = false;
     private static boolean readyToSend = true;
+    private static boolean doingToSelf = true;
+
+    public static boolean isDoingToSelf() {
+        return doingToSelf;
+    }
+
+    public static void setDoingToSelf(boolean doingToSelf) {
+        DE2Message.doingToSelf = doingToSelf;
+        DE2Message.readyToSend = doingToSelf;
+    }
+
     private static int type;
     private static int fromId;
     private static int toId;

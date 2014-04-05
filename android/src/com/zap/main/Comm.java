@@ -55,6 +55,35 @@ public class Comm {
         }
     }
 
+    public static void sendMessageNoAck(String message) {
+        // Send Message Structure:
+        // [0] length not including [0]
+        // [1] message type
+        String msg = message;
+        byte[] bmsg = hstba(msg);
+
+        // Create an array of bytes. First byte will be the
+        // message length, and the next ones will be the message
+        byte buf[] = new byte[bmsg.length + 1];
+
+        buf[0] = (byte) bmsg.length;
+        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
+
+        // Now send through the output stream of the socket
+
+        OutputStream out;
+        try {
+            out = app.sock.getOutputStream();
+            try {
+                out.write(buf, 0, bmsg.length + 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // bytesToHexString
     final protected static char[] hexArray = "0123456789abcdef".toCharArray();
 
@@ -135,6 +164,11 @@ public class Comm {
     }
 
     public static void tellDE2UserUsedOther(int pid, int pid1, String type, int cid) {
+        if (pid == pid1) {
+            DE2Message.setDoingToSelf(true);
+        } else {
+            DE2Message.setDoingToSelf(false);
+        }
         int itype = 0;
         if (type.equals("ZAP")) {
             itype = 0x01;
@@ -166,14 +200,14 @@ public class Comm {
     public static void tellDE2UserNeedsXCards(int pid, int ncards) {
         String msg = "16" + iths(pid) + iths(ncards);
 
-        sendMessage(msg);
+        sendMessageNoAck(msg);
 
         return;
     }
 
     public static void tellDE2UserUpdateLives(int pid, int lives) {
         String msg = "17" + iths(pid) + iths(lives);
-
+        Log.i("colin", "tellDE2UserUpdateLives " + msg);
         sendMessage(msg);
 
         return;
@@ -198,32 +232,7 @@ public class Comm {
     public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
 
-        // Send Message Structure:
-        // [0] length not including [0]
-        // [1] message type
-
-        byte[] bmsg = hstba(msg);
-
-        // Create an array of bytes. First byte will be the
-        // message length, and the next ones will be the message
-        byte buf[] = new byte[bmsg.length + 1];
-
-        buf[0] = (byte) bmsg.length;
-        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
-
-        // Now send through the output stream of the socket
-
-        OutputStream out;
-        try {
-            out = app.sock.getOutputStream();
-            try {
-                out.write(buf, 0, bmsg.length + 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendMessageNoAck(msg);
 
         return;
     }
@@ -332,6 +341,7 @@ public class Comm {
                 p.setOpponentRole(pid, role);
                 p.setOpponentRange(pid, range);
             }
+            Log.i("colin", "set roles and ranges");
             Comm.tellDE2OK(fromId);
             break;
         }
@@ -373,6 +383,7 @@ public class Comm {
                 }
                 p.setOpponentBlueCards(i, bcard);
             }
+            Log.i("colin", "set lives and blues");
             Comm.tellDE2OK(fromId);
             break;
         }
@@ -392,7 +403,9 @@ public class Comm {
         }
         case 0x06:
             // tell_user_their_turn
+            Log.i("colin", p.getPid() + " turn started outside");
             p.startTurn();
+            Log.i("colin", p.getPid() + " turn started outside return");
             break;
         case 0x07: {
             // tell_user_miss_or_lose_life

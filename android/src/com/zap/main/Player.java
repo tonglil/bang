@@ -182,10 +182,6 @@ public class Player {
     }
 
     public void startTurn() {
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
-
         turn = true;
         zappedThisTurn = false;
 
@@ -216,7 +212,6 @@ public class Player {
                 break;
             }
         }
-
         drawCards(2);
     }
 
@@ -417,11 +412,14 @@ public class Player {
                         }
 
                         if (userplayedmiss) {
+                            Log.i("colin", "played a miss");
                             discardCard(missed_cid);
                             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                         } else {
+                            Log.i("colin", "took a hit");
                             setLives(lives - 1);
-                            Comm.tellDE2UserUpdateLives(pid, lives);
+                            // Don't need to send msg because setLives already sends one
+                            // Comm.tellDE2UserUpdateLives(pid, lives);
                         }
                     }
                 });
@@ -698,6 +696,7 @@ public class Player {
         // TODO: tell de2 that you beered
         // This function shouldn't return until de2 says everything is good
         test_call = "drinkBeer";
+        setLives(lives + 1);
         Comm.tellDE2UserUsedSelf(this.pid, "BEER");
         while (!DE2Message.isReadyToContinue())
             ;
@@ -721,9 +720,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "drawCards";
         Comm.tellDE2UserNeedsXCards(this.pid, numCards);
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
+
         return;
     }
 
