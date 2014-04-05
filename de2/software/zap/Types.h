@@ -35,6 +35,7 @@ typedef struct Message{
     int fromId;
     int toId;
     int count;
+    int self;
     Card cards[MAX_CARDS];
 } Message;
 

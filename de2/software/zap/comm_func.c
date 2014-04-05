@@ -383,7 +383,7 @@ Message receive_interpret_android(void) {
             for (i = 3; i < ncards + 3; i++) {
                 cards[j++] = cd->r_message[i];
             }
-            return create_message(UPDATE_HAND, pid, pid, ncards, cards);
+            return create_message(UPDATE_HAND, pid, pid, ncards, cards, 0);
             break;
         }
         case 0x12:
@@ -397,7 +397,7 @@ Message receive_interpret_android(void) {
             for (i = 3; i < nbcards + 3; i++) {
                 cards[j++] = cd->r_message[i];
             }
-            return create_message(UPDATE_BLUE, pid, pid, nbcards, cards);
+            return create_message(UPDATE_BLUE, pid, pid, nbcards, cards, 0);
             break;
         }
         case 0x13:
@@ -412,19 +412,19 @@ Message receive_interpret_android(void) {
             int card_type = cd->r_message[2];
             switch (card_type) {
                 case 0x01:
-                    return create_message(BEER, pid, pid, 0, cards);
+                    return create_message(BEER, pid, pid, 0, cards, 0);
                     break;
                 case 0x02:
-                    return create_message(GATLING, pid, pid, 0, cards);
+                    return create_message(GATLING, pid, pid, 0, cards, 0);
                     break;
                 case 0x03:
-                    return create_message(ALIENS, pid, pid, 0, cards);
+                    return create_message(ALIENS, pid, pid, 0, cards, 0);
                     break;
                 case 0x04:
-                    return create_message(GENERAL_STORE, pid, pid, 0, cards);
+                    return create_message(GENERAL_STORE, pid, pid, 0, cards, 0);
                     break;
                 case 0x05:
-                    return create_message(SALOON, pid, pid, 0, cards);
+                    return create_message(SALOON, pid, pid, 0, cards, 0);
                     break;
                 default:
                     break;
@@ -445,21 +445,22 @@ Message receive_interpret_android(void) {
             int pid1 = cd->r_message[2];
             int card_type = cd->r_message[3];
             cards[0] = cd->r_message[4];
+            int self = cd->r_message[5];
             switch (card_type) {
                 case 0x01:
-                    return create_message(ZAP, pid, pid1, 0, cards);
+                    return create_message(ZAP, pid, pid1, 0, cards, self);
                     break;
                 case 0x02:
-                    return create_message(PANIC, pid, pid1, 0, cards);
+                    return create_message(PANIC, pid, pid1, 0, cards, self);
                     break;
                 case 0x03:
-                    return create_message(CAT_BALOU, pid, pid1, 0, cards);
+                    return create_message(CAT_BALOU, pid, pid1, 0, cards, self);
                     break;
                 case 0x04:
-                    return create_message(DUEL, pid, pid1, 0, cards);
+                    return create_message(DUEL, pid, pid1, 0, cards, self);
                     break;
                 case 0x05:
-                    return create_message(JAIL, pid, pid1, 0, cards);
+                    return create_message(JAIL, pid, pid1, 0, cards, self);
                     break;
                 default:
                     break;
@@ -469,7 +470,7 @@ Message receive_interpret_android(void) {
         case 0x15:
         {
             // tellDE2UserEndedTurn
-            return create_message(END_TURN, pid, pid, 0, cards);
+            return create_message(END_TURN, pid, pid, 0, cards, 0);
             break;
         }
         case 0x16:
@@ -477,7 +478,7 @@ Message receive_interpret_android(void) {
             // tellDE2UserNeedsXCards
             // [2] ncards
             int ncards = cd->r_message[2];
-            return create_message(DRAW_CARDS, pid, pid, ncards, cards);
+            return create_message(DRAW_CARDS, pid, pid, ncards, cards, 0);
             break;
         }
         case 0x17:
@@ -485,27 +486,27 @@ Message receive_interpret_android(void) {
             // tellDE2UserUpdateLives
             // [2] lives
             int lives = cd->r_message[2];
-            return create_message(UPDATE_LIVES, pid, pid, lives, cards);
+            return create_message(UPDATE_LIVES, pid, pid, lives, cards, 0);
         }
         case 0x18:
         {
             // tellDE2UserPickedCard
             // [2] cid
             cards[0] = cd->r_message[2];
-            return create_message(CHOOSE, pid, pid, 0, cards);
+            return create_message(CHOOSE, pid, pid, 0, cards, 0);
         }
         case 0x19:
         {
             // tellDE2UserTransferCard
             // [2] cid
             cards[0] = cd->r_message[2];
-            return create_message(TRANSFER, pid, pid, 0, cards);
+            return create_message(TRANSFER, pid, pid, 0, cards, 0);
         }
         case 0x1a:
         {
             // tellDE2OK
             // TODO: custom message for OK
-        	return create_message(ACKNOWLEDGE, pid, pid, 0, cards);
+        	return create_message(ACKNOWLEDGE, pid, pid, 0, cards, 0);
             break;
         }
         case 0x1b:
@@ -514,20 +515,22 @@ Message receive_interpret_android(void) {
 			// TODO: custom message for OK
 			int new_pid = connected_count++;
 			pid_connected[new_pid] = 1;
+			pid_table[new_pid] = cd->client_id;
 			break;
 		}
         default:
             break;
     }
-    return create_message(NO_TYPE, 0, 0, 0, cards);
+    return create_message(NO_TYPE, 0, 0, 0, cards, 0);
 }
 
-Message create_message(messageType type, int fromId, int toId, int count, Card cards[]) {
+Message create_message(messageType type, int fromId, int toId, int count, Card cards[], int self) {
     Message msg;
     msg.type = type;
     msg.fromId = fromId;
     msg.toId = toId;
     msg.count = count;
+    msg.self = self;
     memcpy(msg.cards, cards, sizeof(Card)*MAX_CARDS);
 
     return msg;
