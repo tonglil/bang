@@ -602,6 +602,7 @@ public class Comm {
         }
         default:
             Log.i("colin", "Doing nothing");
+            break;
         }
         if (false) {
             DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
