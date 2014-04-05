@@ -192,7 +192,8 @@ public class Player {
 			}
 		}
 		
-		drawCards(2);
+		//TODO: TONY blocks?
+//		drawCards(2);
 	}
 
 	public void endTurn() {

@@ -1,7 +1,13 @@
 package com.zap;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,12 +18,14 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 
     Button newGame;
+    private static AssetManager assetManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addButtonListenerNewGame();
+        assetManager = getAssets();
     }
 
     @Override
@@ -44,6 +52,18 @@ public class MainActivity extends Activity {
 //        String value = "A string value to pass.";
 //        setupIntent.putExtra("key", value);
         startActivity(setupIntent);
+    }
+    
+    public static BufferedReader readCardTxt() {
+        InputStream inputStream;
+        try {
+            inputStream = assetManager.open("cards.txt");
+            return new BufferedReader(new InputStreamReader(inputStream));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

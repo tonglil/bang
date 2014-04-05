@@ -1,10 +1,14 @@
 package com.zap.main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import com.zap.MainActivity;
 
 public class CardController {
     private static HashMap<Integer, Card> validCards = null;
@@ -126,6 +130,23 @@ public class CardController {
 
     private void initValidCards(String filename) {
         validCards = new HashMap<Integer, Card>();
+
+        BufferedReader br = MainActivity.readCardTxt();
+        try {
+            String s;
+            while ((s = br.readLine()) != null) {
+                if (s.charAt(0) != '-') {
+                    Card card = readCard(s);
+                    validCards.put(Integer.valueOf(card.cid), card);
+                }
+            }
+
+            br.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         File file = new File(filename);
         try {
             Scanner input = new Scanner(file);
