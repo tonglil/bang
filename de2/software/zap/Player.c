@@ -79,7 +79,7 @@ const char * roleToString(role r) {
 int getNumAlivePlayers(PlayerCtrl* playerCtrl) {
     int count = 0;
     int i;
-    for (i = 0; i < NUM_PLAYERS; i++) {
+    for (i = 0; i < connected_count; i++) {
         if (playerCtrl->players[i].lives > 0)
             count++;
     }

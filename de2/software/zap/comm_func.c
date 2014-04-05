@@ -262,12 +262,15 @@ void tell_user_store(int pid, int ncards, int* cards) {
     cd->s_message[l++] = 0x0c;
     cd->s_message[l++] = ncards;
 
-    int i;
-    for (i = 0; i < ncards; i++) {
-        cd->s_message[i + l] = cards[i];
+    int i, j = 0;
+    for (i = 0; i < NUM_PLAYERS; i++) {
+    	if (cards[i] != 0) {
+    		cd->s_message[j + l] = cards[i];
+    		j++;
+    	}
     }
 
-    cd->s_len = l + i;
+    cd->s_len = l + ncards;
 
     cd->s_message[1] = cd->s_len - 2;
 

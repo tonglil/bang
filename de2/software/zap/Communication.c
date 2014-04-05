@@ -129,6 +129,9 @@ void startAliens(PlayerCtrl* playerCtrl, int id) {
 }
 
 void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
+    tell_user_ok(id);
+    Message message1 = receivedFromAndroid();
+
     updateStore(playerCtrl, cardCtrl);
     setSubTurn(playerCtrl,id);
     int count = getNumAlivePlayers(playerCtrl);
@@ -139,6 +142,8 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
         switch (message.type) {
         case CHOOSE:
         	addCard(playerCtrl, getSubTurn(playerCtrl),message.cards[0]);
+        	tell_user_new_card(getSubTurn(playerCtrl), message.cards[0]);
+        	Message message = receivedFromAndroid();
             removeCardFromStore(cardCtrl, message.cards[0]);
             endSubTurn(playerCtrl);
             tell_user_store(getSubTurn(playerCtrl), count--, cardCtrl->store);
@@ -152,6 +157,8 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
         switch (message.type) {
         case CHOOSE:
         	addCard(playerCtrl, getSubTurn(playerCtrl),message.cards[0]);
+        	tell_user_new_card(getSubTurn(playerCtrl), message.cards[0]);
+        	Message message = receivedFromAndroid();
             removeCardFromStore(cardCtrl, message.cards[0]);
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)

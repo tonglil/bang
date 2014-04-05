@@ -174,8 +174,6 @@ int main() {
 		message = receivedFromAndroid();
 		if (message.type == ACKNOWLEDGE);
     	tell_user_their_turn(playerCtrl->turn);
-		message = receivedFromAndroid();
-		if (message.type == ACKNOWLEDGE);
         alt_up_char_buffer_clear(charBuffer);
         runField(field);
     }
