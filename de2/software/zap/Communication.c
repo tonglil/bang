@@ -5,10 +5,22 @@ Message receivedFromAndroid() {
     return message;
 }
 
-void drawCardsForId(int id, CardCtrl* cardCtrl, int count) {
+void drawCardsForId(int id, CardCtrl* cardCtrl, int count, PlayerCtrl* playerCtrl) {
     int i;
     for (i = 0; i < count; i++) {
         tell_user_new_card(id, cardCtrl->deck[cardCtrl->deckIndex]);
+		printf("Waiting for Updated Hand\n");
+		Message message = receivedFromAndroid();
+		printf("received/interpreted\n");
+		printf("message.type: %d\n", message.type);
+		switch (message.type) {
+		case UPDATE_HAND:
+			updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
+			break;
+		default:
+			printf("garbage\n");
+			break;
+		}
         cardCtrl->deckIndex++;
     }
 }

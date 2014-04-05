@@ -514,6 +514,7 @@ Message receive_interpret_android(void) {
 			// TODO: custom message for OK
 			int new_pid = connected_count++;
 			pid_connected[new_pid] = 1;
+			pid_table[new_pid] = cd->client_id;
 			break;
 		}
         default:

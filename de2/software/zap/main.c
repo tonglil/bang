@@ -74,20 +74,14 @@ int main() {
 
     Message message;
 
-    tell_user_their_turn(0);
+	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
 	message = receivedFromAndroid();
 	if (message.type == ACKNOWLEDGE);
-    runField(field);
+	tell_user_all_opponent_blue_lives(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+	message = receivedFromAndroid();
+	if (message.type == ACKNOWLEDGE);
+    tell_user_their_turn(0);
     while (1){
-    	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
-		message = receivedFromAndroid();
-		if (message.type == ACKNOWLEDGE);
-    	tell_user_all_opponent_blue_lives(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
-		message = receivedFromAndroid();
-		if (message.type == ACKNOWLEDGE);
-
-		tell_user_ok(playerCtrl->turn);
-
         int listening = 1;
         while (listening) {
         	printf("Waiting for Command\n");
@@ -96,7 +90,7 @@ int main() {
         	printf("message.type: %d\n", message.type);
             switch (message.type) {
             case DRAW_CARDS:
-                drawCardsForId(message.fromId, cardCtrl, message.count);
+                drawCardsForId(message.fromId, cardCtrl, message.count, playerCtrl);
                 break;
             case UPDATE_HAND:
                 updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
@@ -127,9 +121,11 @@ int main() {
             case SALOON:
                 startSaloon(playerCtrl);
                 break;
-            case ZAP:
-                startZap(playerCtrl, message.toId);
-                break;
+            case ZAP: {
+            	startZap(playerCtrl, message.toId);
+            	tell_user_ok(message.fromId);
+				break;
+            }
             case PANIC:
                 startPanic(playerCtrl, message.toId, message.fromId);
                 break;
@@ -155,6 +151,12 @@ int main() {
         }
         printf("exited while loops\n");
         endTurn(playerCtrl);
+    	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+		message = receivedFromAndroid();
+		if (message.type == ACKNOWLEDGE);
+    	tell_user_all_opponent_blue_lives(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
+		message = receivedFromAndroid();
+		if (message.type == ACKNOWLEDGE);
     	tell_user_their_turn(playerCtrl->turn);
 		message = receivedFromAndroid();
 		if (message.type == ACKNOWLEDGE);
