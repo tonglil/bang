@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.zap.main.Card;
 import com.zap.main.Comm;
 import com.zap.main.Player;
 
@@ -152,7 +151,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage8(View view) {
-        Card c = p.drawOneCard();
+        p.drawOneCard();
     }
 
     public void sendMessage9(View view) {
