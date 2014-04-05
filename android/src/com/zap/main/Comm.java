@@ -180,8 +180,12 @@ public class Comm {
     public static void tellDE2BlueCardsInFront(int pid, int ncards, ArrayList<Card> cards) {
         String msg = "12" + iths(pid) + iths(ncards);
 
-        for (Card c : cards) {
-            msg = msg + iths(c.cid);
+        if (cards == null) {
+            msg = msg + iths(0);
+        } else {
+            for (Card c : cards) {
+                msg = msg + iths(c.cid);
+            }
         }
         Log.i("colin", "Going to send tellDE2BlueCardsInFront");
         sendMessage(msg);
@@ -366,26 +370,26 @@ public class Comm {
                 if (p.getPid() == pid) {
                     break;
                 }
-                String role = "NONE";
+                String role = "None";
                 switch (int_role) {
                 case 0x01: {
-                    role = "SHERIFF";
+                    role = "Sheriff";
                     break;
                 }
                 case 0x02: {
-                    role = "DEPUTY";
+                    role = "Deputy";
                     break;
                 }
                 case 0x03: {
-                    role = "OUTLAW";
+                    role = "Outlaw";
                     break;
                 }
                 case 0x04: {
-                    role = "RENEGADE";
+                    role = "Renegade";
                     break;
                 }
                 default: {
-                    role = "NONE";
+                    role = "None";
                     break;
                 }
                 }
@@ -583,7 +587,6 @@ public class Comm {
             // tell_user_jail
             // [3] toId
             // [4] cid of jailcard
-            toId = (int) buf[l++];
             int cid = (int) buf[l++];
             Log.i("colin", "Doing onJail");
             p.onJail(cid);

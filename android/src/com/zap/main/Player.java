@@ -535,7 +535,9 @@ public class Player {
 
     public void onJail(int cid) {
         // Nothing needs to be done
+        Log.i("b6", "crash on receiving");
         receiveBlueCard(cid);
+        Log.i("b6", "crash on receiving");
         Comm.tellDE2BlueCardsInFront(cid, getNumberOfBlueCards(), getBlueCards());
     }
 

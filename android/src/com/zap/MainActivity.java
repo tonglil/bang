@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage6(View view) {
-        p.throwInJail(0, 72);
+        p.throwInJail(1, 0x72);
     }
 
     public void sendMessage7(View view) {
