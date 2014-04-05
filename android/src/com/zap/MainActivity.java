@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage10(View view) {
-        p.catBalouOpponentCard(1);
+        p.catBalouOpponent(1);
     }
 
     public void sendMessage11(View view) {

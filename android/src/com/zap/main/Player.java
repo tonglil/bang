@@ -339,7 +339,7 @@ public class Player {
                     }
                 } else if (c.forceDiscard) {
                     if (c.onePlayer) { // cat balou
-                        catBalouOpponentCard(1);
+                        catBalouOpponent(1);
                         cc.discardCard(cid);
                     }
                 } else if (c.name.compareTo(DUEL) == 0) {
@@ -525,7 +525,7 @@ public class Player {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int cid = DE2Message.getCard_choices().get(which);
-                        Comm.tellDE2UserTransferCard(pid, cid);
+                        Comm.tellDE2UserPickedCard(pid, cid);
                     }
                 });
                 builder.show();
@@ -774,7 +774,7 @@ public class Player {
         return;
     }
 
-    public void catBalouOpponentCard(int pid) {
+    public void catBalouOpponent(int pid) {
         // TODO: tell de2 to randomly discard card from all opponents
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
