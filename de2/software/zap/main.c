@@ -114,7 +114,8 @@ int main() {
                 break;
             case BEER:
             	//TODO
-                updateLivesForId(playerCtrl, message.fromId, message.count);
+                //updateLivesForId(playerCtrl, message.fromId, message.count);
+                tell_user_ok(message.fromId);
                 break;
             case GENERAL_STORE:
                 startStore(playerCtrl, message.fromId, cardCtrl);
