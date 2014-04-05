@@ -648,9 +648,10 @@ public class Player {
         Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
     }
 
-    public void onReceiveRoleAndPid(int fromId, String role) {
+    public void onReceiveRoleAndPid(int fromId, String role, int life) {
         setPid(fromId);
         setRole(role);
+        this.lives = life;
         Comm.tellDE2OK(pid);
     }
 

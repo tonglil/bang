@@ -296,7 +296,13 @@ public class Comm {
                 break;
             }
             }
-            p.onReceiveRoleAndPid(fromId, role);
+            int life = 0;
+            if (role.equals("SHERIFF")) {
+                life = 5;
+            } else {
+                life = 4;
+            }
+            p.onReceiveRoleAndPid(fromId, role, life);
             break;
         }
         case 0x02: {
