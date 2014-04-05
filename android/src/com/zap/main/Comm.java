@@ -180,8 +180,14 @@ public class Comm {
     public static void tellDE2BlueCardsInFront(int pid, int ncards, ArrayList<Card> cards) {
         String msg = "12" + iths(pid) + iths(ncards);
 
-        for (Card c : cards) {
-            msg = msg + iths(c.cid);
+        if (cards == null) {
+            Log.i("b6", "card is null");
+            msg = msg + iths(0);
+        } else {
+            Log.i("b6", "card not null");
+            for (Card c : cards) {
+                msg = msg + iths(c.cid);
+            }
         }
         Log.i("colin", "Going to send tellDE2BlueCardsInFront");
         sendMessage(msg);
@@ -587,9 +593,7 @@ public class Comm {
         }
         case 0x0f: {
             // tell_user_jail
-            // [3] toId
             // [4] cid of jailcard
-            toId = (int) buf[l++];
             int cid = (int) buf[l++];
             Log.i("colin", "Doing onJail");
             p.onJail(cid);
@@ -598,7 +602,6 @@ public class Comm {
         }
         default:
             Log.i("colin", "Doing nothing");
-            break;
         }
         if (false) {
             DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
