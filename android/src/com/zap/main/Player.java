@@ -468,7 +468,6 @@ public class Player {
                             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                         } else {
                             setLives(lives - 1);
-                            Comm.tellDE2UserUpdateLives(pid, lives);
                         }
                     }
                 });
@@ -585,7 +584,6 @@ public class Player {
                             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                         } else {
                             setLives(lives - 1);
-                            Comm.tellDE2UserUpdateLives(pid, lives);
                         }
                     }
                 });
