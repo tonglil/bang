@@ -143,6 +143,7 @@ int main() {
             case JAIL:
             	//TODO
                 tell_user_jail(message.toId, message.cards);
+                tell_user_ok(message.fromId);
                 break;
             case END_TURN:
                 listening = 0;
