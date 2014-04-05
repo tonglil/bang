@@ -1,65 +1,172 @@
 package com.zap;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.zap.main.Player;
+
 public class PlayerActivity extends FragmentActivity {
-    ViewPager viewPager;
-    PlayerTabPagerAdapter tabAdapter;
-    ActionBar actionBar;
+    
+    // TODO: player is the current player
+    private Player player = new Player("Tony");
+    
+    private ViewPager viewPager;
+    private TabsAdapter tabsAdapter;
 
-    private void setupTabs() {
-        tabAdapter = new PlayerTabPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.pager);
+    private String tabStats;
 
-        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                actionBar = getActionBar();
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
-
-        viewPager.setAdapter(tabAdapter);
+    public void setTabStats(String data) {
+        tabStats = data;
     }
 
-    // Enable Tabs on Action Bar
-    private void setupActionBar() {
-        actionBar = getActionBar();
-
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            @Override
-            public void onTabReselected(android.app.ActionBar.Tab tab, FragmentTransaction ft) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(android.app.ActionBar.Tab tab, FragmentTransaction ft) {
-                // TODO Auto-generated method stub
-            }
-        };
-
-        // Add New Tabs
-        actionBar.addTab(actionBar.newTab().setText("Stats").setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText("Cards").setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText("Done").setTabListener(tabListener));
+    public String getTabStats() {
+        return tabStats;
+    }
+    
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+    
+    public Player getPlayer() {
+        return this.player;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        player.startTurn();
+        player.receiveCard(1);
+        player.receiveCard(2);
+        player.receiveCard(3);
+        player.receiveCard(4);
+        player.receiveCard(5);
+        player.receiveCard(46);
+        player.receiveCard(78);
+        player.receiveCard(20);
+        player.receiveCard(21);
+        player.receiveCard(71);
+        player.playCard(1);
+        player.playCard(71);
+        
+        viewPager = new ViewPager(this);
+        viewPager.setId(R.id.pager);
+        setContentView(viewPager);
 
-        setContentView(R.layout.activity_player);
-        setupTabs();
-        setupActionBar();
+        final ActionBar bar = getActionBar();
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        bar.setTitle("Current Player: " + player.getName());
+
+        tabsAdapter = new TabsAdapter(this, viewPager);
+        tabsAdapter.addTab(bar.newTab().setText("Hand Cards"), PlayerHandCards.class, null);
+        tabsAdapter.addTab(bar.newTab().setText("Stats"), PlayerStats.class, null);
+        tabsAdapter.addTab(bar.newTab().setText("Table Cards"), PlayerTableCards.class, null);
+        
+        bar.setSelectedNavigationItem(1);
+
+        if (savedInstanceState != null) {
+            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
+        }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
+        outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+    }
+
+    public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+
+        private final Context context;
+        private final ActionBar actionBar;
+        private final ViewPager viewPager;
+        private final ArrayList<TabInfo> tabs = new ArrayList<TabInfo>();
+
+        static final class TabInfo {
+
+            private final Class<?> classes;
+            private final Bundle args;
+
+            TabInfo(Class<?> _class, Bundle _args) {
+                classes = _class;
+                args = _args;
+            }
+
+        }
+
+        public TabsAdapter(FragmentActivity activity, ViewPager pager) {
+            super(activity.getSupportFragmentManager());
+            context = activity;
+            actionBar = activity.getActionBar();
+            viewPager = pager;
+            viewPager.setAdapter(this);
+            viewPager.setOnPageChangeListener(this);
+        }
+
+        public void addTab(ActionBar.Tab tab, Class<?> classes, Bundle args) {
+            TabInfo info = new TabInfo(classes, args);
+            tab.setTag(info);
+            tab.setTabListener(this);
+            tabs.add(info);
+            actionBar.addTab(tab);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionoffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            actionBar.setSelectedNavigationItem(position);
+        }
+
+        @Override
+        public void onTabReselected(Tab tab, FragmentTransaction transaction) {
+
+        }
+
+        @Override
+        public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+            Object tag = tab.getTag();
+            for (int i = 0; i < tabs.size(); i++) {
+                if (tabs.get(i) == tag) {
+                    viewPager.setCurrentItem(i);
+                }
+            }
+        }
+
+        @Override
+        public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
+
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            TabInfo info = tabs.get(position);
+            return Fragment.instantiate(context, info.classes.getName(), info.args);
+        }
+
+        @Override
+        public int getCount() {
+            return tabs.size();
+        }
+
+    }
+
 }

@@ -17,7 +17,7 @@ public class Player {
 	private boolean turn;
 	private boolean dead;
 	private boolean zappedThisTurn;
-	
+
 	public String test_call;
 
 	public static final String SHERIFF = "Sheriff";
@@ -39,16 +39,16 @@ public class Player {
         dead = false;
         zappedThisTurn = false;
         test_call = "";
-    }	
-    
+    }
+
     public Player() {
         this("name");
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
 	public void setLives(int lives) {
 		if (!dead) {
 			if (lives <= 0) {
@@ -62,43 +62,43 @@ public class Player {
 			}
 		}
 	}
-	
+
 	public int getLives() {
 		return lives;
 	}
-	
+
 	public boolean isDead() {
 		return dead;
 	}
-	
+
 	public boolean isTurn() {
 		return turn;
 	}
-	
+
 	public void setPid(int pid) {
 		this.pid = pid;
 	}
-	
+
 	public int getPid() {
 		return pid;
 	}
-	
+
 	public int getNumberOfHandCards() {
 		return cc.numberOfHandCards();
 	}
-	
+
 	public int getNumberOfBlueCards() {
 		return cc.numberOfBlueCards();
 	}
-	
+
 	public ArrayList<Card> getHandCards() {
 		return cc.getHandCards();
 	}
-	
+
 	public ArrayList<Card> getBlueCards() {
 		return cc.getBlueCards();
 	}
-	
+
 	public void setRole(String role) {
 		this.role = role;
 		if (role.compareTo(SHERIFF) == 0) {
@@ -109,29 +109,29 @@ public class Player {
 			lives = 4;
 		}
 	}
-	
+
 	public String getRole() {
 		return role;
 	}
-	
+
 	public void initOpponent(int pid, int range, String role) {
 		if (opponents.get(new Integer(pid)) == null) {
 			opponents.put(new Integer(pid), new Opponent(pid, range, role));
 		}
 	}
-	
+
 	public void setOpponentRange(int pid, int range) {
 		Opponent o = opponents.get(new Integer(pid));
 		if (o != null) {
 			o.setRange(range);
 		}
 	}
-	
+
 	public void setOpponentLives(int pid, int lives) {
 		Opponent o = opponents.get(new Integer(pid));
 		o.setLives(lives);
 	}
-	
+
 	//TEST
 	public void setOpponentBlueCards(int pid, ArrayList<Integer> cids) {
 		Opponent o = opponents.get(new Integer(pid));
@@ -140,12 +140,12 @@ public class Player {
 			o.playBlueCard(i.intValue());
 		}
 	}
-	
+
 	public void opponentPlayBlueCard(int pid, int cid) {
 		Opponent o = opponents.get(new Integer(pid));
 		o.playBlueCard(cid);
 	}
-	
+
 	public void opponentDiscardBlueCard(int pid, int cid) {
 		Opponent o = opponents.get(new Integer(pid));
 		o.discardBlueCard(cid);
@@ -155,15 +155,15 @@ public class Player {
 	public void receiveCard(int cid) {
 		cc.receiveCard(cid);
 	}
-	
+
 	public void discardCard(int cid) {
 		cc.discardCard(cid);
 	}
-	
+
 	public void startTurn() {
 		turn = true;
 		zappedThisTurn = false;
-		
+
 		//Draw for jail, if in jail
 		for (Card c : cc.getBlueCards()) {
 			if (c.name.compareTo(JAIL) == 0) {
@@ -191,7 +191,7 @@ public class Player {
 				break;
 			}
 		}
-		
+
 		drawCards(2);
 	}
 
@@ -204,13 +204,13 @@ public class Player {
 			turn = false;
 		}
 	}
-	
+
 	public void forceEndTurn() {
 		//TODO: tell de2 that my turn is over
 		test_call = "forceEndTurn";
 		turn = false;
 	}
-	
+
 	public int getFixedRange() {
 		int range = 1;
 		for (Card c : cc.getBlueCards()) {
@@ -220,7 +220,7 @@ public class Player {
 		}
 		return range;
 	}
-	
+
 	// Get maximum range of the payer
 	public int getRange() {
 		int range = 1;
@@ -234,7 +234,7 @@ public class Player {
 		}
 		return range;
 	}
-	
+
 	//TODO AMITOJ: test cases
 	public int getRangeFromOpponent(int pid) {
 		Opponent o = opponents.get(Integer.valueOf(pid));
@@ -246,7 +246,7 @@ public class Player {
 		}
 		return range;
 	}
-	
+
 	public boolean hasJail() {
 		for (Card c : cc.getBlueCards()) {
 			if (c.name.compareTo(JAIL) == 0) {
@@ -255,7 +255,7 @@ public class Player {
 		}
 		return false;
 	}
-	
+
 	public boolean hasDynamite() {
 		for (Card c : cc.getBlueCards()) {
 			if (c.name.compareTo(DYNAMITE) == 0) {
@@ -264,7 +264,7 @@ public class Player {
 		}
 		return false;
 	}
-	
+
 	public boolean hasBarrel() {
 		for (Card c : cc.getBlueCards()) {
 			if (c.name.compareTo(JAIL) == 0) {
@@ -273,7 +273,7 @@ public class Player {
 		}
 		return false;
 	}
-	
+
 	public boolean hasMustang() {
 		for (Card c : cc.getBlueCards()) {
 			if (c.name.compareTo(MUSTANG) == 0) {
@@ -282,7 +282,7 @@ public class Player {
 		}
 		return false;
 	}
-	
+
 	public void playCard(int cid) {
 		if (turn) {
 			Card c = cc.getHandCard(cid);
@@ -313,8 +313,10 @@ public class Player {
 				} else if (c.life == 1) {
 					if (c.allPlayers) { //saloon
 						goToSaloon();
+						cc.discardCard(cid);
 					} else if(lives < maxLives) { //beer
 						drinkBeer();
+                        cc.discardCard(cid);
 					} else {
 						//TODO Tony: tell user he has full lives, so he can't play beer
 						test_call = "cant beer";
@@ -381,31 +383,31 @@ public class Player {
 			test_call = "Not turn";
 		}
 	}
-		
+
 	////////////////////////////////////////////////////
 	// THE BELOW PUBLIC FUNCTIONS ARE CALLED WHEN AN OPPONENT INITIATES AN ACTION
-	
+
 	//TEST THEM ALL
 	public void onZap() {
 		//TODO: user has choice of playing miss or taking a life (player getting zapped)
 		//TODO: let him use a beer if this is a lethal hit
 	}
-	
+
 	public void onAliens() {
 		//TODO: user has choice of playing zap or taking a life (player getting dueled or aliens)
 		//TODO: let him use a beer if this is a lethal hit
 	}
-	
+
 	public void onSaloon() {
 		if (lives < maxLives) {
 			setLives(lives + 1);;
 		}
 	}
-	
+
 	public void onPanic(int cid) {
 		discardCard(cid);
 	}
-	
+
 	public void onCatBalou(int cid) {
 		discardCard(cid);
 	}
@@ -413,15 +415,15 @@ public class Player {
 	public void onJail() {
 		//Nothing needs to be done
 	}
-	
+
 	public void onDuel() {
-		
+
 	}
-	
+
 	public void onGeneralStore() {
-		
+
 	}
-	
+
 ///////////////////////////////////////////////////////
 
 	private void zapOpponent(int pid) {
@@ -429,13 +431,13 @@ public class Player {
 		//This function shouldn't return until either the opponent uses missed, beer, or takes the hit
 		test_call = "zapOpponent";
 	}
-	
+
 	private void zapAll() {
 		//TODO: tell de2 that this player wants to zap everyone
-		//This function shouldn't return until every opponent uses missed, beer, or takes the hit	
+		//This function shouldn't return until every opponent uses missed, beer, or takes the hit
 		test_call = "zapAll";
 	}
-	
+
 	private void goToSaloon() {
 		//TODO: tell de2 that everyone gets a life
 		//This function shouldn't return until de2 says everything is good
@@ -447,49 +449,49 @@ public class Player {
 		//This function shouldn't return until de2 says everything is good
 		test_call = "drinkBeer";
 	}
-	
+
 	private void throwInJail(int pid) {
 		//TODO: tell de2 that this opponent should be put in jail
 		//This function shouldn't return until de2 says everything is good
 		test_call = "throwInJail";
 	}
-	
+
 	private void drawCards(int numCards) {
 		//TODO: tell de2 that this player needs numCards cards
 		//This function shouldn't return until de2 says everything is good
 		test_call = "drawCards";
 	}
-	
+
 	private Card drawOneCard() {
 		//TODO: tell de2 that this player needs 1 card
 		test_call = "drawOneCard";
 		return CardController.getValidCard(1);
 	}
-	
+
 	private void panicOpponent(int pid) {
 		//TODO: tell de2 that this player wants to panic opponent
 		//This function shouldn't return until de2 says everything is good
 		test_call = "panicOpponent";
 	}
-	
+
 	private void discardOpponentCard() {
 		//TODO: tell de2 to randomly discard card from all opponents
 		//This function shouldn't return until de2 says everything is good
 		test_call = "discardOpponentCard";
 	}
-	
+
 	private void duelOpponent(int pid) {
 		//TODO: tell de2 to begin duel with opponent
 		//This function shouldn't return until de2 says everything is good
 		test_call = "duelOpponent";
 	}
-	
+
 	private void releaseTheAliens() {
 		//TODO: tell de2 to send aliens after everyone
 		//This function shouldn't return until de2 says everything is good
 		test_call = "releaseTheAliens";
 	}
-	
+
 	private void generalStore() {
 		//TODO: tell de2 to use general store
 		//This function shouldn't return until de2 says everything is good
@@ -504,7 +506,7 @@ public class Player {
 			return false;
 		}
 	}
-	
+
 	// Check if opponent if within range to shoot
 	private boolean checkRange(int pid) {
 		Opponent o = opponents.get(new Integer(pid));
