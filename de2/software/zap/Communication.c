@@ -82,6 +82,7 @@ void startDuel(PlayerCtrl* playerCtrl, int to, int from) {
 void startZap(PlayerCtrl* playerCtrl, int to, int self) {
 	if (self == 1) {
 		tell_user_ok(to);
+		Message message = receivedFromAndroid();
 	}
     tell_user_miss_or_lose_life(to);
     while (1) {
