@@ -133,7 +133,10 @@ int main() {
 				break;
             }
             case PANIC:
-                startPanic(playerCtrl, message.toId, message.fromId);
+                startPanic(playerCtrl, message.toId, message.fromId, message.self);
+            	if (message.self == 0) {
+            		tell_user_ok(message.fromId);
+            	}
                 break;
             case CAT_BALOU:
                 startCatBalou(playerCtrl, message.toId, message.fromId);

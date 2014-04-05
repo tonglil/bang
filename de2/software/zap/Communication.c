@@ -174,7 +174,11 @@ void startSaloon(PlayerCtrl* playerCtrl) {
     }
 }
 
-void startPanic(PlayerCtrl* playerCtrl, int to, int from) {
+void startPanic(PlayerCtrl* playerCtrl, int to, int from, int self) {
+	if (self == 1) {
+		tell_user_ok(to);
+		Message message = receivedFromAndroid();
+	}
     Card transfer;
     tell_user_panic(from, to, playerCtrl->players[to].num_hand, playerCtrl->players[to].hand, playerCtrl->players[to].num_blue, playerCtrl->players[to].blueCards);
     while (1) {

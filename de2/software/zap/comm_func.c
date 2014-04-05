@@ -285,7 +285,7 @@ void tell_user_panic(int pid, int pid1, int ncards, int* cards, int nbcards, int
     cd->s_message[l++] = pid;
     l++;
     cd->s_message[l++] = 0x0d;
-    cd->s_message[l++] = pid;
+    cd->s_message[l++] = pid1;
     cd->s_message[l++] = nbcards;
     cd->s_message[l++] = ncards;
 
@@ -296,7 +296,7 @@ void tell_user_panic(int pid, int pid1, int ncards, int* cards, int nbcards, int
 
     int j;
     for (j = 0; j < ncards; j++) {
-        cd->s_message[i + l] = cards[i];
+        cd->s_message[j + i + l] = cards[j];
     }
 
     cd->s_len = l + i + j;
@@ -328,7 +328,7 @@ void tell_user_cat_balou(int pid, int pid1, int ncards, int* cards, int nbcards,
 
     int j;
     for (j = 0; j < ncards; j++) {
-        cd->s_message[i + l] = cards[i];
+        cd->s_message[j + i + l] = cards[j];
     }
 
     cd->s_len = l + i + j;
