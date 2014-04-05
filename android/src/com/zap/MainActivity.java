@@ -285,7 +285,7 @@ public class MainActivity extends Activity {
                         in.read(buf);
 
                         final String s = Comm.bth(buf);
-                        Log.i("colin", "TCPReadTimerTask run() got: " + s);
+                        Log.i("colin", "Message from Middleman: " + s);
 
                         Comm.receiveInterpretDE2(buf, getP());
 

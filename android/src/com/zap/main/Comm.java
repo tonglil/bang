@@ -24,11 +24,16 @@ public class Comm {
         // Send Message Structure:
         // [0] length not including [0]
         // [1] message type
-        Log.i("colin", "Waiting for Ack");
-        while (!DE2Message.isReadyToSend())
-            ;
+
+        Boolean once = true;
+        while (!DE2Message.getReadyToSend(once)) {
+            if (once) {
+                Log.i("colin", "Waiting to send " + message);
+                once = false;
+            }
+        }
         DE2Message.setReadyToSend(false);
-        Log.i("colin", "Got Ack");
+        Log.i("colin", "Message to Middleman: " + message);
 
         String msg = message;
         byte[] bmsg = hstba(msg);
@@ -59,6 +64,7 @@ public class Comm {
         // Send Message Structure:
         // [0] length not including [0]
         // [1] message type
+        Log.i("colin", "Message to Middleman: " + message);
         String msg = message;
         byte[] bmsg = hstba(msg);
 
@@ -125,9 +131,9 @@ public class Comm {
         for (Card c : cards) {
             msg = msg + iths(c.cid);
         }
-        Log.i("colin", "Going to send message");
+        Log.i("colin", "Going to send tellDE2CardsInHand");
         sendMessage(msg);
-        Log.i("colin", "Sent message");
+        Log.i("colin", "Sent tellDE2CardsInHand");
         return;
     }
 
@@ -137,8 +143,9 @@ public class Comm {
         for (Card c : cards) {
             msg = msg + iths(c.cid);
         }
-
+        Log.i("colin", "Going to send tellDE2BlueCardsInFront");
         sendMessage(msg);
+        Log.i("colin", "Sent tellDE2BlueCardsInFront");
 
         return;
     }
@@ -157,17 +164,20 @@ public class Comm {
             itype = 0x05;
         }
         String msg = "13" + iths(pid) + iths(itype);
-
+        Log.i("colin", "Going to send tellDE2UserUsedSelf");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2UserUsedSelf");
         return;
     }
 
     public static void tellDE2UserUsedOther(int pid, int pid1, String type, int cid) {
+        int self = 0;
         if (pid == pid1) {
             DE2Message.setDoingToSelf(true);
+            self = 1;
         } else {
             DE2Message.setDoingToSelf(false);
+            self = 0;
         }
         int itype = 0;
         if (type.equals("ZAP")) {
@@ -182,66 +192,66 @@ public class Comm {
             itype = 0x05;
         }
 
-        String msg = "14" + iths(pid) + iths(pid1) + iths(itype) + iths(cid);
-
+        String msg = "14" + iths(pid) + iths(pid1) + iths(itype) + iths(cid) + iths(self);
+        Log.i("colin", "Going to send tellDE2UserUsedOther");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2UserUsedOther");
         return;
     }
 
     public static void tellDE2UserEndedTurn(int pid) {
         String msg = "15" + iths(pid);
-
+        Log.i("colin", "Going to send tellDE2UserEndedTurn");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2UserEndedTurn");
         return;
     }
 
     public static void tellDE2UserNeedsXCards(int pid, int ncards) {
         String msg = "16" + iths(pid) + iths(ncards);
-
+        Log.i("colin", "Going to send tellDE2UserNeedsXCards");
         sendMessageNoAck(msg);
-
+        Log.i("colin", "Sent tellDE2UserNeedsXCards");
         return;
     }
 
     public static void tellDE2UserUpdateLives(int pid, int lives) {
         String msg = "17" + iths(pid) + iths(lives);
-        Log.i("colin", "tellDE2UserUpdateLives " + msg);
+        Log.i("colin", "Going to send tellDE2UserUpdateLives");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2UserUpdateLives");
         return;
     }
 
     public static void tellDE2UserPickedCard(int pid, int cid) {
         String msg = "18" + iths(pid) + iths(cid);
-
+        Log.i("colin", "Going to send tellDE2UserPickedCard");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2UserPickedCard");
         return;
     }
 
     public static void tellDE2UserTransferCard(int pid, int cid) {
         String msg = "19" + iths(pid) + iths(cid);
-
+        Log.i("colin", "Going to send tellDE2UserTransferCard");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2UserTransferCard");
         return;
     }
 
     public static void tellDE2OK(int pid) {
         String msg = "1a" + iths(pid);
-
+        Log.i("colin", "Going to send tellDE2OK");
         sendMessageNoAck(msg);
-
+        Log.i("colin", "Sent tellDE2OK");
         return;
     }
 
     public static void tellDE2Connected(int pid) {
         String msg = "1b" + iths(pid);
-
+        Log.i("colin", "Going to send tellDE2Connected");
         sendMessage(msg);
-
+        Log.i("colin", "Sent tellDE2Connected");
         return;
     }
 
@@ -250,7 +260,6 @@ public class Comm {
         // [0] 0x0a
         if (buf[0] == 0x0a) {
             DE2Message.setReadyToSend(true);
-            Log.i("colin", "DE2 acknowledged, Android can send more");
             return;
         }
 
@@ -296,7 +305,9 @@ public class Comm {
                 break;
             }
             }
+            Log.i("colin", "Doing onReceiveRoleAndPid");
             p.onReceiveRoleAndPid(fromId, role);
+            Log.i("colin", "Did onReceiveRoleAndPid");
             break;
         }
         case 0x02: {
@@ -338,10 +349,11 @@ public class Comm {
                     break;
                 }
                 }
+                Log.i("colin", "Doing setOpponentRole and setOpponentRange");
                 p.setOpponentRole(pid, role);
                 p.setOpponentRange(pid, range);
+                Log.i("colin", "Did setOpponentRole and setOpponentRange");
             }
-            Log.i("colin", "set roles and ranges");
             Comm.tellDE2OK(fromId);
             break;
         }
@@ -365,8 +377,9 @@ public class Comm {
                 if (p.getPid() == pid) {
                     break;
                 }
-
+                Log.i("colin", "Doing setOpponentLives");
                 p.setOpponentLives(pid, lives);
+                Log.i("colin", "Did setOpponentLives");
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();
                 pinfo.add(num_blues);
                 r_pinfo.add(pinfo);
@@ -381,9 +394,10 @@ public class Comm {
                 for (int j = 0; j < r_pinfo.get(i).get(0); j++) {
                     bcard.add((int) buf[k++]);
                 }
+                Log.i("colin", "Doing setOpponentBlueCards");
                 p.setOpponentBlueCards(i, bcard);
+                Log.i("colin", "Did setOpponentBlueCards");
             }
-            Log.i("colin", "set lives and blues");
             Comm.tellDE2OK(fromId);
             break;
         }
@@ -391,26 +405,31 @@ public class Comm {
             // tell_user_new_card
             // [3] cid
             int cid = (int) buf[l++];
+            Log.i("colin", "Doing onReceiveCard");
             p.onReceiveCard(cid);
+            Log.i("colin", "Did onReceiveCard");
             break;
         }
         case 0x05: {
             // tell_user_lost_card
             // [3] cid
             int cid = (int) buf[l++];
+            Log.i("colin", "Doing onLoseCard");
             p.onLoseCard(cid);
+            Log.i("colin", "Did onLoseCard");
             break;
         }
         case 0x06:
             // tell_user_their_turn
-            Log.i("colin", p.getPid() + " turn started outside");
+            Log.i("colin", "Doing startTurn");
             p.startTurn();
-            Log.i("colin", p.getPid() + " turn started outside return");
+            Log.i("colin", "Did startTurn");
             break;
         case 0x07: {
             // tell_user_miss_or_lose_life
-            Log.i("colin", "Try to onZap");
+            Log.i("colin", "Doing onZap");
             p.onZap();
+            Log.i("colin", "Did onZap");
             break;
         }
         case 0x08: {
@@ -418,26 +437,37 @@ public class Comm {
             // [3] 0x01 for Aliens, 0x02 for Duel
             int choice = (int) buf[l++];
             if (choice == 0x01) {
+                Log.i("colin", "Doing onAliens");
                 p.onAliens();
+                Log.i("colin", "Did onAliens");
             } else {
+                Log.i("colin", "Doing onDuel");
                 p.onDuel();
+                Log.i("colin", "Did onDuel");
             }
             break;
         }
         case 0x09: {
             // tell_user_get_life
+            Log.i("colin", "Doing onSaloon");
             p.onSaloon();
+            Log.i("colin", "Did onSaloon");
             break;
         }
         case 0x2a:
             // tell_user_ok
+            Log.i("colin", "Doing setReadyToContinue and setReadyToSend");
             DE2Message.setReadyToContinue(true);
+            DE2Message.setReadyToSend(true);
+            Log.i("colin", "Did setReadyToContinue and setReadyToSend");
             break;
         case 0x0b: {
             // tell_user_blue_player_infront
             // [3] cid
             int cid = (int) buf[l++];
+            Log.i("colin", "Doing receiveBlueCard");
             p.receiveBlueCard(cid);
+            Log.i("colin", "Did receiveBlueCard");
             break;
         }
         case 0x0c: {
@@ -451,7 +481,9 @@ public class Comm {
                 int cid = (int) buf[l++];
                 card_choices.add(cid);
             }
+            Log.i("colin", "Doing onGeneralStore");
             p.onGeneralStore(card_choices);
+            Log.i("colin", "Did onGeneralStore");
         }
         case 0x0d: {
             // tell_user_panic
@@ -475,7 +507,9 @@ public class Comm {
                 card_choices.add(cid);
             }
             r_cinfo.add(card_choices);
+            Log.i("colin", "Doing onPanic");
             p.onPanic();
+            Log.i("colin", "Did onPanic");
         }
         case 0x0e: {
             // tell_user_cat_balou
@@ -499,7 +533,9 @@ public class Comm {
                 card_choices.add(cid);
             }
             r_cinfo.add(card_choices);
+            Log.i("colin", "Doing onCatBalou");
             p.onCatBalou();
+            Log.i("colin", "Did onCatBalou");
         }
         case 0x0f: {
             // tell_user_jail
@@ -507,15 +543,18 @@ public class Comm {
             // [4] cid of jailcard
             toId = (int) buf[l++];
             int cid = (int) buf[l++];
+            Log.i("colin", "Doing onJail");
             p.onJail(cid);
+            Log.i("colin", "Did onJail");
         }
         default:
+            Log.i("colin", "Doing nothing");
             break;
         }
-        if (type == 0x05 || type == 0x06 || type == 0x07 || type == 0x08 || type == 0x09 || type == 0x0b) {
-            DE2Message.setMessage(false, type, fromId, toId, count, r_pinfo, r_cinfo);
-        } else {
+        if (false) {
             DE2Message.setMessage(true, type, fromId, toId, count, r_pinfo, r_cinfo);
+        } else {
+            DE2Message.setMessage(false, type, fromId, toId, count, r_pinfo, r_cinfo);
         }
         return;
     }

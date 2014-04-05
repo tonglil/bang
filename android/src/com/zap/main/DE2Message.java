@@ -2,10 +2,48 @@ package com.zap.main;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class DE2Message {
-    private static boolean readyToContinue = false;
-    private static boolean readyToSend = true;
-    private static boolean doingToSelf = true;
+    volatile private static Boolean readyToContinue = false;
+    volatile private static Boolean readyToSend = true;
+    volatile private static Boolean doingToSelf = true;
+
+    public static Boolean getReadyToContinue(Boolean once) {
+        if (once) {
+            Log.i("colin", "readyToContinue: " + readyToContinue);
+        }
+        return readyToContinue;
+    }
+
+    public static void setReadyToContinue(Boolean readyToContinue) {
+        Log.i("colin", "readyToContinue: " + DE2Message.readyToContinue + "->" + readyToContinue);
+        DE2Message.readyToContinue = readyToContinue;
+    }
+
+    public static Boolean getReadyToSend(Boolean once) {
+        if (once) {
+            Log.i("colin", "readyToSend: " + readyToSend);
+        }
+        return readyToSend;
+    }
+
+    public static void setReadyToSend(Boolean readyToSend) {
+        Log.i("colin", "readyToSend: " + DE2Message.readyToSend + "->" + readyToSend);
+        DE2Message.readyToSend = readyToSend;
+    }
+
+    public static Boolean getDoingToSelf(Boolean once) {
+        if (once) {
+            Log.i("colin", "doingToSelf: " + doingToSelf);
+        }
+        return doingToSelf;
+    }
+
+    public static void setDoingToSelf(Boolean doingToSelf) {
+        Log.i("colin", "doingToSelf: " + DE2Message.doingToSelf + "->" + doingToSelf);
+        DE2Message.doingToSelf = doingToSelf;
+    }
 
     public static boolean isDoingToSelf() {
         return doingToSelf;
@@ -13,7 +51,9 @@ public class DE2Message {
 
     public static void setDoingToSelf(boolean doingToSelf) {
         DE2Message.doingToSelf = doingToSelf;
-        DE2Message.readyToSend = doingToSelf;
+        if (doingToSelf) {
+            DE2Message.readyToSend = true;
+        }
     }
 
     private static int type;
@@ -26,7 +66,7 @@ public class DE2Message {
     private static DE2Message instance;
 
     private DE2Message(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {
-        DE2Message.readyToContinue = ready;
+        // DE2Message.setReadyToContinue(ready);
         DE2Message.type = type;
         DE2Message.fromId = fromId;
         DE2Message.toId = toId;
@@ -43,29 +83,13 @@ public class DE2Message {
     }
 
     public static void setMessage(boolean ready, int type, int fromId, int toId, int count, ArrayList<ArrayList<Integer>> r_pinfo, ArrayList<ArrayList<Integer>> r_cinfo) {
-        DE2Message.readyToContinue = ready;
+        // DE2Message.setReadyToContinue(ready);
         DE2Message.type = type;
         DE2Message.fromId = fromId;
         DE2Message.toId = toId;
         DE2Message.count = count;
         DE2Message.r_pinfo = r_pinfo;
         DE2Message.r_cinfo = r_cinfo;
-    }
-
-    public static boolean isReadyToContinue() {
-        return readyToContinue;
-    }
-
-    public static void setReadyToContinue(boolean ready) {
-        DE2Message.readyToContinue = ready;
-    }
-
-    public static boolean isReadyToSend() {
-        return readyToSend;
-    }
-
-    public static void setReadyToSend(boolean readyToSend) {
-        DE2Message.readyToSend = readyToSend;
     }
 
     public static int getType() {

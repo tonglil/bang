@@ -268,9 +268,7 @@ public class Player {
                     if (c.onePlayerReachable) { // zap
                         if (!zappedThisTurn) {
                             int pid = 1; // TODO Tony: prompt user for target
-                            Log.i("colin", "going to checkRange");
                             if (checkRange(pid)) {
-                                Log.i("colin", "zapOpponent");
                                 zapOpponent(pid);
                                 zappedThisTurn = true;
                                 cc.discardCard(cid);
@@ -356,14 +354,12 @@ public class Player {
                     cc.discardCard(cid);
                 }
             }
-            Log.i("colin", "sending tellDE2CardsInHand");
             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
             Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
         } else {
             // TODO Tony: tell player it isn't his turn
             test_call = "Not turn";
         }
-        Log.i("colin", test_call);
     }
 
     // //////////////////////////////////////////////////
@@ -412,11 +408,9 @@ public class Player {
                         }
 
                         if (userplayedmiss) {
-                            Log.i("colin", "played a miss");
                             discardCard(missed_cid);
                             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                         } else {
-                            Log.i("colin", "took a hit");
                             setLives(lives - 1);
                             // Don't need to send msg because setLives already sends one
                             // Comm.tellDE2UserUpdateLives(pid, lives);
@@ -634,7 +628,6 @@ public class Player {
             }
         }
         discardCard(cid);
-        Log.i("colin", "sending tellDE2CardsInHand");
         if (isHand) {
             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
         } else {
@@ -644,7 +637,6 @@ public class Player {
 
     public void onReceiveCard(int cid) {
         receiveCard(cid);
-        Log.i("colin", "sending tellDE2CardsInHand");
         Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
     }
 
@@ -663,8 +655,14 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "ZAP", 0);
-        while (!DE2Message.isReadyToContinue())
-            ;
+
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(true)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         DE2Message.setReadyToContinue(false);
         return;
     }
@@ -675,8 +673,13 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapAll";
         Comm.tellDE2UserUsedSelf(this.pid, "GATLING");
-        while (!DE2Message.isReadyToContinue())
-            ;
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         DE2Message.setReadyToContinue(false);
         return;
     }
@@ -686,8 +689,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "goToSaloon";
         Comm.tellDE2UserUsedSelf(this.pid, "SALOON");
-        while (!DE2Message.isReadyToContinue())
-            ;
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         DE2Message.setReadyToContinue(false);
         return;
     }
@@ -698,8 +706,13 @@ public class Player {
         test_call = "drinkBeer";
         setLives(lives + 1);
         Comm.tellDE2UserUsedSelf(this.pid, "BEER");
-        while (!DE2Message.isReadyToContinue())
-            ;
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         DE2Message.setReadyToContinue(false);
         return;
     }
@@ -709,8 +722,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "throwInJail";
         Comm.tellDE2UserUsedOther(this.pid, pid, "JAIL", cid);
-        while (!DE2Message.isReadyToContinue())
-            ;
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         DE2Message.setReadyToContinue(false);
         return;
     }
@@ -741,9 +759,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "PANIC", 0);
-        while (!DE2Message.isReadyToContinue() && DE2Message.getType() != 0x0d)
-            ;
-        DE2Message.setReadyToContinue(false);
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once) && DE2Message.getType() != 0x0d) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
         // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
         // Put cid = 0 to indicate random card from hand
@@ -757,9 +779,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
         Comm.tellDE2UserUsedOther(this.pid, pid, "CAT_BALOU", 0);
-        while (!DE2Message.isReadyToContinue() && DE2Message.getType() != 0x0e)
-            ;
-        DE2Message.setReadyToContinue(false);
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once) && DE2Message.getType() != 0x0e) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         // Prompt user to pick a card from blue cards in front of victim or random card from hand of victim
         // The ArrayList<Integer> of blue cards in front is DE2Message.getR_cinfo().get(0);
         // Put cid = 0 to indicate random card from hand
@@ -773,9 +799,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "duelOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "DUEL", 0);
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         return;
     }
 
@@ -784,9 +814,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "releaseTheAliens";
         Comm.tellDE2UserUsedSelf(this.pid, "ALIENS");
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         return;
     }
 
@@ -795,9 +829,13 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "generalStore";
         Comm.tellDE2UserUsedSelf(this.pid, "GENERAL_STORE");
-        while (!DE2Message.isReadyToContinue())
-            ;
-        DE2Message.setReadyToContinue(false);
+        Boolean once = true;
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
         return;
     }
 
