@@ -3,16 +3,12 @@ package com.zap.main;
 import java.util.ArrayList;
 
 public class Opponent {
+
     private int pid;
     private int lives;
     private int maxLives;
     private int range;
     private String role;
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     private ArrayList<Card> blueCards;
     private boolean dead;
 
@@ -39,6 +35,10 @@ public class Opponent {
         return role;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public void setLives(int lives) {
         if (!dead) {
             if (lives <= 0) {
@@ -62,6 +62,10 @@ public class Opponent {
 
     public void setRange(int range) {
         this.range = range;
+    }
+
+    public int getFixedRange() {
+        return this.range;
     }
 
     public int getLives() {

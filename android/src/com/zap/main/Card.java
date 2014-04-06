@@ -18,7 +18,10 @@ public class Card {
 
     // space duel, indians, general store
     // space jail, dynamite, barrel, scope, mustang
-    Card(int cid, String name, char border, char number, char suit, boolean zap, boolean missed, int life, boolean forceDiscard, int draw, boolean onePlayer, boolean allPlayers, boolean onePlayerReachable, int onePlayerFixed) {
+    Card(int cid, String name, char border, char number, char suit,
+            boolean zap, boolean missed, int life, boolean forceDiscard,
+            int draw, boolean onePlayer, boolean allPlayers,
+            boolean onePlayerReachable, int onePlayerFixed) {
         this.cid = cid;
         this.name = name;
         this.border = border;
@@ -43,10 +46,6 @@ public class Card {
         }
     }
 
-    public boolean isJail() {
-        return name.compareTo(Player.JAIL) == 0;
-    }
-
     public boolean isBlue() {
         return border == 'L';
     }
@@ -55,4 +54,89 @@ public class Card {
         return border == 'R';
     }
 
+    public boolean selfTarget() {
+        return isGunCard() || isMissed() || isBeer() || isStageCoach()
+                || isWellsFargo() || isBarrel() || isMustang() || isScope()
+                || isDynamite();
+    }
+
+    public boolean allPlayersIncSelf() {
+        return isSaloon() || isGeneralStore();
+    }
+
+    public boolean allPlayersNotSelf() {
+        return isGatling() || isAliens();
+    }
+
+    public boolean onePlayerNotSelf() {
+        return isBang() || isPanic() || isCatBalou() || isDuel() || isJail();
+    }
+
+    public boolean isBang() {
+        return name.equals("Zap!");
+    }
+
+    public boolean isDuel() {
+        return name.equals("Duel");
+    }
+
+    public boolean isAliens() {
+        return name.equals("Aliens");
+    }
+
+    public boolean isGeneralStore() {
+        return name.equals("General Store");
+    }
+
+    public boolean isMissed() {
+        return name.equals("Missed");
+    }
+
+    public boolean isBeer() {
+        return name.equals("Beer");
+    }
+
+    public boolean isStageCoach() {
+        return name.equals("Stagecoach");
+    }
+
+    public boolean isWellsFargo() {
+        return name.equals("Wells Fargo");
+    }
+
+    public boolean isBarrel() {
+        return name.equals("Barrel");
+    }
+
+    public boolean isMustang() {
+        return name.equals("Mustang");
+    }
+
+    public boolean isScope() {
+        return name.equals("Scope");
+    }
+
+    public boolean isSaloon() {
+        return name.equals("Saloon");
+    }
+
+    public boolean isDynamite() {
+        return name.equals("Dynamite");
+    }
+
+    public boolean isGatling() {
+        return name.equals("Gatling");
+    }
+
+    public boolean isPanic() {
+        return name.equals("Panic");
+    }
+
+    public boolean isCatBalou() {
+        return name.equals("Cat Balou");
+    }
+
+    public boolean isJail() {
+        return name.equals("Space Jail");
+    }
 }
