@@ -15,10 +15,10 @@ import android.support.v4.view.ViewPager;
 import com.zap.main.Player;
 
 public class PlayerActivity extends FragmentActivity {
-    
+
     // TODO: player is the current player
     private Player player = new Player("Tony");
-    
+
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
 
@@ -31,11 +31,11 @@ public class PlayerActivity extends FragmentActivity {
     public String getTabStats() {
         return tabStats;
     }
-    
+
     public void setPlayer(Player player) {
         this.player = player;
     }
-    
+
     public Player getPlayer() {
         return this.player;
     }
@@ -43,7 +43,7 @@ public class PlayerActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         player.startTurn();
         player.receiveCard(1);
         player.receiveCard(2);
@@ -57,7 +57,7 @@ public class PlayerActivity extends FragmentActivity {
         player.receiveCard(71);
         player.playCard(1);
         player.playCard(71);
-        
+
         viewPager = new ViewPager(this);
         viewPager.setId(R.id.pager);
         setContentView(viewPager);
@@ -67,24 +67,30 @@ public class PlayerActivity extends FragmentActivity {
         bar.setTitle("Current Player: " + player.getName());
 
         tabsAdapter = new TabsAdapter(this, viewPager);
-        tabsAdapter.addTab(bar.newTab().setText("Hand Cards"), PlayerHandCards.class, null);
-        tabsAdapter.addTab(bar.newTab().setText("Stats"), PlayerStats.class, null);
-        tabsAdapter.addTab(bar.newTab().setText("Table Cards"), PlayerTableCards.class, null);
-        
+        tabsAdapter.addTab(bar.newTab().setText("Hand Cards"),
+                PlayerHandCards.class, null);
+        tabsAdapter.addTab(bar.newTab().setText("Stats"), PlayerStats.class,
+                null);
+        tabsAdapter.addTab(bar.newTab().setText("Table Cards"),
+                PlayerTableCards.class, null);
+
         bar.setSelectedNavigationItem(1);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
+
+        Player.activity = this;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
+        // super.onSaveInstanceState(outState);
         outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
     }
 
-    public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+    public static class TabsAdapter extends FragmentPagerAdapter implements
+            ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
         private final Context context;
         private final ActionBar actionBar;
@@ -127,7 +133,8 @@ public class PlayerActivity extends FragmentActivity {
         }
 
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionoffsetPixels) {
+        public void onPageScrolled(int position, float positionOffset,
+                int positionoffsetPixels) {
 
         }
 
@@ -159,7 +166,8 @@ public class PlayerActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             TabInfo info = tabs.get(position);
-            return Fragment.instantiate(context, info.classes.getName(), info.args);
+            return Fragment.instantiate(context, info.classes.getName(),
+                    info.args);
         }
 
         @Override

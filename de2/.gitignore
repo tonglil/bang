@@ -15,7 +15,6 @@ nios_system/synthesis/*
 *sopc_*
 *.jdi
 *.ptf.*
-*.sof
 *.pof
 *.qws
 *.smsg
@@ -50,6 +49,7 @@ simulation/
 timing/
 testbench/
 *_sim/
+*_bsp/
 
 # Don't ignore
 !replacement_files/*

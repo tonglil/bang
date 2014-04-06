@@ -46,6 +46,14 @@ public class Card {
         }
     }
 
+    public boolean isBlue() {
+        return border == 'L';
+    }
+
+    public boolean isRegular() {
+        return border == 'R';
+    }
+
     public boolean selfTarget() {
         return isGunCard() || isMissed() || isBeer() || isStageCoach()
                 || isWellsFargo() || isBarrel() || isMustang() || isScope()

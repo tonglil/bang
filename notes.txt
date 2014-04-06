@@ -1,0 +1,40 @@
+--- Notes for dev
+When you write more complex code, you should know a few things. First, be warned that the UART contains FIFOs which store messages received and messages to send. These FIFOs are only 128 bytes. You should not send more than 128 bytes of data without first confirming that the other party has received the data, otherwise your data will be lost. This probably means implementing some sort of acknowledge/receive handshaking protocol. In the above example, it was not a problem because we knew we were sending less than 128 bytes of data.
+Also, a note about interrupts: Although the UART core supports interrupts, it does not generate an interrupt every time data is received. It will only generate an interrupt once the receive FIFO is almost full. If you want to interrupt every time data is received, you should instead use a timer interrupt that periodically checks if there is data available to be read.
+
+Note that this code was made purposely simple for this tutorial. There is at least one major problem with this code: what happens if the timer is triggered while the Middleman is half-way through sending a message? Would the GUI operate as expected? How would you fix this? Clearly some sort of higher-level handshaking is required, and this is the type thing you will want to think about for your project.
+
+--- What need to know
+DE2 and Android, are you ready?
+If 2 are ready, every other Android gets busy until free again
+
+DE2's send hangs until response that the Android has received
+Android's send hangs until response that the DE2 has received
+
+DE2 needs to know everyone's cards, lives, etc at any given point in the game
+
+Cards are uniquely identified by their cid (card id) Players are uniquely identified by their pid (player id)
+
+DE2
+> Android:
+tell user his pid and role
+tell user every opponents pid, range from user, and role
+tell user every opponents blue cards and lives
+tell user he has received a new card (from draw or something)
+tell user he has lost a card (from panic or something)
+tell user it's his turn
+tell user he has to play a miss or lose a life
+tell user he has to play a zap or lose a life
+tell user he gets a life (someone used saloon)
+
+Android
+> DE2:
+tell de2 the cards the user has in his hand
+tell de2 the blue cards the user has played
+tell de2 that user has used beer, gatling, aliens, general store, or saloon
+tell de2 that user has used zap, panic, cat balou, duel, or jail (against a specific player)
+tell de2 that user has ended his turn
+tell de2 that user needs X cards
+tell de2 the user has different lives
+
+If I forgot something, I will add it.
