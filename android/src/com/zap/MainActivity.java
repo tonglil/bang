@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage6(View view) {
-        p.throwInJail(1, 0x72);
+        p.throwInJail(1, 72);
     }
 
     public void sendMessage7(View view) {

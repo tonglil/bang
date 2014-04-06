@@ -192,6 +192,7 @@ public class Player {
                 drawOneCard();
                 Card t = getHandCards().get(getHandCards().size() - 1);
                 discardCard(t.cid);
+                Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                 if (t.suit != 'H') {
                     forceEndTurn();
                     return;
@@ -206,6 +207,7 @@ public class Player {
                 drawOneCard();
                 Card t = getHandCards().get(getHandCards().size() - 1);
                 discardCard(t.cid);
+                Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
                 if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
                     // TODO: take 3 hits here
                     cc.discardCard(c.cid);
@@ -748,15 +750,15 @@ public class Player {
         test_call = "drawOneCard";
         Comm.tellDE2UserNeedsXCards(this.pid, 1);
         // TODOCOLIN: get card
-        Boolean once = true;
-        DE2Message.setReadyToContinue(false);
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        // Boolean once = true;
+        // DE2Message.setReadyToContinue(false);
+        // while (!DE2Message.getReadyToContinue(once)) {
+        // if (once) {
+        // Log.i("colin", "Waiting for readyToContinue");
+        // once = false;
+        // }
+        // }
+        // DE2Message.setReadyToContinue(false);
         return;
     }
 
