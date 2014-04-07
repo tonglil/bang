@@ -11,6 +11,7 @@ public class Opponent {
     private String role;
     private ArrayList<Card> blueCards;
     private boolean dead;
+    private String name;
 
     public Opponent(int pid, int range, String role) {
         this.pid = pid;
@@ -25,6 +26,14 @@ public class Opponent {
             lives = 4;
             maxLives = 4;
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getPid() {

@@ -17,7 +17,7 @@ import com.zap.main.Player;
 public class PlayerActivity extends FragmentActivity {
 
     // TODO: player is the current player
-    private Player player = new Player("Tony");
+    private Player player;
 
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
@@ -31,11 +31,7 @@ public class PlayerActivity extends FragmentActivity {
     public String getTabStats() {
         return tabStats;
     }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
+    
     public Player getPlayer() {
         return this.player;
     }
@@ -44,6 +40,9 @@ public class PlayerActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        MyApplication app = (MyApplication) getApplication();
+        player = app.getPlayer();
+        
         player.startTurn();
         player.receiveCard(1);
         player.receiveCard(2);
@@ -55,8 +54,8 @@ public class PlayerActivity extends FragmentActivity {
         player.receiveCard(20);
         player.receiveCard(21);
         player.receiveCard(71);
-        player.playCard(1);
-        player.playCard(71);
+        player.playCard(1, null);
+        player.playCard(71, null);
 
         viewPager = new ViewPager(this);
         viewPager.setId(R.id.pager);
