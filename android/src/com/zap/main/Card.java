@@ -73,7 +73,7 @@ public class Card {
     }
 
     public boolean isBang() {
-        return name.equals("Zap!");
+        return name.equals("Bang!");
     }
 
     public boolean isDuel() {

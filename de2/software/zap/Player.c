@@ -3,8 +3,8 @@
 int connected_count = 0;
 
 void initPlayers(PlayerCtrl* playerCtrl, int count) {
-    if (count < 4){
-        printf("There has to be at least 4 players");
+    if (count < 0){
+        printf("There has to be at least 1 player");
         return;
     }
 
@@ -15,9 +15,14 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
     defaultPlayer.pos = -1;
     defaultPlayer.role = NONE;
     defaultPlayer.lives = 0;
+    defaultPlayer.num_hand = 0;
+    defaultPlayer.num_blue = 0;
+    memset(defaultPlayer.blueCards, 0, sizeof(Card)*MAX_CARDS);
+    memset(defaultPlayer.hand, 0, sizeof(Card)*MAX_CARDS);
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
         playerCtrl->players[i] = defaultPlayer;
+
     }
 
     playerCtrl->players[0].role = SHERIFF;
@@ -36,18 +41,15 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
     for (i = 0; i < count; i++)
     {
         int j = i + rand() % (count - i);
-        if (j >= MAX_CARDS)
+        if (j >= count)
             printf("Randomizer exceeded maximum index\n");
         role temp = playerCtrl->players[j].role;
         playerCtrl->players[j].role = playerCtrl->players[i].role;
         playerCtrl->players[i].role = temp;
-        playerCtrl->players[i].num_blue = 0;
     }
 
-    for (i = 0; i < NUM_PLAYERS; i++) {
-        Player *p = &(playerCtrl->players[i]);
-        memset(p->blueCards, 0, sizeof(Card)*MAX_CARDS);
-        memset(p->hand, 0, sizeof(Card)*MAX_CARDS);
+    for (i = 0; i < count; i++) {
+    	Player *p = &(playerCtrl->players[i]);
         if (p->role == NONE)
             continue;
         p->id = i;

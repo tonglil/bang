@@ -43,15 +43,14 @@ public class CardController {
         for (int i = 0; i < handCards.size(); i++) {
             if (handCards.get(i).cid == cid) {
                 handCards.remove(i);
-                return;
             }
         }
         for (int i = 0; i < blueCards.size(); i++) {
             if (blueCards.get(i).cid == cid) {
                 blueCards.remove(i);
-                return;
             }
         }
+        return;
     }
 
     public void discardAll() {
@@ -225,8 +224,6 @@ public class CardController {
         int onePlayerFixed = Integer.parseInt(String.valueOf(l[i].charAt(11)));
         i++;
         String image = l[i];
-        return new Card(id, name, border, number, suit, zap, missed, life,
-                forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable,
-                onePlayerFixed, image);
+        return new Card(id, name, border, number, suit, zap, missed, life, forceDiscard, draw, onePlayer, allPlayers, onePlayerReachable, onePlayerFixed, image);
     }
 }
