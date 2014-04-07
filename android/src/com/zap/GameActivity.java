@@ -1,7 +1,5 @@
 package com.zap;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +36,6 @@ public class GameActivity extends Activity {
         makeGame.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 setupGame(view);
             }
         });
@@ -46,9 +43,8 @@ public class GameActivity extends Activity {
 
     public void setupGame(View view) {
         MyApplication app = (MyApplication) getApplication();
-        EditText name = (EditText) findViewById(R.id.playerNameValue);
-        Log.v("TONY", name.toString());
-        app.setPlayer(new Player(name.toString()));
+        String name = ((EditText) findViewById(R.id.playerNameValue)).getText().toString();
+        app.setPlayer(new Player(name));
 
         Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
         startActivity(setupIntent);

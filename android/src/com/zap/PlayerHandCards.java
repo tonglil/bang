@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.zap.main.Card;
 import com.zap.main.Opponent;
@@ -45,6 +44,7 @@ public class PlayerHandCards extends Fragment {
         final HashMap<Integer, Opponent> opponents = playerCurrent.getOpponents();
         ArrayList<Integer> images = new ArrayList<Integer>();
 
+        Log.v("TONY", "# of players: " + opponents.size());
         Log.v("TONY", "# of hand cards: " + cards.size());
         for (Card card : cards) {
             Log.v("TONY", "A hand card exists: " + card.name + " image: " + card.image);
@@ -55,24 +55,19 @@ public class PlayerHandCards extends Fragment {
         cardGrid.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int cardPosition, long id) {
                 final Card cardPlayed = cards.get(cardPosition);
-                Toast.makeText(getActivity(), "The hand card choosen: " + cardPlayed.name, Toast.LENGTH_SHORT).show();
-                Log.v("TONY", "The hand card choosen: " + cardPlayed.name);
-
-                // TODO: determine if that card needs to be able to select
-                // (other) users => then show dialog
                 ArrayList<String> names = new ArrayList<String>();
-                Log.v("TONY", "# of players: " + opponents.size());
+
+                // TODO: this is purely for debug
                 for (Opponent opponent : opponents.values()) {
                     Log.v("TONY", "A player named: " + opponent.getName() + " exists.");
                 }
 
-                // TODO: add in a confirmation screen if no player needs to be selected....
                 if (cardPlayed.allPlayersIncSelf()) {
                     Log.v("TONY", "All players inc self (saloon)");
-                    playCard(cardPosition, null);
+                    confirmCard(cardPosition);
                 } else if (cardPlayed.allPlayersNotSelf()) {
                     Log.v("TONY", "All players not self (indians)");
-                    playCard(cardPosition, null);
+                    confirmCard(cardPosition);
                 } else if (cardPlayed.onePlayerNotSelf()) {
                     for (Opponent opponent : opponents.values()) {
                         names.add(opponent.getName());
@@ -81,17 +76,37 @@ public class PlayerHandCards extends Fragment {
                     choosePlayer(cardPosition, names);
                 } else {
                     Log.v("TONY", "self (beer)");
-                    playCard(cardPosition, playerCurrent.getPid());
+                    confirmCard(cardPosition);
                 }
             }
 
             public void playCard(int cardPosition, Integer target) {
-                // TODO: DO CARD ACTION HERE
-                // TODO: somehow get card feedback to see if it can proceed, and
-                // then do extra things if necessary?
+                // TODO: TONY/AMITOJ somehow get card feedback and do extra
+                // things if necessary?
                 playerCurrent.playCard(cards.get(cardPosition).cid, target);
                 cards.remove(cardPosition);
                 buildCards();
+            }
+
+            public void confirmCard(final int cardPosition) {
+                AlertDialog.Builder confirmDialog = new AlertDialog.Builder(getActivity());
+                confirmDialog.setTitle("Are you sure you want to use the " + cards.get(cardPosition).name + " card?");
+                confirmDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        playCard(cardPosition, null);
+                        PlayerStats playerStats = (PlayerStats) getActivity().getSupportFragmentManager().findFragmentByTag(((PlayerActivity) getActivity()).getTabStats());
+                        playerStats.buildStats();
+                        dialog.dismiss();
+                    }
+                });
+                confirmDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                confirmDialog.show();
             }
 
             public void choosePlayer(final int cardPosition, ArrayList<String> names) {
