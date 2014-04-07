@@ -81,24 +81,27 @@ public class PlayerStats extends Fragment {
                 nextConfirmationDialog.setTitle("Are you sure you want to end your turn?");
                 nextConfirmationDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.v("TONY", "GO TO INTERMEDIATE VIEW");
-                        // TODO: could blank bg screen here?
+                        PlayerStats.this.player.endTurn();
+
+                        // TODO:
+                        // GO TO INTERMEDIATE VIEW
                         AlertDialog.Builder passOrWaitDialog = new AlertDialog.Builder(getActivity());
-                        // TODO: based on if next player is on same or different device...
-                        passOrWaitDialog.setTitle("Please Wait / Pass The Device To: NEXT PLAYER");
-                        passOrWaitDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Log.v("TONY", "NEXT PLAYER CONFIRMS => CHANGE TO THAT PLAYER AND UPDATE TABS");
-                                // TODO:
-                                // GO TO INTERMEDIATE VIEW
-                                // UPDATE PLAYER #
-                                // REFRESH/REBUILD TABS
-                                PlayerStats playerStats = (PlayerStats) getActivity().getSupportFragmentManager().findFragmentByTag(((PlayerActivity) getActivity()).getTabStats());
-                                playerStats.buildStats();
-                                dialog.dismiss();
-                            }
-                        });
+                        passOrWaitDialog.setTitle("Please Wait For Your Turn");
+                        if (PlayerStats.this.player.isTurn()) {
+
+                            passOrWaitDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    // UPDATE PLAYER #
+                                    // REFRESH/REBUILD ALL TABS
+                                    PlayerStats playerStats = (PlayerStats) getActivity().getSupportFragmentManager().findFragmentByTag(((PlayerActivity) getActivity()).getTabStats());
+                                    playerStats.buildStats();
+                                    dialog.dismiss();
+                                }
+                            });
+                            passOrWaitDialog.show();
+                        }
                         passOrWaitDialog.show();
                     }
                 });
@@ -108,7 +111,6 @@ public class PlayerStats extends Fragment {
                         dialog.dismiss();
                     }
                 });
-                PlayerStats.this.player.endTurn();
                 nextConfirmationDialog.show();
             }
         });

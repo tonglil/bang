@@ -63,18 +63,24 @@ public class PlayerHandCards extends Fragment {
                 // (other) users => then show dialog
                 ArrayList<String> names = new ArrayList<String>();
                 Log.v("TONY", "# of players: " + opponents.size());
-                for (Opponent opponent : opponents.values()) {
-                    Log.v("TONY", "A player named: " + opponent.getName() + " exists.");
-                }
 
-                // TODO: add in a confirmation screen if no player needs to be selected....
+                // TODO: add in a confirmation screen if no player needs to be
+                // selected....
                 if (cardPlayed.allPlayersIncSelf()) {
                     playCard(cardPosition, null);
                 } else if (cardPlayed.allPlayersNotSelf()) {
                     playCard(cardPosition, null);
                 } else if (cardPlayed.onePlayerNotSelf()) {
                     for (Opponent opponent : opponents.values()) {
-                        names.add(opponent.getPid() + "");
+                        Integer pid = opponent.getPid();
+                        Log.v("TONY", "Doing opp checks...");
+                        Log.v("TONY", "Doing opp checks: " + PlayerHandCards.this.playerCurrent.getPid());
+                        Log.v("TONY", "Doing opp checks: " + pid);
+                        Log.v("TONY", "Doing opp checks: " + !opponent.getDead());
+                        Log.v("TONY", "Doing opp checks: " + PlayerHandCards.this.playerCurrent.checkRange(pid));
+                        if (pid != PlayerHandCards.this.playerCurrent.getPid() && !opponent.getDead() && PlayerHandCards.this.playerCurrent.checkRange(pid)) {
+                            names.add(pid + " - Range " + PlayerHandCards.this.playerCurrent.getRangeFromOpponent(pid) + " away");
+                        }
                     }
                     choosePlayer(cardPosition, names);
                 } else {
@@ -91,35 +97,27 @@ public class PlayerHandCards extends Fragment {
                 buildCards();
             }
 
-            public void choosePlayer(final int cardPosition, ArrayList<String> names2) {
+            public void choosePlayer(final int cardPosition, ArrayList<String> names) {
                 AlertDialog.Builder cardActionDialog = new AlertDialog.Builder(getActivity());
                 cardActionDialog.setTitle("Choose A Player");
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_singlechoice, names2);
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_singlechoice, names);
                 cardActionDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-                
-                Log.v("TONY", "the names are: " + names2.toString());
+
+                Log.v("TONY", "the names are: " + names.toString());
 
                 cardActionDialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Integer playerSelected = null;
                         String selectedName = arrayAdapter.getItem(which);
-//                        for (Opponent opponent : opponents.values()) {
-//                            if (opponent.getName() == selectedName) {
-//                                playerSelected = opponent.getPid();
-//                            }
-//                        }
-                        Log.v("TONY", "IN FINAL DIALOG which: " + which);
-                        Log.v("TONY", "IN FINAL DIALOG which selectedName int'" + Integer.parseInt(selectedName) + "'");
+
                         for (Opponent opponent : opponents.values()) {
-                            Log.v("TONY", "iterating through opponents with int'" + opponent.getPid() + "'");
                             if (opponent.getPid() == Integer.parseInt(selectedName)) {
-                                Log.v("TONY", "found the PID");
                                 playerSelected = opponent.getPid();
                             }
                         }

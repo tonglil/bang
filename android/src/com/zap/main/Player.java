@@ -206,6 +206,7 @@ public class Player {
     }
 
     public void setOpponentLives(int pid, int lives) {
+        Log.v("TONY", "pid: " + pid + " lives " + lives);
         Opponent o = opponents.get(Integer.valueOf(pid));
         o.setLives(lives);
     }
@@ -948,7 +949,7 @@ public class Player {
     }
 
     // Check if opponent if within range to shoot
-    private boolean checkRange(int pid) {
+    public boolean checkRange(int pid) {
         Opponent o = opponents.get(Integer.valueOf(pid));
         if (o.getRange() <= getRange()) {
             return true;
