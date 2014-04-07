@@ -314,7 +314,7 @@ public class Player {
         return range;
     }
 
-    public void playCard(int cid) {
+    public void playCard(int cid, Integer target) {
         if (turn) {
             Card c = cc.getHandCard(cid);
             if (c == null) {
@@ -324,7 +324,7 @@ public class Player {
                 if (c.zap) {
                     if (c.onePlayerReachable) { // zap
                         if (!zappedThisTurn) {
-                            int pid = 1; // TODO Tony: prompt user for target
+                            int pid = target.intValue();
                             if (checkRange(pid)) {
                                 zapOpponent(pid);
                                 zappedThisTurn = true;
@@ -354,7 +354,7 @@ public class Player {
                     }
                 } else if (c.border == 'L') {
                     if (c.name.compareTo(JAIL) == 0) { // space jail
-                        int pid = 1; // TODO Tony: prompt user for target
+                        int pid = target.intValue();
                         Opponent o = opponents.get(Integer.valueOf(pid));
                         if (o.getRole().compareTo(SHERIFF) == 0) {
                             // TODO Tony: tell user he can't jail the sheriff
@@ -381,7 +381,7 @@ public class Player {
                     test_call = "cant play missed";
                 } else if (c.draw > 0) {
                     if (c.onePlayerFixed == 1) { // panic
-                        int pid = 1; // TODO Tony: prompt user for target
+                        int pid = target.intValue();
                         if (checkFixedRange(pid)) {
                             panicOpponent(pid);
                             cc.discardCard(cid);
@@ -400,7 +400,7 @@ public class Player {
                         cc.discardCard(cid);
                     }
                 } else if (c.name.compareTo(DUEL) == 0) {
-                    int pid = 1; // TODO Tony: prompt user for target
+                    int pid = target.intValue();
                     duelOpponent(pid);
                     cc.discardCard(cid);
                 } else if (c.name.compareTo(ALIENS) == 0) {
