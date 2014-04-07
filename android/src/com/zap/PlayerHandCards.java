@@ -2,6 +2,8 @@ package com.zap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -73,13 +75,8 @@ public class PlayerHandCards extends Fragment {
                 } else if (cardPlayed.onePlayerNotSelf()) {
                     for (Opponent opponent : opponents.values()) {
                         Integer pid = opponent.getPid();
-                        Log.v("TONY", "Doing opp checks...");
-                        Log.v("TONY", "Doing you checks: " + PlayerHandCards.this.playerCurrent.getPid());
-                        Log.v("TONY", "Doing pid checks: " + pid);
-                        Log.v("TONY", "Doing alive checks: " + !opponent.getDead());
-                        Log.v("TONY", "Doing inrange checks: " + PlayerHandCards.this.playerCurrent.checkRange(pid));
                         if (pid != PlayerHandCards.this.playerCurrent.getPid() && !opponent.getDead() && PlayerHandCards.this.playerCurrent.checkRange(pid)) {
-                            names.add(pid + " - Range " + PlayerHandCards.this.playerCurrent.getRangeFromOpponent(pid) + " away");
+                            names.add("Player " + pid + " (range " + PlayerHandCards.this.playerCurrent.getRangeFromOpponent(pid) + " away)");
                         }
                     }
                     choosePlayer(cardPosition, names);
@@ -108,21 +105,19 @@ public class PlayerHandCards extends Fragment {
                     }
                 });
 
-                Log.v("TONY", "the names are: " + names.toString());
-
                 cardActionDialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Integer playerSelected = null;
-                        String selectedName = arrayAdapter.getItem(which);
-
-                        for (Opponent opponent : opponents.values()) {
-                            if (opponent.getPid() == Integer.parseInt(selectedName)) {
-                                playerSelected = opponent.getPid();
-                            }
-                        }
+                        String selectedItem = arrayAdapter.getItem(which);
+                        
+                        String pattern = "([0-9]+)";
+                        Pattern regex = Pattern.compile(pattern);
+                        Matcher match = regex.matcher(selectedItem);
+                        playerSelected = Integer.parseInt(match.group(0));
+                        
                         AlertDialog.Builder cardPlayedDialog = new AlertDialog.Builder(getActivity());
-                        cardPlayedDialog.setTitle(cards.get(cardPosition).name + " Played On pid: " + playerSelected);
+                        cardPlayedDialog.setTitle(cards.get(cardPosition).name + " Played On: " + playerSelected);
                         // TODO: TONY/AMITOJ: if we want to display a custom
                         // message based on the card played, set that message as
                         // a part of: card.message for example
