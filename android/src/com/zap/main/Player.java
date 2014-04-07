@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.SystemClock;
 import android.util.Log;
 
 //TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
@@ -30,10 +31,10 @@ public class Player {
 
     public static final String SHERIFF = "Sheriff";
     public static final String MUSTANG = "Mustang";
-    public static final String JAIL = "Space Jail";
+    public static final String JAIL = "Jail";
     private static final String SCOPE = "Scope";
     private static final String DUEL = "Duel";
-    private static final String ALIENS = "Aliens";
+    private static final String ALIENS = "Indians";
     private static final String GENERAL_STORE = "General Store";
     private static final String DYNAMITE = "Dynamite";
 
@@ -239,6 +240,7 @@ public class Player {
     }
 
     public void startTurn() {
+
         turn = true;
         zappedThisTurn = false;
 
@@ -246,11 +248,11 @@ public class Player {
         for (Card c : cc.getBlueCards()) {
             if (c.name.compareTo(JAIL) == 0) {
                 cc.discardCard(c.cid);
-                drawOneCard();
                 Card t = getHandCards().get(getHandCards().size() - 1);
                 discardCard(t.cid);
-                Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(),
-                        getHandCards());
+                Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                SystemClock.sleep(1500);
+                Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
                 if (t.suit != 'H') {
                     forceEndTurn();
                     return;
@@ -262,11 +264,11 @@ public class Player {
         // Draw for dynamite, if there is dynamite
         for (Card c : cc.getBlueCards()) {
             if (c.name.compareTo(DYNAMITE) == 0) {
-                drawOneCard();
                 Card t = getHandCards().get(getHandCards().size() - 1);
                 discardCard(t.cid);
-                Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(),
-                        getHandCards());
+                Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                SystemClock.sleep(1500);
+                Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
                 if (t.suit == 'S' && t.number >= '2' && t.number <= '9') {
                     // TODO: take 3 hits here
                     cc.discardCard(c.cid);
@@ -420,8 +422,8 @@ public class Player {
                 }
             }
             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-            Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(),
-                    getBlueCards());
+            SystemClock.sleep(1500);
+            Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
         } else {
             // TODO Tony: tell player it isn't his turn
             test_call = "Not turn";
@@ -452,43 +454,38 @@ public class Player {
                 } else {
                     choices = new CharSequence[] { "Take hit" };
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        Player.activity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
                 builder.setTitle("Select an option");
-                builder.setItems(choices,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                Boolean userplayedmiss = false;
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Boolean userplayedmiss = false;
 
-                                int missed_cid = 0;
-                                for (Card c : getHandCards()) {
-                                    if (c.missed) {
-                                        missed_cid = c.cid;
-                                        break;
-                                    }
-                                }
-
-                                if (which == 0) {
-                                    userplayedmiss = false;
-                                } else {
-                                    userplayedmiss = true;
-                                }
-
-                                if (userplayedmiss) {
-                                    discardCard(missed_cid);
-                                    Comm.tellDE2CardsInHand(pid,
-                                            getNumberOfHandCards(),
-                                            getHandCards());
-                                } else {
-                                    setLives(lives - 1);
-                                    // Don't need to send msg because setLives
-                                    // already sends one
-                                    // Comm.tellDE2UserUpdateLives(pid, lives);
-                                }
+                        int missed_cid = 0;
+                        for (Card c : getHandCards()) {
+                            if (c.missed) {
+                                missed_cid = c.cid;
+                                break;
                             }
-                        });
+                        }
+
+                        if (which == 0) {
+                            userplayedmiss = false;
+                        } else {
+                            userplayedmiss = true;
+                        }
+
+                        if (userplayedmiss) {
+                            discardCard(missed_cid);
+                            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                        } else {
+                            setLives(lives - 1);
+                            // Don't need to send msg because setLives
+                            // already sends one
+                            // Comm.tellDE2UserUpdateLives(pid, lives);
+                        }
+                    }
+                });
                 builder.show();
             }
         });
@@ -514,40 +511,35 @@ public class Player {
                 } else {
                     choices = new CharSequence[] { "Take hit" };
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        Player.activity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
                 builder.setTitle("Select an option");
-                builder.setItems(choices,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                Boolean userplayedzap = false;
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Boolean userplayedzap = false;
 
-                                int zap_cid = 0;
-                                for (Card c : getHandCards()) {
-                                    if (c.zap) {
-                                        zap_cid = c.cid;
-                                        break;
-                                    }
-                                }
-
-                                if (which == 0) {
-                                    userplayedzap = false;
-                                } else {
-                                    userplayedzap = true;
-                                }
-
-                                if (userplayedzap) {
-                                    discardCard(zap_cid);
-                                    Comm.tellDE2CardsInHand(pid,
-                                            getNumberOfHandCards(),
-                                            getHandCards());
-                                } else {
-                                    setLives(lives - 1);
-                                }
+                        int zap_cid = 0;
+                        for (Card c : getHandCards()) {
+                            if (c.zap) {
+                                zap_cid = c.cid;
+                                break;
                             }
-                        });
+                        }
+
+                        if (which == 0) {
+                            userplayedzap = false;
+                        } else {
+                            userplayedzap = true;
+                        }
+
+                        if (userplayedzap) {
+                            discardCard(zap_cid);
+                            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                        } else {
+                            setLives(lives - 1);
+                        }
+                    }
+                });
                 builder.show();
             }
         });
@@ -558,7 +550,6 @@ public class Player {
             setLives(lives + 1);
             ;
         }
-        Comm.tellDE2UserUpdateLives(this.pid, lives);
     }
 
     public void onPanic() {
@@ -566,25 +557,20 @@ public class Player {
         // cards are in:
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                CharSequence choices[] = new CharSequence[DE2Message
-                        .getCard_choices().size()];
+                CharSequence choices[] = new CharSequence[DE2Message.getCard_choices().size()];
                 int i = 0;
                 for (Integer cid : DE2Message.getCard_choices()) {
                     choices[i++] = CardController.getValidCard(cid.intValue()).name;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        Player.activity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
                 builder.setTitle("Select an card");
-                builder.setItems(choices,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                int cid = DE2Message.getCard_choices().get(
-                                        which);
-                                Comm.tellDE2UserTransferCard(pid, cid);
-                            }
-                        });
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int cid = DE2Message.getCard_choices().get(which);
+                        Comm.tellDE2UserTransferCard(pid, cid);
+                    }
+                });
                 builder.show();
             }
         });
@@ -595,25 +581,20 @@ public class Player {
         // cards are in:
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                CharSequence choices[] = new CharSequence[DE2Message
-                        .getCard_choices().size()];
+                CharSequence choices[] = new CharSequence[DE2Message.getCard_choices().size()];
                 int i = 0;
                 for (Integer cid : DE2Message.getCard_choices()) {
                     choices[i++] = CardController.getValidCard(cid.intValue()).name;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        Player.activity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
                 builder.setTitle("Select an card");
-                builder.setItems(choices,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                int cid = DE2Message.getCard_choices().get(
-                                        which);
-                                Comm.tellDE2UserPickedCard(pid, cid);
-                            }
-                        });
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int cid = DE2Message.getCard_choices().get(which);
+                        Comm.tellDE2UserPickedCard(pid, cid);
+                    }
+                });
                 builder.show();
             }
         });
@@ -622,8 +603,7 @@ public class Player {
     public void onJail(int cid) {
         // Nothing needs to be done
         receiveBlueCard(cid);
-        Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(),
-                getBlueCards());
+        Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
     }
 
     public void onDuel() {
@@ -646,40 +626,35 @@ public class Player {
                 } else {
                     choices = new CharSequence[] { "Take hit" };
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        Player.activity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
                 builder.setTitle("Select an option");
-                builder.setItems(choices,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                Boolean userplayedzap = false;
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Boolean userplayedzap = false;
 
-                                int zap_cid = 0;
-                                for (Card c : getHandCards()) {
-                                    if (c.zap) {
-                                        zap_cid = c.cid;
-                                        break;
-                                    }
-                                }
-
-                                if (which == 0) {
-                                    userplayedzap = false;
-                                } else {
-                                    userplayedzap = true;
-                                }
-
-                                if (userplayedzap) {
-                                    discardCard(zap_cid);
-                                    Comm.tellDE2CardsInHand(pid,
-                                            getNumberOfHandCards(),
-                                            getHandCards());
-                                } else {
-                                    setLives(lives - 1);
-                                }
+                        int zap_cid = 0;
+                        for (Card c : getHandCards()) {
+                            if (c.zap) {
+                                zap_cid = c.cid;
+                                break;
                             }
-                        });
+                        }
+
+                        if (which == 0) {
+                            userplayedzap = false;
+                        } else {
+                            userplayedzap = true;
+                        }
+
+                        if (userplayedzap) {
+                            discardCard(zap_cid);
+                            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+                        } else {
+                            setLives(lives - 1);
+                        }
+                    }
+                });
                 builder.show();
             }
         });
@@ -691,25 +666,20 @@ public class Player {
         // cards are in:
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                CharSequence choices[] = new CharSequence[DE2Message
-                        .getCard_choices().size()];
+                CharSequence choices[] = new CharSequence[DE2Message.getCard_choices().size()];
                 int i = 0;
                 for (Integer cid : DE2Message.getCard_choices()) {
                     choices[i++] = CardController.getValidCard(cid.intValue()).name;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        Player.activity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Player.activity);
                 builder.setTitle("Select an card");
-                builder.setItems(choices,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which) {
-                                int cid = DE2Message.getCard_choices().get(
-                                        which);
-                                Comm.tellDE2UserPickedCard(pid, cid);
-                            }
-                        });
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int cid = DE2Message.getCard_choices().get(which);
+                        Comm.tellDE2UserPickedCard(pid, cid);
+                    }
+                });
                 builder.show();
             }
         });
@@ -726,8 +696,7 @@ public class Player {
         if (isHand) {
             Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
         } else {
-            Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(),
-                    getBlueCards());
+            Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
         }
     }
 
@@ -843,15 +812,15 @@ public class Player {
         test_call = "drawOneCard";
         Comm.tellDE2UserNeedsXCards(this.pid, 1);
         // TODOCOLIN: get card
-        // Boolean once = true;
-        // DE2Message.setReadyToContinue(false);
-        // while (!DE2Message.getReadyToContinue(once)) {
-        // if (once) {
-        // Log.i("colin", "Waiting for readyToContinue");
-        // once = false;
-        // }
-        // }
-        // DE2Message.setReadyToContinue(false);
+        Boolean once = true;
+        DE2Message.setReadyToContinue(false);
+        while (!DE2Message.getReadyToContinue(once)) {
+            if (once) {
+                Log.i("colin", "Waiting for readyToContinue");
+                once = false;
+            }
+        }
+        DE2Message.setReadyToContinue(false);
         return;
     }
 

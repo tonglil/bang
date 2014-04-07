@@ -219,10 +219,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="10" >
-
-        <requestFocus />
-    </EditText>
+        android:text="1" />
 
     <TextView
         android:layout_width="fill_parent"

@@ -27,7 +27,7 @@ import com.zap.main.Comm;
 import com.zap.main.Player;
 
 public class MainActivity extends Activity {
-    
+
     Button newGame;
 
     private static AssetManager assetManager;
@@ -115,12 +115,11 @@ public class MainActivity extends Activity {
 
     public void sendMessage2(View view) {
         // Get the message from the box
-        // EditText et = (EditText) findViewById(R.id.MessageText);
-        // String msg = et.getText().toString();
-        // Comm.sendMessage(msg);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
 
         MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().zapOpponent(1);
+        app.getPlayer().zapOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage3(View view) {
@@ -139,13 +138,19 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage6(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
         MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().throwInJail(1, 72);
+        app.getPlayer().throwInJail(Integer.valueOf(msg), 72);
     }
 
     public void sendMessage7(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
         MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().drawCards(3);
+        app.getPlayer().drawCards(Integer.valueOf(msg));
     }
 
     public void sendMessage8(View view) {
@@ -154,18 +159,27 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage9(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
         MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().panicOpponent(1);
+        app.getPlayer().panicOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage10(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
         MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().catBalouOpponent(1);
+        app.getPlayer().catBalouOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage11(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
         MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().duelOpponent(1);
+        app.getPlayer().duelOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage12(View view) {
@@ -184,7 +198,10 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage15(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
 
+        Comm.sendMessage(msg);
     }
 
     public void setupGame() {
