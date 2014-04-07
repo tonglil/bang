@@ -31,6 +31,7 @@ public class PlayerHandCards extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.playerHandCards = inflater.inflate(R.layout.fragment_player_hand_cards, container, false);
 
+        ((PlayerActivity) getActivity()).setTabHandCards(getTag());
         buildCards();
 
         return this.playerHandCards;
@@ -139,6 +140,7 @@ public class PlayerHandCards extends Fragment {
                 cardActionDialog.show();
             }
         });
+
     }
 
 }

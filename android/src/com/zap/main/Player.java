@@ -9,11 +9,16 @@ import android.content.DialogInterface;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.zap.PlayerActivity;
+import com.zap.PlayerHandCards;
+import com.zap.PlayerTableCards;
+
 //TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
 //TODO Amitoj: Implement onEvent functions, test dynamite and jail
 
 public class Player {
     public static Activity activity;
+    public static PlayerActivity playerActivity = null;
 
     private String name;
 
@@ -53,7 +58,7 @@ public class Player {
     public Player() {
         this("name");
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
@@ -61,7 +66,7 @@ public class Player {
     public String getName() {
         return this.name;
     }
-    
+
     public HashMap getOpponents() {
         return this.opponents;
     }
@@ -237,6 +242,20 @@ public class Player {
 
     public void discardCard(int cid) {
         cc.discardCard(cid);
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                PlayerHandCards playerHandCards;
+                if (playerActivity != null) {
+                    playerHandCards = (PlayerHandCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabHandCards());
+                    playerHandCards.buildCards();
+                }
+                PlayerTableCards playerTableCards;
+                if (playerActivity != null) {
+                    playerTableCards = (PlayerTableCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabTableCards());
+                    playerTableCards.buildCards();
+                }
+            }
+        });
     }
 
     public void startTurn() {
@@ -702,6 +721,22 @@ public class Player {
 
     public void onReceiveCard(int cid) {
         receiveCard(cid);
+
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                PlayerHandCards playerHandCards;
+                if (playerActivity != null) {
+                    playerHandCards = (PlayerHandCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabHandCards());
+                    playerHandCards.buildCards();
+                }
+                PlayerTableCards playerTableCards;
+                if (playerActivity != null) {
+                    playerTableCards = (PlayerTableCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabTableCards());
+                    playerTableCards.buildCards();
+                }
+            }
+        });
+
         Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
     }
 

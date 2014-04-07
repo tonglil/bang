@@ -1,7 +1,5 @@
 package com.zap;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,6 +48,11 @@ public class GameActivity extends Activity {
         Log.v("TONY", name.toString());
         app.setPlayer(new Player(name.toString()));
 
+        Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
+        startActivity(setupIntent);
+    }
+
+    public void refreshGame(View view) {
         Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
         startActivity(setupIntent);
     }

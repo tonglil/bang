@@ -22,13 +22,14 @@ import com.zap.main.Player;
 public class PlayerTableCards extends Fragment {
 
     private View playerTableCards;
-    
+
     private Player player;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.playerTableCards = inflater.inflate(R.layout.fragment_player_table_cards, container, false);
 
+        ((PlayerActivity) getActivity()).setTabTableCards(getTag());
         buildCards();
 
         return this.playerTableCards;
@@ -87,7 +88,7 @@ public class PlayerTableCards extends Fragment {
 
                         // TODO: DO CARD ACTION HERE
                         // TODO: either check what kind of card and do accordingly, or somehow get card feedback to see if it can proceed, and then do extra things if necessary?
-                        //player.playCard(cards.get(position).cid);
+                        // player.playCard(cards.get(position).cid);
                         cards.remove(position);
                         buildCards();
 
