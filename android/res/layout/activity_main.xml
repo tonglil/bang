@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="218" />
+            android:text="217" />
 
         <EditText
             android:id="@+id/ip4"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="169" />
+            android:text="204" />
     </LinearLayout>
 
     <LinearLayout

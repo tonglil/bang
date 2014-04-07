@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 
         assetManager = getAssets();
 
-         addButtonListenerNewGame();
+        addButtonListenerNewGame();
 
         Player.activity = this;
     }
@@ -154,8 +154,6 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage8(View view) {
-        MyApplication app = (MyApplication) getApplication();
-        app.getPlayer().drawOneCard();
     }
 
     public void sendMessage9(View view) {

@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.zap.main.Comm;
 import com.zap.main.Player;
 
 public class GameActivity extends Activity {
@@ -46,7 +47,13 @@ public class GameActivity extends Activity {
         MyApplication app = (MyApplication) getApplication();
         EditText name = (EditText) findViewById(R.id.playerNameValue);
         Log.v("TONY", name.toString());
+
         app.setPlayer(new Player(name.toString()));
+        for (int i = 0; i < 7; i++) {
+            app.getPlayer().initOpponent(i, 1, "ASDF");
+        }
+        // 7 is a magic number
+        Comm.tellDE2Connected(7);
 
         Intent setupIntent = new Intent(getBaseContext(), PlayerActivity.class);
         startActivity(setupIntent);

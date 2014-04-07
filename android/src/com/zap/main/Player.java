@@ -842,22 +842,22 @@ public class Player {
         return;
     }
 
-    public void drawOneCard() {
-        // TODO: tell de2 that this player needs 1 card
-        test_call = "drawOneCard";
-        Comm.tellDE2UserNeedsXCards(this.pid, 1);
-        // TODOCOLIN: get card
-        Boolean once = true;
-        DE2Message.setReadyToContinue(false);
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
-        return;
-    }
+    // public void drawOneCard() {
+    // // TODO: tell de2 that this player needs 1 card
+    // test_call = "drawOneCard";
+    // Comm.tellDE2UserNeedsXCards(this.pid, 1);
+    // // TODOCOLIN: get card
+    // Boolean once = true;
+    // DE2Message.setReadyToContinue(false);
+    // while (!DE2Message.getReadyToContinue(once)) {
+    // if (once) {
+    // Log.i("colin", "Waiting for readyToContinue");
+    // once = false;
+    // }
+    // }
+    // DE2Message.setReadyToContinue(false);
+    // return;
+    // }
 
     public void panicOpponent(int pid) {
         // TODO: tell de2 that this player wants to panic opponent
