@@ -69,19 +69,15 @@ public class PlayerHandCards extends Fragment {
 
                 // TODO: add in a confirmation screen if no player needs to be selected....
                 if (cardPlayed.allPlayersIncSelf()) {
-                    Log.v("TONY", "All players inc self (saloon)");
                     playCard(cardPosition, null);
                 } else if (cardPlayed.allPlayersNotSelf()) {
-                    Log.v("TONY", "All players not self (indians)");
                     playCard(cardPosition, null);
                 } else if (cardPlayed.onePlayerNotSelf()) {
                     for (Opponent opponent : opponents.values()) {
                         names.add(opponent.getPid() + "");
                     }
-                    Log.v("TONY", "one players not self (jail)");
                     choosePlayer(cardPosition, names);
                 } else {
-                    Log.v("TONY", "self (beer)");
                     playCard(cardPosition, playerCurrent.getPid());
                 }
             }
@@ -95,24 +91,35 @@ public class PlayerHandCards extends Fragment {
                 buildCards();
             }
 
-            public void choosePlayer(final int cardPosition, ArrayList<String> names) {
+            public void choosePlayer(final int cardPosition, ArrayList<String> names2) {
                 AlertDialog.Builder cardActionDialog = new AlertDialog.Builder(getActivity());
                 cardActionDialog.setTitle("Choose A Player");
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_singlechoice, names);
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_singlechoice, names2);
                 cardActionDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
+                
+                Log.v("TONY", "the names are: " + names2.toString());
 
                 cardActionDialog.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Integer playerSelected = null;
                         String selectedName = arrayAdapter.getItem(which);
+//                        for (Opponent opponent : opponents.values()) {
+//                            if (opponent.getName() == selectedName) {
+//                                playerSelected = opponent.getPid();
+//                            }
+//                        }
+                        Log.v("TONY", "IN FINAL DIALOG which: " + which);
+                        Log.v("TONY", "IN FINAL DIALOG which selectedName int'" + Integer.parseInt(selectedName) + "'");
                         for (Opponent opponent : opponents.values()) {
-                            if (opponent.getName() == selectedName) {
+                            Log.v("TONY", "iterating through opponents with int'" + opponent.getPid() + "'");
+                            if (opponent.getPid() == Integer.parseInt(selectedName)) {
+                                Log.v("TONY", "found the PID");
                                 playerSelected = opponent.getPid();
                             }
                         }

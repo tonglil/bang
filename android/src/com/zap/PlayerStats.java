@@ -108,6 +108,7 @@ public class PlayerStats extends Fragment {
                         dialog.dismiss();
                     }
                 });
+                PlayerStats.this.player.endTurn();
                 nextConfirmationDialog.show();
             }
         });
