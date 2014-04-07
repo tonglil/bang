@@ -52,9 +52,17 @@ public class Player {
     public Player() {
         this("name");
     }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getName() {
-        return name;
+        return this.name;
+    }
+    
+    public HashMap getOpponents() {
+        return this.opponents;
     }
 
     // TODO AMITOJ: test cases

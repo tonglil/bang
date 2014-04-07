@@ -27,23 +27,13 @@ import com.zap.main.Comm;
 import com.zap.main.Player;
 
 public class MainActivity extends Activity {
+    
     Button newGame;
 
     private static AssetManager assetManager;
 
-    private Player p;
-
-    public void setP(Player p) {
-        this.p = p;
-    }
-
-    public Player getP() {
-        return p;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         // This call will result in better error messages if you
         // try to do things in the wrong thread.
 
@@ -114,9 +104,10 @@ public class MainActivity extends Activity {
     // Called when the user wants to send a message
 
     public void sendMessage(View view) {
-        setP(new Player());
+        MyApplication app = (MyApplication) getApplication();
+        app.setPlayer(new Player());
         for (int i = 0; i < 7; i++) {
-            p.initOpponent(i, 1, "ASDF");
+            app.getPlayer().initOpponent(i, 1, "ASDF");
         }
         // 7 is a magic number
         Comm.tellDE2Connected(7);
@@ -128,55 +119,68 @@ public class MainActivity extends Activity {
         // String msg = et.getText().toString();
         // Comm.sendMessage(msg);
 
-        p.zapOpponent(1);
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().zapOpponent(1);
     }
 
     public void sendMessage3(View view) {
-        p.zapAll();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().zapAll();
     }
 
     public void sendMessage4(View view) {
-        p.goToSaloon();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().goToSaloon();
     }
 
     public void sendMessage5(View view) {
-        p.drinkBeer();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().drinkBeer();
     }
 
     public void sendMessage6(View view) {
-        p.throwInJail(1, 72);
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().throwInJail(1, 72);
     }
 
     public void sendMessage7(View view) {
-        p.drawCards(3);
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().drawCards(3);
     }
 
     public void sendMessage8(View view) {
-        p.drawOneCard();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().drawOneCard();
     }
 
     public void sendMessage9(View view) {
-        p.panicOpponent(1);
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().panicOpponent(1);
     }
 
     public void sendMessage10(View view) {
-        p.catBalouOpponent(1);
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().catBalouOpponent(1);
     }
 
     public void sendMessage11(View view) {
-        p.duelOpponent(1);
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().duelOpponent(1);
     }
 
     public void sendMessage12(View view) {
-        p.releaseTheAliens();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().releaseTheAliens();
     }
 
     public void sendMessage13(View view) {
-        p.generalStore();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().generalStore();
     }
 
     public void sendMessage14(View view) {
-        p.endTurn();
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().endTurn();
     }
 
     public void sendMessage15(View view) {
@@ -287,7 +291,7 @@ public class MainActivity extends Activity {
                         final String s = Comm.bth(buf);
                         Log.i("colin", "Message from Middleman: " + s);
 
-                        Comm.receiveInterpretDE2(buf, getP());
+                        Comm.receiveInterpretDE2(buf, app.getPlayer());
 
                         // As explained in the tutorials, the GUI can not be
                         // updated in an asynchronous task. So, update the GUI
@@ -313,7 +317,6 @@ public class MainActivity extends Activity {
         newGame.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("MY_TAG", "init new view...");
                 setupGame(view);
             }
         });
