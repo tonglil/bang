@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.zap.main.Card;
 import com.zap.main.Opponent;
@@ -28,6 +27,9 @@ public class PlayerHandCards extends Fragment {
     private View playerHandCards;
 
     private Player playerCurrent;
+    private ArrayList<Card> cards;
+    private ArrayList<Integer> images;
+    private HashMap<Integer, Opponent> opponents;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,35 +45,34 @@ public class PlayerHandCards extends Fragment {
         GridView cardGrid = (GridView) this.playerHandCards.findViewById(R.id.handCardGrid);
         PlayerActivity parentActivity = (PlayerActivity) getActivity();
 
-        playerCurrent = parentActivity.getPlayer();
-        final ArrayList<Card> cards = playerCurrent.getHandCards();
-        final HashMap<Integer, Opponent> opponents = playerCurrent.getOpponents();
-        ArrayList<Integer> images = new ArrayList<Integer>();
+        this.images = new ArrayList<Integer>();
+        this.playerCurrent = parentActivity.getPlayer();
+        this.cards = this.playerCurrent.getHandCards();
+        this.opponents = this.playerCurrent.getOpponents();
 
-        Log.v("TONY", "# of hand cards: " + cards.size());
-        for (Card card : cards) {
+        Log.v("TONY", "# of players: " + this.opponents.size());
+        Log.v("TONY", "# of hand cards: " + this.cards.size());
+        for (Card card : this.cards) {
             Log.v("TONY", "A hand card exists: " + card.name + " image: " + card.image);
-            images.add(getResources().getIdentifier(card.image, "drawable", parentActivity.getPackageName()));
+            this.images.add(getResources().getIdentifier(card.image, "drawable", parentActivity.getPackageName()));
         }
 
-        cardGrid.setAdapter(new ArrayListImageAdapter(getActivity(), images));
+        cardGrid.setAdapter(new ArrayListImageAdapter(getActivity(), this.images));
         cardGrid.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int cardPosition, long id) {
-                final Card cardPlayed = cards.get(cardPosition);
-                Toast.makeText(getActivity(), "The hand card choosen: " + cardPlayed.name, Toast.LENGTH_SHORT).show();
-                Log.v("TONY", "The hand card choosen: " + cardPlayed.name);
-
-                // TODO: determine if that card needs to be able to select
-                // (other) users => then show dialog
+                final Card cardPlayed = PlayerHandCards.this.cards.get(cardPosition);
                 ArrayList<String> names = new ArrayList<String>();
-                Log.v("TONY", "# of players: " + opponents.size());
 
-                // TODO: add in a confirmation screen if no player needs to be
-                // selected....
+                // TODO: this loop is purely for debug so you can confirm other
+                // player's names
+                for (Opponent opponent : PlayerHandCards.this.opponents.values()) {
+                    Log.v("TONY", "A player named: " + opponent.getName() + " exists.");
+                }
+
                 if (cardPlayed.allPlayersIncSelf()) {
-                    playCard(cardPosition, null);
+                    confirmCard(cardPosition);
                 } else if (cardPlayed.allPlayersNotSelf()) {
-                    playCard(cardPosition, null);
+                    confirmCard(cardPosition);
                 } else if (cardPlayed.onePlayerNotSelf()) {
                     for (Opponent opponent : opponents.values()) {
                         Integer pid = opponent.getPid();
@@ -81,17 +82,37 @@ public class PlayerHandCards extends Fragment {
                     }
                     choosePlayer(cardPosition, names);
                 } else {
-                    playCard(cardPosition, playerCurrent.getPid());
+                    confirmCard(cardPosition);
                 }
             }
 
             public void playCard(int cardPosition, Integer target) {
-                // TODO: DO CARD ACTION HERE
-                // TODO: somehow get card feedback to see if it can proceed, and
-                // then do extra things if necessary?
-                playerCurrent.playCard(cards.get(cardPosition).cid, target);
-                cards.remove(cardPosition);
+                // TODO: TONY/AMITOJ somehow get card feedback and do extra
+                // things if necessary?
+                PlayerHandCards.this.playerCurrent.playCard(PlayerHandCards.this.cards.get(cardPosition).cid, target);
+                PlayerHandCards.this.cards.remove(cardPosition);
                 buildCards();
+            }
+
+            public void confirmCard(final int cardPosition) {
+                AlertDialog.Builder confirmDialog = new AlertDialog.Builder(getActivity());
+                confirmDialog.setTitle("Are you sure you want to use the " + PlayerHandCards.this.cards.get(cardPosition).name + " card?");
+                confirmDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        playCard(cardPosition, null);
+                        PlayerStats playerStats = (PlayerStats) getActivity().getSupportFragmentManager().findFragmentByTag(((PlayerActivity) getActivity()).getTabStats());
+                        playerStats.buildStats();
+                        dialog.dismiss();
+                    }
+                });
+                confirmDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                confirmDialog.show();
             }
 
             public void choosePlayer(final int cardPosition, ArrayList<String> names) {
@@ -117,7 +138,8 @@ public class PlayerHandCards extends Fragment {
                         playerSelected = Integer.parseInt(match.group(0));
                         
                         AlertDialog.Builder cardPlayedDialog = new AlertDialog.Builder(getActivity());
-                        cardPlayedDialog.setTitle(cards.get(cardPosition).name + " Played On: " + playerSelected);
+                        // TODO: this is pid only, not the name...
+                        cardPlayedDialog.setTitle(PlayerHandCards.this.cards.get(cardPosition).name + " Played On pid: " + playerSelected);
                         // TODO: TONY/AMITOJ: if we want to display a custom
                         // message based on the card played, set that message as
                         // a part of: card.message for example

@@ -3,7 +3,6 @@ package com.zap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +36,6 @@ public class GameActivity extends Activity {
         makeGame.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 setupGame(view);
             }
         });
@@ -45,10 +43,9 @@ public class GameActivity extends Activity {
 
     public void setupGame(View view) {
         MyApplication app = (MyApplication) getApplication();
-        EditText name = (EditText) findViewById(R.id.playerNameValue);
-        Log.v("TONY", name.toString());
+        String name = ((EditText) findViewById(R.id.playerNameValue)).getText().toString();
+        app.setPlayer(new Player(name));
 
-        app.setPlayer(new Player(name.toString()));
         for (int i = 0; i < 7; i++) {
             app.getPlayer().initOpponent(i, 1, "ASDF");
         }

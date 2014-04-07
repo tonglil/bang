@@ -1,6 +1,7 @@
 package com.zap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zap.main.Opponent;
 import com.zap.main.Player;
 
 public class PlayerStats extends Fragment {
@@ -30,6 +32,7 @@ public class PlayerStats extends Fragment {
     private Button doneTurn;
 
     private Player player;
+    private HashMap<Integer, Opponent> opponents;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,15 +52,26 @@ public class PlayerStats extends Fragment {
 
     public void buildStats() {
         PlayerActivity parentActivity = (PlayerActivity) getActivity();
-        player = parentActivity.getPlayer();
+        this.player = parentActivity.getPlayer();
+        this.opponents = player.getOpponents();
         ArrayList<String> status = new ArrayList<String>();
+        
 
         Toast.makeText(getActivity(), "stats for player: " + player.getName(), Toast.LENGTH_SHORT).show();
 
         textHealth.setText("" + player.getLives());
         textRange.setText("" + player.getRange());
-        // TODO: TONY for mustang
-        textHidden.setText("0");
+        
+        String players = "";
+        for (Opponent opponent : this.opponents.values()) {
+            Integer pid = opponent.getPid();
+            players += "Player " + pid + " player.getRangeFromOpponent(" + pid + ") " + this.player.getRangeFromOpponent(pid) + " away\n";
+        }
+        
+        textHidden.setText(players);
+        
+        if (player.hasMustang())
+            status.add("Mustang");
         if (player.hasBarrel())
             status.add("Barrel");
         if (player.hasDynamite())
