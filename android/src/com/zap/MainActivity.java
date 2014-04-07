@@ -123,11 +123,10 @@ public class MainActivity extends Activity {
 
     public void sendMessage2(View view) {
         // Get the message from the box
-        // EditText et = (EditText) findViewById(R.id.MessageText);
-        // String msg = et.getText().toString();
-        // Comm.sendMessage(msg);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
 
-        p.zapOpponent(1);
+        p.zapOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage3(View view) {
@@ -143,11 +142,17 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage6(View view) {
-        p.throwInJail(1, 72);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        p.throwInJail(Integer.valueOf(msg), 72);
     }
 
     public void sendMessage7(View view) {
-        p.drawCards(3);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        p.drawCards(Integer.valueOf(msg));
     }
 
     public void sendMessage8(View view) {
@@ -155,15 +160,24 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage9(View view) {
-        p.panicOpponent(1);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        p.panicOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage10(View view) {
-        p.catBalouOpponent(1);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        p.catBalouOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage11(View view) {
-        p.duelOpponent(1);
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        p.duelOpponent(Integer.valueOf(msg));
     }
 
     public void sendMessage12(View view) {
@@ -179,7 +193,10 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage15(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
 
+        Comm.sendMessage(msg);
     }
 
     public void setupGame() {

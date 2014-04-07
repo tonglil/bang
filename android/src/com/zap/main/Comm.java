@@ -172,7 +172,7 @@ public class Comm {
             msg = msg + iths(c.cid);
         }
         Log.i("colin", "Going to send tellDE2CardsInHand");
-        sendMessageWait(msg);
+        sendMessage(msg);
         Log.i("colin", "Sent tellDE2CardsInHand");
         return;
     }
