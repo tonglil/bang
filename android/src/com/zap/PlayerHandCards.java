@@ -76,7 +76,7 @@ public class PlayerHandCards extends Fragment {
                     playCard(cardPosition, null);
                 } else if (cardPlayed.onePlayerNotSelf()) {
                     for (Opponent opponent : opponents.values()) {
-                        names.add(opponent.getName());
+                        names.add(opponent.getPid() + "");
                     }
                     Log.v("TONY", "one players not self (jail)");
                     choosePlayer(cardPosition, names);
