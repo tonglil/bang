@@ -12,10 +12,10 @@
     <string name="player_stats_health_value">0</string>
     <string name="player_stats_range">Range:</string>
     <string name="player_stats_range_value">0</string>
-    <string name="player_stats_hidden">Hidden:</string>
-    <string name="player_stats_hidden_value">-0</string>
+    <string name="player_stats_players">Players:</string>
+    <string name="player_stats_players_value">N/A</string>
     <string name="player_stats_special">Special:</string>
-    <string name="player_stats_special_value">Barrel / Jailed / Dynamite</string>
+    <string name="player_stats_special_value">N/A</string>
     <string name="player_done_turn">Done Turn</string>
 
 </resources>
