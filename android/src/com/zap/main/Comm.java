@@ -428,10 +428,6 @@ public class Comm {
             }
             int k = 3 * i + l;
             for (i = 0; i < 7; i++) {
-                if (p.getPid() == i) {
-                    break;
-                }
-
                 ArrayList<Integer> bcard = new ArrayList<Integer>();
                 for (int j = 0; j < r_pinfo.get(i).get(0); j++) {
                     bcard.add((int) buf[k++]);
