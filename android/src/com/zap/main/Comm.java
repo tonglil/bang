@@ -369,9 +369,7 @@ public class Comm {
                 int pid = (int) buf[3 * i + l + 1];
                 int range = (int) buf[3 * i + l + 1];
                 int int_role = (int) buf[3 * i + l + 2];
-                if (p.getPid() == pid) {
-                    break;
-                }
+
                 String role = "None";
                 switch (int_role) {
                 case 0x01: {
@@ -420,10 +418,8 @@ public class Comm {
                 int lives = (int) buf[3 * i + l + 1];
                 int num_blues = (int) buf[3 * i + l + 2];
 
-                if (p.getPid() == pid) {
-                    break;
-                }
                 Log.i("colin", "Doing setOpponentLives");
+                Log.i("colin", "pid: " + pid + "lives: " + lives);
                 p.setOpponentLives(pid, lives);
                 Log.i("colin", "Did setOpponentLives");
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();

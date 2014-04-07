@@ -138,7 +138,7 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
         	addCard(playerCtrl, getSubTurn(playerCtrl),message.cards[0]);
         	tell_user_new_card(getSubTurn(playerCtrl), message.cards[0]);
             removeCardFromStore(cardCtrl, message.cards[0]);
-        	Message message = receivedFromAndroid();
+        	receivedFromAndroid();
             endSubTurn(playerCtrl);
             tell_user_store(getSubTurn(playerCtrl), count--, cardCtrl->store);
             loop = 0;
@@ -153,7 +153,7 @@ void startStore(PlayerCtrl* playerCtrl, int id, CardCtrl* cardCtrl) {
         	addCard(playerCtrl, getSubTurn(playerCtrl),message.cards[0]);
         	tell_user_new_card(getSubTurn(playerCtrl), message.cards[0]);
             removeCardFromStore(cardCtrl, message.cards[0]);
-        	Message message = receivedFromAndroid();
+        	receivedFromAndroid();
             endSubTurn(playerCtrl);
             if (getSubTurn(playerCtrl) != id)
             	tell_user_store(getSubTurn(playerCtrl), count--, cardCtrl->store);

@@ -74,10 +74,10 @@ public class PlayerHandCards extends Fragment {
                     for (Opponent opponent : opponents.values()) {
                         Integer pid = opponent.getPid();
                         Log.v("TONY", "Doing opp checks...");
-                        Log.v("TONY", "Doing opp checks: " + PlayerHandCards.this.playerCurrent.getPid());
-                        Log.v("TONY", "Doing opp checks: " + pid);
-                        Log.v("TONY", "Doing opp checks: " + !opponent.getDead());
-                        Log.v("TONY", "Doing opp checks: " + PlayerHandCards.this.playerCurrent.checkRange(pid));
+                        Log.v("TONY", "Doing you checks: " + PlayerHandCards.this.playerCurrent.getPid());
+                        Log.v("TONY", "Doing pid checks: " + pid);
+                        Log.v("TONY", "Doing alive checks: " + !opponent.getDead());
+                        Log.v("TONY", "Doing inrange checks: " + PlayerHandCards.this.playerCurrent.checkRange(pid));
                         if (pid != PlayerHandCards.this.playerCurrent.getPid() && !opponent.getDead() && PlayerHandCards.this.playerCurrent.checkRange(pid)) {
                             names.add(pid + " - Range " + PlayerHandCards.this.playerCurrent.getRangeFromOpponent(pid) + " away");
                         }

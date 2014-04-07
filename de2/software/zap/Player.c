@@ -11,8 +11,6 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
     playerCtrl->turn = 0;
 
     Player defaultPlayer;
-    defaultPlayer.id = -1;
-    defaultPlayer.pos = -1;
     defaultPlayer.role = NONE;
     defaultPlayer.lives = 0;
     defaultPlayer.num_hand = 0;
@@ -22,13 +20,12 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
         playerCtrl->players[i] = defaultPlayer;
-
     }
 
     playerCtrl->players[0].role = SHERIFF;
     playerCtrl->players[1].role = DEPUTY;
-    playerCtrl->players[2].role = OUTLAW;
-    playerCtrl->players[3].role = OUTLAW;
+    playerCtrl->players[2].role = NONE;
+    playerCtrl->players[3].role = NONE;
 
     if (count > 4)
         playerCtrl->players[4].role = DEPUTY;
@@ -48,11 +45,11 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
         playerCtrl->players[i].role = temp;
     }
 
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < NUM_PLAYERS; i++) {
     	Player *p = &(playerCtrl->players[i]);
+        p->id = i;
         if (p->role == NONE)
             continue;
-        p->id = i;
         p->pos = i;
         if (p->role == SHERIFF)
             p->lives = 5;
