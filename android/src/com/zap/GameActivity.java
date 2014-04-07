@@ -47,7 +47,7 @@ public class GameActivity extends Activity {
         app.setPlayer(new Player(name));
 
         for (int i = 0; i < 7; i++) {
-            app.getPlayer().initOpponent(i, 1, "ASDF");
+            app.getPlayer().initOpponent(i, 10, "ASDF");
         }
         // 7 is a magic number
         Comm.tellDE2Connected(7);
