@@ -27,7 +27,7 @@ public class PlayerStats extends Fragment {
     
     private TextView textHealth;
     private TextView textRange;
-    private TextView textHidden;
+    private TextView textPlayers;
     private TextView textSpecial;
     private Button doneTurn;
 
@@ -40,7 +40,7 @@ public class PlayerStats extends Fragment {
 
         textHealth = (TextView) this.playerStats.findViewById(R.id.playerStatsHealthValue);
         textRange = (TextView) this.playerStats.findViewById(R.id.playerStatsRangeValue);
-        textHidden = (TextView) this.playerStats.findViewById(R.id.playerStatsHiddenValue);
+        textPlayers = (TextView) this.playerStats.findViewById(R.id.playerStatsPlayersValue);
         textSpecial = (TextView) this.playerStats.findViewById(R.id.playerStatsSpecialValue);
         doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
 
@@ -65,10 +65,10 @@ public class PlayerStats extends Fragment {
         String players = "";
         for (Opponent opponent : this.opponents.values()) {
             Integer pid = opponent.getPid();
-            players += "Player " + pid + " player.getRangeFromOpponent(" + pid + ") " + this.player.getRangeFromOpponent(pid) + " away\n";
+            players += "Player " + pid + " is " + this.player.getRangeFromOpponent(pid) + " away\n";
         }
         
-        textHidden.setText(players);
+        textPlayers.setText(players);
         
         if (player.hasMustang())
             status.add("Mustang");
