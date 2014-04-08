@@ -67,9 +67,7 @@ public class PlayerStats extends Fragment {
             Integer pid = opponent.getPid();
             players += "Player " + pid + " is " + this.player.getRangeFromOpponent(pid) + " away\n";
         }
-        
-        this.textPlayers.setText(players);
-        
+                
         if (player.hasMustang())
             status.add("Mustang");
         if (player.hasBarrel())
@@ -83,9 +81,10 @@ public class PlayerStats extends Fragment {
         this.textSpecial.setText(TextUtils.join(" / ", status));
 
         if (PlayerStats.this.player.isTurn()) {
-            this.doneTurn.setEnabled(true); 
+            this.doneTurn.setEnabled(true);
+            this.textPlayers.setText(players);
         } else {
-            this.doneTurn.setEnabled(false); 
+            this.doneTurn.setEnabled(false);
         }
         
         // NOTE: this allows this tab to be referenced by a tag and updated by other tabs
