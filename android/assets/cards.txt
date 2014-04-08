@@ -72,9 +72,9 @@
 69 General Store R9C000000000 general_store_2
 70 General Store RQS000000000 general_store_1
 71 Saloon R5H001000100 saloon
-72 Jail L0S000000000 jail_2
-73 Jail LJS000000000 jail_1
-74 Jail L4H000000000 jail_3
+72 Saloon R5H001000100 saloon
+73 Stagecoach R9S000020000 stagecoach_1
+74 Stagecoach R9S000020000 stagecoach_2
 75 Missed! R0C010000000 missed_11
 76 Missed! RJC010000000 missed_12
 77 Missed! RQC010000000 missed_10

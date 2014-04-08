@@ -41,7 +41,7 @@ public class PlayerStats extends Fragment {
         this.textPlayers = (TextView) this.playerStats.findViewById(R.id.playerStatsPlayersValue);
         this.textSpecial = (TextView) this.playerStats.findViewById(R.id.playerStatsSpecialValue);
         this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
-        
+
         ((PlayerActivity) getActivity()).setTabStats(getTag());
         buildStats();
 
@@ -106,22 +106,19 @@ public class PlayerStats extends Fragment {
                         // GO TO INTERMEDIATE VIEW
                         AlertDialog.Builder passOrWaitDialog = new AlertDialog.Builder(getActivity());
                         passOrWaitDialog.setTitle("Please Wait For Your Turn");
-                        if (PlayerStats.this.player.isTurn()) {
+                        passOrWaitDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 
-                            passOrWaitDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    // UPDATE PLAYER #
-                                    // REFRESH/REBUILD ALL TABS
-                                    PlayerStats playerStats = (PlayerStats) getActivity().getSupportFragmentManager().findFragmentByTag(((PlayerActivity) getActivity()).getTabStats());
-                                    playerStats.buildStats();
-                                    dialog.dismiss();
-                                }
-                            });
-                            passOrWaitDialog.show();
-                        }
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
                         passOrWaitDialog.show();
+
+                        PlayerStats playerStats = (PlayerStats) getActivity().getSupportFragmentManager().findFragmentByTag(((PlayerActivity) getActivity()).getTabStats());
+                        playerStats.buildStats();
+                        dialog.dismiss();
+
                     }
                 });
                 nextConfirmationDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
