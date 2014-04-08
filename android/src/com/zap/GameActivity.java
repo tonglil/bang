@@ -46,7 +46,7 @@ public class GameActivity extends Activity {
         String name = ((EditText) findViewById(R.id.playerNameValue)).getText().toString();
         app.setPlayer(new Player(name));
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 3; i++) {
             app.getPlayer().initOpponent(i, 10, "ASDF");
         }
         // 7 is a magic number
