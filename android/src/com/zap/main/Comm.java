@@ -285,7 +285,7 @@ public class Comm {
             // [21] pid
             // [22] range
             // [23] role
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 3; i++) {
                 int pid = (int) buf[3 * i + l];
                 int range = (int) buf[3 * i + l + 1];
                 int int_role = (int) buf[3 * i + l + 2];
@@ -334,7 +334,7 @@ public class Comm {
             // [24] rest of array is cid for blue cards
             // ...
             int i;
-            for (i = 0; i < 7; i++) {
+            for (i = 0; i < 3; i++) {
                 int pid = (int) buf[3 * i + l];
                 int lives = (int) buf[3 * i + l + 1];
                 int num_blues = (int) buf[3 * i + l + 2];
@@ -348,7 +348,7 @@ public class Comm {
                 r_pinfo.add(pinfo);
             }
             int k = 3 * i + l;
-            for (i = 0; i < 7; i++) {
+            for (i = 0; i < 3; i++) {
                 ArrayList<Integer> bcard = new ArrayList<Integer>();
                 for (int j = 0; j < r_pinfo.get(i).get(0); j++) {
                     bcard.add((int) buf[k++]);
