@@ -422,7 +422,7 @@ public class Comm {
             tellDE2OK(p.getPid());
             break;
         }
-        case 0xaa: {
+        case 0x3a: {
             Log.i("colin", "Doing updateHand");
             p.onUpdateCards();
             Log.i("colin", "Did updateHand");
