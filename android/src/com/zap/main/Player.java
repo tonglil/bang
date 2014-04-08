@@ -771,7 +771,6 @@ public class Player {
         Comm.tellDE2UserUsedOther(this.pid, pid, "ZAP", 0);
 
         Boolean once = true;
-        DE2Message.setReadyToContinue(false);
         while (!DE2Message.getReadyToContinue(true)) {
             if (once) {
                 Log.i("colin", "Waiting for readyToContinue");
