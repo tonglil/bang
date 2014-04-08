@@ -816,14 +816,6 @@ public class Player {
         test_call = "zapOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "ZAP", 0);
 
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(true)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
         return;
     }
 
@@ -833,14 +825,7 @@ public class Player {
         // beer, or takes the hit
         test_call = "zapAll";
         Comm.tellDE2UserUsedSelf(this.pid, "GATLING");
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -849,14 +834,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "goToSaloon";
         Comm.tellDE2UserUsedSelf(this.pid, "SALOON");
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -866,14 +844,7 @@ public class Player {
         test_call = "drinkBeer";
         setLives(lives + 1);
         Comm.tellDE2UserUsedSelf(this.pid, "BEER");
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -882,14 +853,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "throwInJail";
         Comm.tellDE2UserUsedOther(this.pid, pid, "JAIL", cid);
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -924,14 +888,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "panicOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "PANIC", 0);
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -940,14 +897,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "catBalouOpponentCard";
         Comm.tellDE2UserUsedOther(this.pid, pid, "CAT_BALOU", 0);
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -956,14 +906,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "duelOpponent";
         Comm.tellDE2UserUsedOther(this.pid, pid, "DUEL", 0);
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
@@ -972,13 +915,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "releaseTheAliens";
         Comm.tellDE2UserUsedSelf(this.pid, "ALIENS");
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
+        
         return;
     }
 
@@ -987,14 +924,7 @@ public class Player {
         // This function shouldn't return until de2 says everything is good
         test_call = "generalStore";
         Comm.tellDE2UserUsedSelf(this.pid, "GENERAL_STORE");
-        Boolean once = true;
-        while (!DE2Message.getReadyToContinue(once)) {
-            if (once) {
-                Log.i("colin", "Waiting for readyToContinue");
-                once = false;
-            }
-        }
-        DE2Message.setReadyToContinue(false);
+        
         return;
     }
 
