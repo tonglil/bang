@@ -63,7 +63,7 @@ typedef struct Field {
 	alt_up_char_buffer_dev* charBuffer;
 }Field;
 
-void runField(Field* field);
+void runField(Field* field, int isGameEnd, int winningPlayer);
 int getCursorPosition(Field*);
 void initField(Field* field, PlayerCtrl* playerCtrl, CardCtrl* cardCtrl, alt_up_char_buffer_dev* charBuffer);
 void handleField(char ascii);

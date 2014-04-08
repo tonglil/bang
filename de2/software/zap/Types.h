@@ -1,7 +1,7 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
-#define NUM_PLAYERS 7
+#define NUM_PLAYERS 3
 
 #define MAX_CARDS 80
 #define MAX_BLUE_CARDS 80

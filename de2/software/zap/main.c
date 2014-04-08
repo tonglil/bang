@@ -33,7 +33,7 @@ int main() {
     initCards(cardCtrl);
 
     printf("Waiting for players\n");
-    while(connected_count < 2) {
+    while(connected_count < 3) {
     	receivedFromAndroid();
     }
     printf("Got all players\n");
@@ -100,19 +100,24 @@ int main() {
         		tell_user_ok(message.fromId);
                 break;
             case BEER:
+            {
             	//TODO
                 //updateLivesForId(playerCtrl, message.fromId, message.count);
-                tell_user_ok(message.fromId);
+            	Message message = receivedFromAndroid();
+            	if (message.type == UPDATE_LIVES)
+            		updateLivesForId(playerCtrl, message.fromId, message.count);
+            	updateHand(message.fromId, playerCtrl);
                 break;
+            }
             case GENERAL_STORE:
                 startStore(playerCtrl, message.fromId, cardCtrl);
                 break;
             case SALOON:
-                startSaloon(playerCtrl);
+                startSaloon(playerCtrl, message.fromId);
                 tell_user_ok(message.fromId);
                 break;
             case ZAP: {
-            	startZap(playerCtrl, message.toId, message.self);
+            	startZap(playerCtrl, message.toId, message.fromId, message.self);
             	if (message.self == 0) {
             		tell_user_ok(message.fromId);
             	}
@@ -147,7 +152,7 @@ int main() {
                 break;
             }
         	alt_up_char_buffer_clear(charBuffer);
-        	runField(field);
+        	runField(field, isGameEnd, winningPlayer);
         }
         endTurn(playerCtrl);
     	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
@@ -165,7 +170,7 @@ int main() {
 		}
     	tell_user_their_turn(playerCtrl->turn);
         alt_up_char_buffer_clear(charBuffer);
-        runField(field);
+        runField(field, isGameEnd, winningPlayer);
     }
     return 0;
 }

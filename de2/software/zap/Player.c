@@ -23,19 +23,11 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
     }
 
     playerCtrl->players[0].role = SHERIFF;
-    playerCtrl->players[1].role = DEPUTY;
-    playerCtrl->players[2].role = NONE;
-    playerCtrl->players[3].role = NONE;
-
-    if (count > 4)
-        playerCtrl->players[4].role = DEPUTY;
-    if (count > 5)
-        playerCtrl->players[5].role = OUTLAW;
-    if (count == 7)
-        playerCtrl->players[6].role = RENEGADE;
+    playerCtrl->players[1].role = RENEGADE;
+    playerCtrl->players[2].role = OUTLAW;
 
     //Shuffle roles
-    for (i = 0; i < count; i++)
+    for (i = 0; i < NUM_PLAYERS; i++)
     {
         int j = i + rand() % (count - i);
         if (j >= count)
@@ -48,9 +40,9 @@ void initPlayers(PlayerCtrl* playerCtrl, int count) {
     for (i = 0; i < NUM_PLAYERS; i++) {
     	Player *p = &(playerCtrl->players[i]);
         p->id = i;
+        p->pos = i;
         if (p->role == NONE)
             continue;
-        p->pos = i;
         if (p->role == SHERIFF)
             p->lives = 5;
         else
@@ -130,8 +122,8 @@ PlayersInfo getPlayersInfoForId(PlayerCtrl* playerCtrl, int id) {
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
     playersInfo.players[i] = playerCtrl->players[i];
-        if (playersInfo.players[i].pos < 0) {
-            playersInfo.distance[i] = -1;
+        if (playersInfo.players[i].lives <= 0) {
+            playersInfo.distance[i] = 10;
             continue;
         }
         int tempDistance =  playersInfo.players[i].pos - playersInfo.players[id].pos;
