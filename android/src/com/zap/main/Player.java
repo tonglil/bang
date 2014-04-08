@@ -52,6 +52,7 @@ public class Player {
         turn = false;
         dead = false;
         zappedThisTurn = false;
+        role = "N/A";
         test_call = "";
     }
 
@@ -181,6 +182,13 @@ public class Player {
 
     public void setRole(String role) {
         this.role = role;
+
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                playerActivity.getActionBar().setTitle("Role: " + getRole() + " " + String.valueOf(pid));
+            }
+        });
+
         if (role.compareTo(SHERIFF) == 0) {
             maxLives = 1;
             lives = 1;

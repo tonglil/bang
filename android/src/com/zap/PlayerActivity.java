@@ -81,7 +81,7 @@ public class PlayerActivity extends FragmentActivity {
 
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setTitle("Current Player: " + player.getName());
+        bar.setTitle("Current Role: " + player.getRole());
         bar.setDisplayHomeAsUpEnabled(false);
 
         tabsAdapter = new TabsAdapter(this, viewPager);
