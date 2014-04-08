@@ -86,7 +86,6 @@ public class PlayerActivity extends FragmentActivity {
         tabsAdapter = new TabsAdapter(this, viewPager);
         tabsAdapter.addTab(bar.newTab().setText("Hand Cards"), PlayerHandCards.class, null);
         tabsAdapter.addTab(bar.newTab().setText("Stats"), PlayerStats.class, null);
-        tabsAdapter.addTab(bar.newTab().setText("Table Cards"), PlayerTableCards.class, null);
 
         bar.setSelectedNavigationItem(1);
 
