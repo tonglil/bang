@@ -79,7 +79,7 @@ public class PlayerHandCards extends Fragment {
                         for (Opponent opponent : opponents.values()) {
                             Integer pid = opponent.getPid();
                             if (pid != PlayerHandCards.this.playerCurrent.getPid() && !opponent.getDead() && PlayerHandCards.this.playerCurrent.checkRange(pid)) {
-                                names.add("Player " + pid);// + " (range " + PlayerHandCards.this.playerCurrent.getRangeFromOpponent(pid) + " away)");
+                                names.add("Player " + pid + " (range " + PlayerHandCards.this.playerCurrent.getRangeFromOpponent(pid) + " away)");
                             }
                         }
                         choosePlayer(cardPosition, names);

@@ -42,6 +42,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        EditText et = (EditText) findViewById(R.id.RecvdMessage);
+        et.setKeyListener(null);
+        et = (EditText) findViewById(R.id.error_message_box);
+        et.setKeyListener(null);
+
         // Set up a timer task. We will use the timer to check the
         // input queue every 500 ms
 
@@ -94,6 +99,107 @@ public class MainActivity extends Activity {
         // and executes the code in it.
 
         new SocketConnect().execute((Void) null);
+    }
+
+    // Called when the user wants to send a message
+
+    public void sendMessage(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.setPlayer(new Player());
+        for (int i = 0; i < 7; i++) {
+            app.getPlayer().initOpponent(i, 1, "ASDF");
+        }
+        // 7 is a magic number
+        Comm.tellDE2Connected(7);
+    }
+
+    public void sendMessage2(View view) {
+        // Get the message from the box
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().zapOpponent(Integer.valueOf(msg));
+    }
+
+    public void sendMessage3(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().zapAll();
+    }
+
+    public void sendMessage4(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().goToSaloon();
+    }
+
+    public void sendMessage5(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().drinkBeer();
+    }
+
+    public void sendMessage6(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().throwInJail(Integer.valueOf(msg), 72);
+    }
+
+    public void sendMessage7(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().drawCards(Integer.valueOf(msg));
+    }
+
+    public void sendMessage8(View view) {
+    }
+
+    public void sendMessage9(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().panicOpponent(Integer.valueOf(msg));
+    }
+
+    public void sendMessage10(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().catBalouOpponent(Integer.valueOf(msg));
+    }
+
+    public void sendMessage11(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().duelOpponent(Integer.valueOf(msg));
+    }
+
+    public void sendMessage12(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().releaseTheAliens();
+    }
+
+    public void sendMessage13(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().generalStore();
+    }
+
+    public void sendMessage14(View view) {
+        MyApplication app = (MyApplication) getApplication();
+        app.getPlayer().endTurn();
+    }
+
+    public void sendMessage15(View view) {
+        EditText et = (EditText) findViewById(R.id.MessageText);
+        String msg = et.getText().toString();
+
+        Comm.sendMessage(msg);
     }
 
     public void setupGame() {
@@ -201,6 +307,17 @@ public class MainActivity extends Activity {
                         Log.i("colin", "Message from Middleman: " + s);
 
                         Comm.receiveInterpretDE2(buf, app.getPlayer());
+
+                        // As explained in the tutorials, the GUI can not be
+                        // updated in an asynchronous task. So, update the GUI
+                        // using the UI thread.
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                EditText et = (EditText) findViewById(R.id.RecvdMessage);
+                                et.setText(s);
+                            }
+                        });
 
                     }
                 } catch (IOException e) {

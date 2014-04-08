@@ -24,7 +24,7 @@ public class PlayerStats extends Fragment {
     private View playerStats;
 
     private TextView textHealth;
-    //private TextView textRange;
+    private TextView textRange;
     private TextView textPlayers;
     private TextView textSpecial;
     private Button doneTurn;
@@ -37,7 +37,7 @@ public class PlayerStats extends Fragment {
         this.playerStats = inflater.inflate(R.layout.fragment_player_stats, container, false);
 
         this.textHealth = (TextView) this.playerStats.findViewById(R.id.playerStatsHealthValue);
-        //this.textRange = (TextView) this.playerStats.findViewById(R.id.playerStatsRangeValue);
+        this.textRange = (TextView) this.playerStats.findViewById(R.id.playerStatsRangeValue);
         this.textPlayers = (TextView) this.playerStats.findViewById(R.id.playerStatsPlayersValue);
         this.textSpecial = (TextView) this.playerStats.findViewById(R.id.playerStatsSpecialValue);
         this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
@@ -59,7 +59,7 @@ public class PlayerStats extends Fragment {
         Log.v("TONY", "stats for player: " + player.getName());
 
         this.textHealth.setText("" + player.getLives());
-        //this.textRange.setText("" + player.getRange());
+        this.textRange.setText("" + player.getRange());
 
         String players = "";
         for (Opponent opponent : this.opponents.values()) {
