@@ -38,13 +38,14 @@ public class PlayerStats extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.playerStats = inflater.inflate(R.layout.fragment_player_stats, container, false);
 
-        textHealth = (TextView) this.playerStats.findViewById(R.id.playerStatsHealthValue);
-        textRange = (TextView) this.playerStats.findViewById(R.id.playerStatsRangeValue);
-        textPlayers = (TextView) this.playerStats.findViewById(R.id.playerStatsPlayersValue);
-        textSpecial = (TextView) this.playerStats.findViewById(R.id.playerStatsSpecialValue);
-        doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
+        this.textHealth = (TextView) this.playerStats.findViewById(R.id.playerStatsHealthValue);
+        this.textRange = (TextView) this.playerStats.findViewById(R.id.playerStatsRangeValue);
+        this.textPlayers = (TextView) this.playerStats.findViewById(R.id.playerStatsPlayersValue);
+        this.textSpecial = (TextView) this.playerStats.findViewById(R.id.playerStatsSpecialValue);
+        this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
 
         buildStats();
+        
         addButtonListenerDone();
         
         return this.playerStats;
@@ -56,11 +57,10 @@ public class PlayerStats extends Fragment {
         this.opponents = player.getOpponents();
         ArrayList<String> status = new ArrayList<String>();
         
-
         Toast.makeText(getActivity(), "stats for player: " + player.getName(), Toast.LENGTH_SHORT).show();
 
-        textHealth.setText("" + player.getLives());
-        textRange.setText("" + player.getRange());
+        this.textHealth.setText("" + player.getLives());
+        this.textRange.setText("" + player.getRange());
         
         String players = "";
         for (Opponent opponent : this.opponents.values()) {
@@ -68,7 +68,7 @@ public class PlayerStats extends Fragment {
             players += "Player " + pid + " is " + this.player.getRangeFromOpponent(pid) + " away\n";
         }
         
-        textPlayers.setText(players);
+        this.textPlayers.setText(players);
         
         if (player.hasMustang())
             status.add("Mustang");
@@ -80,15 +80,21 @@ public class PlayerStats extends Fragment {
             status.add("Jailed");
         if (status.size() == 0)
             status.add("N/A");
-        textSpecial.setText(TextUtils.join(" / ", status));
+        this.textSpecial.setText(TextUtils.join(" / ", status));
 
+        if (PlayerStats.this.player.isTurn()) {
+            this.doneTurn.setEnabled(true); 
+        } else {
+            this.doneTurn.setEnabled(false); 
+        }
+        
         // NOTE: this allows this tab to be referenced by a tag and updated by other tabs
         ((PlayerActivity) getActivity()).setTabStats(getTag());
     }
         
     public void addButtonListenerDone() {
-        doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
-        doneTurn.setOnClickListener(new OnClickListener() {
+        this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
+        this.doneTurn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder nextConfirmationDialog = new AlertDialog.Builder(getActivity());

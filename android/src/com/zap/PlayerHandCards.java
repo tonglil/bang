@@ -58,6 +58,9 @@ public class PlayerHandCards extends Fragment {
         }
 
         cardGrid.setAdapter(new ArrayListImageAdapter(getActivity(), this.images));
+        
+        if (this.playerCurrent.isTurn()) {
+        
         cardGrid.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int cardPosition, long id) {
                 final Card cardPlayed = PlayerHandCards.this.cards.get(cardPosition);
@@ -162,6 +165,8 @@ public class PlayerHandCards extends Fragment {
                 cardActionDialog.show();
             }
         });
+        
+        }
 
     }
 
