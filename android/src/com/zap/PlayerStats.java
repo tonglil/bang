@@ -41,7 +41,8 @@ public class PlayerStats extends Fragment {
         this.textPlayers = (TextView) this.playerStats.findViewById(R.id.playerStatsPlayersValue);
         this.textSpecial = (TextView) this.playerStats.findViewById(R.id.playerStatsSpecialValue);
         this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
-
+        
+        ((PlayerActivity) getActivity()).setTabStats(getTag());
         buildStats();
 
         addButtonListenerDone();
