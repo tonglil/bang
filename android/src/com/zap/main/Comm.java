@@ -314,6 +314,7 @@ public class Comm {
                 }
                 }
                 Log.i("colin", "Doing setOpponentRole and setOpponentRange");
+                Log.i("range", pid + "is " + range + " far away from " + fromId);
                 p.setOpponentRole(pid, role);
                 p.setOpponentRange(pid, range);
                 Log.i("colin", "Did setOpponentRole and setOpponentRange");
