@@ -286,7 +286,7 @@ public class Comm {
             // [22] range
             // [23] role
             for (int i = 0; i < 7; i++) {
-                int pid = (int) buf[3 * i + l + 1];
+                int pid = (int) buf[3 * i + l];
                 int range = (int) buf[3 * i + l + 1];
                 int int_role = (int) buf[3 * i + l + 2];
 
