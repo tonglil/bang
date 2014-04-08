@@ -190,11 +190,11 @@ public class Player {
         });
 
         if (role.compareTo(SHERIFF) == 0) {
-            maxLives = 1;
-            lives = 1;
+            maxLives = 5;
+            lives = 5;
         } else {
-            maxLives = 1;
-            lives = 1;
+            maxLives = 4;
+            lives = 4;
         }
     }
 
