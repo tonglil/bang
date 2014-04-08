@@ -12,7 +12,6 @@ import android.util.Log;
 import com.zap.PlayerActivity;
 import com.zap.PlayerHandCards;
 import com.zap.PlayerStats;
-import com.zap.PlayerTableCards;
 
 // TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
 // TODO Amitoj: Implement onEvent functions, test dynamite and jail
@@ -259,11 +258,6 @@ public class Player {
                 if (playerActivity != null) {
                     playerHandCards = (PlayerHandCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabHandCards());
                     playerHandCards.buildCards();
-                }
-                PlayerTableCards playerTableCards;
-                if (playerActivity != null) {
-                    playerTableCards = (PlayerTableCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabTableCards());
-                    playerTableCards.buildCards();
                 }
             }
         });
@@ -753,11 +747,6 @@ public class Player {
                 if (playerActivity != null) {
                     playerHandCards = (PlayerHandCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabHandCards());
                     playerHandCards.buildCards();
-                }
-                PlayerTableCards playerTableCards;
-                if (playerActivity != null) {
-                    playerTableCards = (PlayerTableCards) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabTableCards());
-                    playerTableCards.buildCards();
                 }
             }
         });
