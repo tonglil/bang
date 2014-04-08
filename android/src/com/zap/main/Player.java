@@ -383,7 +383,7 @@ public class Player {
                             int pid = target.intValue();
                             if (checkRange(pid)) {
                                 zapOpponent(pid);
-                                zappedThisTurn = true;
+                                //zappedThisTurn = true;
                                 cc.discardCard(cid);
                             } else {
                                 // TODO Tony: target not in range, give player
