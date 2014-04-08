@@ -14,8 +14,8 @@ import com.zap.PlayerHandCards;
 import com.zap.PlayerStats;
 import com.zap.PlayerTableCards;
 
-//TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
-//TODO Amitoj: Implement onEvent functions, test dynamite and jail
+// TODO Amitoj: Implement dying mechanics (3 cards for killing outlaw, etc)
+// TODO Amitoj: Implement onEvent functions, test dynamite and jail
 
 public class Player {
     public static Activity activity;
@@ -261,12 +261,16 @@ public class Player {
     }
 
     public void startTurn() {
-        PlayerStats playerStats;
-        if (playerActivity != null) {
-            playerStats = (PlayerStats) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabStats());
-            playerStats.buildStats();
-        }
-        
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                PlayerStats playerStats;
+                if (playerActivity != null) {
+                    playerStats = (PlayerStats) playerActivity.getSupportFragmentManager().findFragmentByTag(((PlayerActivity) activity).getTabStats());
+                    playerStats.buildStats();
+                }
+            }
+        });
+
         turn = true;
         zappedThisTurn = false;
 

@@ -13,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zap.main.Opponent;
 import com.zap.main.Player;
@@ -24,7 +22,7 @@ import com.zap.main.Player;
 public class PlayerStats extends Fragment {
 
     private View playerStats;
-    
+
     private TextView textHealth;
     private TextView textRange;
     private TextView textPlayers;
@@ -45,9 +43,9 @@ public class PlayerStats extends Fragment {
         this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
 
         buildStats();
-        
+
         addButtonListenerDone();
-        
+
         return this.playerStats;
     }
 
@@ -56,18 +54,18 @@ public class PlayerStats extends Fragment {
         this.player = parentActivity.getPlayer();
         this.opponents = player.getOpponents();
         ArrayList<String> status = new ArrayList<String>();
-        
-        Toast.makeText(getActivity(), "stats for player: " + player.getName(), Toast.LENGTH_SHORT).show();
+
+        Log.v("TONY", "stats for player: " + player.getName());
 
         this.textHealth.setText("" + player.getLives());
         this.textRange.setText("" + player.getRange());
-        
+
         String players = "";
         for (Opponent opponent : this.opponents.values()) {
             Integer pid = opponent.getPid();
             players += "Player " + pid + " is " + this.player.getRangeFromOpponent(pid) + " away\n";
         }
-                
+
         if (player.hasMustang())
             status.add("Mustang");
         if (player.hasBarrel())
@@ -86,11 +84,12 @@ public class PlayerStats extends Fragment {
         } else {
             this.doneTurn.setEnabled(false);
         }
-        
-        // NOTE: this allows this tab to be referenced by a tag and updated by other tabs
+
+        // NOTE: this allows this tab to be referenced by a tag and updated by
+        // other tabs
         ((PlayerActivity) getActivity()).setTabStats(getTag());
     }
-        
+
     public void addButtonListenerDone() {
         this.doneTurn = (Button) this.playerStats.findViewById(R.id.playerDone);
         this.doneTurn.setOnClickListener(new OnClickListener() {
