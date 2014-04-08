@@ -422,6 +422,12 @@ public class Comm {
             tellDE2OK(p.getPid());
             break;
         }
+        case 0xaa: {
+            Log.i("colin", "Doing updateHand");
+            p.onUpdateCards();
+            Log.i("colin", "Did updateHand");
+            break;
+        }
         case 0x0b: {
             // tell_user_blue_player_infront
             // [3] cid

@@ -385,8 +385,10 @@ public class Player {
                 } else if (c.life == 1) {
                     if (c.allPlayers) { // saloon
                         goToSaloon();
+                        cc.discardCard(cid);
                     } else if (lives < maxLives) { // beer
                         drinkBeer();
+                        cc.discardCard(cid);
                     } else {
                         // TODO Tony: tell user he has full lives, so he can't
                         // play beer
@@ -451,9 +453,6 @@ public class Player {
                     cc.discardCard(cid);
                 }
             }
-            Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
-            SystemClock.sleep(1500);
-            Comm.tellDE2BlueCardsInFront(pid, getNumberOfBlueCards(), getBlueCards());
         } else {
             // TODO Tony: tell player it isn't his turn
             test_call = "Not turn";
@@ -715,6 +714,10 @@ public class Player {
         });
     }
 
+    public void onUpdateCards() {
+        Comm.tellDE2CardsInHand(pid, getNumberOfHandCards(), getHandCards());
+    }
+
     public void onLoseCard(int cid) {
         Boolean isHand = false;
         for (Card c : getHandCards()) {
@@ -768,6 +771,7 @@ public class Player {
         Comm.tellDE2UserUsedOther(this.pid, pid, "ZAP", 0);
 
         Boolean once = true;
+        DE2Message.setReadyToContinue(false);
         while (!DE2Message.getReadyToContinue(true)) {
             if (once) {
                 Log.i("colin", "Waiting for readyToContinue");
