@@ -32,11 +32,11 @@ void runField(Field* field, int isGameEnd, int winningPlayer) {
 		Player *p = &(field->playerCtrl->players[i]);
 
 		lineLength = 8;
-		sprintf(buffer, "Player %d", p->id + 1);
+		sprintf(buffer, "Player %d", p->id);
 		padding = (partitionWidth - lineLength)/2;
 		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 0);
 
-		if (p->lives <= 0) {
+		if (p->lives <= 0 || p->role == SHERIFF) {
 			lineLength = strlen(roleToString(p->role));
 			sprintf(buffer, "%s", roleToString(p->role));
 			padding = (partitionWidth - lineLength)/2;
