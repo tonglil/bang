@@ -23,8 +23,6 @@
 
 int main() {
     // INIT COMS
-	printf("Started, waiting 5 secs\n");
-	usleep(5000000);
     cd = (Comm_data*) malloc(sizeof(Comm_data));
     uart = init_clear_uart(cd);
 
@@ -33,13 +31,14 @@ int main() {
     CardCtrl *cardCtrl = (CardCtrl*)malloc(sizeof(CardCtrl));
     PlayerCtrl* playerCtrl = (PlayerCtrl*)malloc(sizeof(PlayerCtrl));
     initCards(cardCtrl);
-    initPlayers(playerCtrl, 7);
 
     printf("Waiting for players\n");
-    while(connected_count < 2) {
+    while(connected_count < 3) {
     	receivedFromAndroid();
     }
     printf("Got all players\n");
+
+    initPlayers(playerCtrl, connected_count);
 
     int y;
     for (y = 0; y < connected_count; y++) {
@@ -52,14 +51,7 @@ int main() {
 
     int i, j;
     for (i = 0; i < connected_count; i++) {
-        for (j = 0; j < 2; j++) {
-            playerCtrl->players[i].hand[j] = testDrawCard(cardCtrl);
-            tell_user_new_card(i, playerCtrl->players[i].hand[j]);
-            Message message = receivedFromAndroid();
-			if (message.type == UPDATE_HAND) {
-				updateHandForId(playerCtrl, message.fromId, message.count, message.cards);
-			}
-        }
+    	drawCardsForId(i, cardCtrl, 2, playerCtrl);
     }
 
     field = malloc(sizeof(Field));
@@ -108,19 +100,24 @@ int main() {
         		tell_user_ok(message.fromId);
                 break;
             case BEER:
+            {
             	//TODO
                 //updateLivesForId(playerCtrl, message.fromId, message.count);
-                tell_user_ok(message.fromId);
+            	Message message = receivedFromAndroid();
+            	if (message.type == UPDATE_LIVES)
+            		updateLivesForId(playerCtrl, message.fromId, message.count);
+            	updateHand(message.fromId, playerCtrl);
                 break;
+            }
             case GENERAL_STORE:
                 startStore(playerCtrl, message.fromId, cardCtrl);
                 break;
             case SALOON:
-                startSaloon(playerCtrl);
+                startSaloon(playerCtrl, message.fromId);
                 tell_user_ok(message.fromId);
                 break;
             case ZAP: {
-            	startZap(playerCtrl, message.toId, message.self);
+            	startZap(playerCtrl, message.toId, message.fromId, message.self);
             	if (message.self == 0) {
             		tell_user_ok(message.fromId);
             	}
@@ -155,7 +152,7 @@ int main() {
                 break;
             }
         	alt_up_char_buffer_clear(charBuffer);
-        	runField(field);
+        	runField(field, isGameEnd, winningPlayer);
         }
         endTurn(playerCtrl);
     	tell_user_all_opponent_range_role(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
@@ -164,9 +161,16 @@ int main() {
     	tell_user_all_opponent_blue_lives(playerCtrl->turn, getPlayersInfoForId(playerCtrl, playerCtrl->turn));
 		message = receivedFromAndroid();
 		if (message.type == ACKNOWLEDGE);
+		int y;
+		for (y = 0; y < MAX_CARDS; y++ ) {
+			if (playerCtrl->players[playerCtrl->turn].blueCards[y] >= 72 && playerCtrl->players[playerCtrl->turn].blueCards[y] <= 74) {
+				drawCardsForId(playerCtrl->turn, cardCtrl, 1, playerCtrl);
+				break;
+			}
+		}
     	tell_user_their_turn(playerCtrl->turn);
         alt_up_char_buffer_clear(charBuffer);
-        runField(field);
+        runField(field, isGameEnd, winningPlayer);
     }
     return 0;
 }

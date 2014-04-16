@@ -50,86 +50,6 @@ public class Comm {
         }
     }
 
-    public static void sendMessageWait(String message) {
-        // Send Message Structure:
-        // [0] length not including [0]
-        // [1] message type
-
-        Boolean once = true;
-        while (!DE2Message.getReadyToSend(once)) {
-            if (once) {
-                Log.i("colin", "Waiting to send " + message);
-                once = false;
-            }
-        }
-        DE2Message.setReadyToSend(false);
-        Log.i("colin", "Message to Middleman: " + message);
-
-        String msg = message;
-        byte[] bmsg = hstba(msg);
-
-        // Create an array of bytes. First byte will be the
-        // message length, and the next ones will be the message
-        byte buf[] = new byte[bmsg.length + 1];
-
-        buf[0] = (byte) bmsg.length;
-        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
-
-        // Now send through the output stream of the socket
-
-        OutputStream out;
-        try {
-            out = app.sock.getOutputStream();
-            try {
-                out.write(buf, 0, bmsg.length + 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendMessageWaitNoChange(String message) {
-        // Send Message Structure:
-        // [0] length not including [0]
-        // [1] message type
-
-        Boolean once = true;
-        while (!DE2Message.getReadyToSend(once)) {
-            if (once) {
-                Log.i("colin", "Waiting to send " + message);
-                once = false;
-            }
-        }
-        DE2Message.setReadyToSend(false);
-        Log.i("colin", "Message to Middleman: " + message);
-
-        String msg = message;
-        byte[] bmsg = hstba(msg);
-
-        // Create an array of bytes. First byte will be the
-        // message length, and the next ones will be the message
-        byte buf[] = new byte[bmsg.length + 1];
-
-        buf[0] = (byte) bmsg.length;
-        System.arraycopy(bmsg, 0, buf, 1, bmsg.length);
-
-        // Now send through the output stream of the socket
-
-        OutputStream out;
-        try {
-            out = app.sock.getOutputStream();
-            try {
-                out.write(buf, 0, bmsg.length + 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // bytesToHexString
     final protected static char[] hexArray = "0123456789abcdef".toCharArray();
 
@@ -172,7 +92,7 @@ public class Comm {
             msg = msg + iths(c.cid);
         }
         Log.i("colin", "Going to send tellDE2CardsInHand");
-        sendMessageWait(msg);
+        sendMessage(msg);
         Log.i("colin", "Sent tellDE2CardsInHand");
         return;
     }
@@ -365,13 +285,11 @@ public class Comm {
             // [21] pid
             // [22] range
             // [23] role
-            for (int i = 0; i < 7; i++) {
-                int pid = (int) buf[3 * i + l + 1];
+            for (int i = 0; i < 3; i++) {
+                int pid = (int) buf[3 * i + l];
                 int range = (int) buf[3 * i + l + 1];
                 int int_role = (int) buf[3 * i + l + 2];
-                if (p.getPid() == pid) {
-                    break;
-                }
+
                 String role = "None";
                 switch (int_role) {
                 case 0x01: {
@@ -396,6 +314,7 @@ public class Comm {
                 }
                 }
                 Log.i("colin", "Doing setOpponentRole and setOpponentRange");
+                Log.i("range", pid + "is " + range + " far away from " + fromId);
                 p.setOpponentRole(pid, role);
                 p.setOpponentRange(pid, range);
                 Log.i("colin", "Did setOpponentRole and setOpponentRange");
@@ -415,15 +334,13 @@ public class Comm {
             // [24] rest of array is cid for blue cards
             // ...
             int i;
-            for (i = 0; i < 7; i++) {
+            for (i = 0; i < 3; i++) {
                 int pid = (int) buf[3 * i + l];
                 int lives = (int) buf[3 * i + l + 1];
                 int num_blues = (int) buf[3 * i + l + 2];
 
-                if (p.getPid() == pid) {
-                    break;
-                }
                 Log.i("colin", "Doing setOpponentLives");
+                Log.i("colin", "pid: " + pid + "lives: " + lives);
                 p.setOpponentLives(pid, lives);
                 Log.i("colin", "Did setOpponentLives");
                 ArrayList<Integer> pinfo = new ArrayList<Integer>();
@@ -431,11 +348,7 @@ public class Comm {
                 r_pinfo.add(pinfo);
             }
             int k = 3 * i + l;
-            for (i = 0; i < 7; i++) {
-                if (p.getPid() == i) {
-                    break;
-                }
-
+            for (i = 0; i < 3; i++) {
                 ArrayList<Integer> bcard = new ArrayList<Integer>();
                 for (int j = 0; j < r_pinfo.get(i).get(0); j++) {
                     bcard.add((int) buf[k++]);
@@ -507,6 +420,12 @@ public class Comm {
             DE2Message.setReadyToSend(true);
             Log.i("colin", "Did setReadyToContinue and setReadyToSend");
             tellDE2OK(p.getPid());
+            break;
+        }
+        case 0x3a: {
+            Log.i("colin", "Doing updateHand");
+            p.onUpdateCards();
+            Log.i("colin", "Did updateHand");
             break;
         }
         case 0x0b: {

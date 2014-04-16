@@ -18,7 +18,7 @@ public class DE2Message {
 
     public static void setReadyToContinue(Boolean readyToContinue) {
         Log.i("colin", "readyToContinue: " + DE2Message.readyToContinue + "->" + readyToContinue);
-        DE2Message.readyToContinue = readyToContinue;
+        DE2Message.readyToContinue = true;
     }
 
     public static Boolean getReadyToSend(Boolean once) {

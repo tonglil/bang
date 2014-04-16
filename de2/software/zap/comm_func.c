@@ -47,9 +47,10 @@ void tell_user_all_opponent_range_role(int pid, PlayersInfo pi) {
 
     int i;
     //TODO: change to numplayers
-    for (i = 0; i < NUM_PLAYERS; i++) {
+    for (i = 0; i < connected_count; i++) {
         cd->s_message[3*i + l] = pi.players[i].id;
         cd->s_message[3*i + l + 1] = pi.distance[i];
+        printf("Player %d is %d from %d\n", pi.players[i].id, pi.distance[i], pid);
         cd->s_message[3*i + l + 2] = pi.players[i].role;
     }
 
@@ -74,7 +75,7 @@ void tell_user_all_opponent_blue_lives(int pid, PlayersInfo pi) {
     cd->s_message[l++] = 0x03;
 
     int i;
-    for (i = 0; i < NUM_PLAYERS; i++) {
+    for (i = 0; i < connected_count; i++) {
         cd->s_message[3*i + l] = pi.players[i].id;
         cd->s_message[3*i + l + 1] = pi.players[i].lives;
         cd->s_message[3*i + l + 2] = pi.players[i].num_blue;
@@ -82,7 +83,7 @@ void tell_user_all_opponent_blue_lives(int pid, PlayersInfo pi) {
 
     int j = l + 3*i;
     int k;
-    for (i = 0; i < NUM_PLAYERS; i++) {
+    for (i = 0; i < connected_count; i++) {
         for (k = 0; i < pi.players[i].num_blue; k++)
         {
             cd->s_message[j++] = pi.players[i].blueCards[k];
@@ -232,6 +233,26 @@ void tell_user_ok(int pid) {
     cd->s_message[l++] = pid;
     l++;
     cd->s_message[l++] = 0x2a;
+
+    cd->s_len = l;
+
+    cd->s_message[1] = cd->s_len - 2;
+
+    send_data_to_middleman(uart, cd);
+}
+
+void tell_update_hand(int pid) {
+	printf("Sending tell_user_ok\n");
+    cd->client_id = pid_table[pid];
+
+    // Clear message buffer
+    memset(cd->s_message, 0, 128*sizeof(*cd->s_message));
+
+    int l = 0;
+
+    cd->s_message[l++] = pid;
+    l++;
+    cd->s_message[l++] = 0x3a;
 
     cd->s_len = l;
 

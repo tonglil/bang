@@ -6,8 +6,18 @@ int getCursorPosition(Field* field) {
 	return MENU_TITLE_Y + field->optionSelected + 1;
 }
 
-void runField(Field* field) {
+void runField(Field* field, int isGameEnd, int winningPlayer) {
 	char buffer[64];
+
+	if (isGameEnd){
+		Player *p = &(field->playerCtrl->players[winningPlayer]);
+		sprintf(buffer, "The winner of Bang! is the %s", roleToString(p->role));
+		int lineLength = strlen(buffer);
+		int padding = (CHAR_ROW_SIZE - lineLength)/2;
+		int padding_y = (CHAR_COL_SIZE)/2;
+		alt_up_char_buffer_string(field->charBuffer, buffer, padding, padding_y);
+		while(1);
+	}
 
 	if (field->hasChanged == 2) {
 		alt_up_char_buffer_clear(field->charBuffer);
@@ -22,14 +32,21 @@ void runField(Field* field) {
 		Player *p = &(field->playerCtrl->players[i]);
 
 		lineLength = 8;
-		sprintf(buffer, "Player %d", p->id + 1);
+		sprintf(buffer, "Player %d", p->id);
 		padding = (partitionWidth - lineLength)/2;
 		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 0);
 
-		lineLength = strlen(roleToString(p->role));
-		sprintf(buffer, "%s", roleToString(p->role));
-		padding = (partitionWidth - lineLength)/2;
-		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 1);
+		if (p->lives <= 0 || p->role == SHERIFF) {
+			lineLength = strlen(roleToString(p->role));
+			sprintf(buffer, "%s", roleToString(p->role));
+			padding = (partitionWidth - lineLength)/2;
+			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 1);
+		} else {
+			lineLength = strlen("Role: Unknown");
+			sprintf(buffer, "Role: Unknown");
+			padding = (partitionWidth - lineLength)/2;
+			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 1);
+		}
 
 		if (p->lives > 0) {
 			lineLength = 7;
@@ -41,43 +58,29 @@ void runField(Field* field) {
 		padding = (partitionWidth - lineLength)/2;
 		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 2);
 
-		lineLength = 10;
-		sprintf(buffer, "Blue Cards");
-		padding = (partitionWidth - lineLength)/2;
-		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 4);
-
-		int j;
 		int count = 0;
-		for (j = 0; j < MAX_CARDS; j++) {
-			if (p->blueCards[j] == 0)
-				continue;
-			lineLength = strlen(cardToString(p->blueCards[j]));
-			sprintf(buffer, "%s", cardToString(p->blueCards[j]));
-			padding = (partitionWidth - lineLength)/2;
-			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 6 + count);
-			count++;
-		}
+		int j;
 
-		lineLength = 10;
-		sprintf(buffer, "Hand Cards");
-		padding = (partitionWidth - lineLength)/2;
-		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 7 + count);
-
-		for (j = 0; j < MAX_CARDS; j++) {
-			if (p->hand[j] == 0)
-				continue;
-			lineLength = strlen(cardToString(p->hand[j]));
-			sprintf(buffer, "%s", cardToString(p->hand[j]));
-			padding = (partitionWidth - lineLength)/2;
-			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 9 + count);
-			count++;
-		}
+//		lineLength = 10;
+//		sprintf(buffer, "Hand Cards");
+//		padding = (partitionWidth - lineLength)/2;
+//		alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 4 + count);
+//
+//		for (j = 0; j < MAX_CARDS; j++) {
+//			if (p->hand[j] == 0)
+//				continue;
+//			lineLength = strlen(cardToString(p->hand[j]));
+//			sprintf(buffer, "%s", cardToString(p->hand[j]));
+//			padding = (partitionWidth - lineLength)/2;
+//			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 6 + count);
+//			count++;
+//		}
 
 		if (field->playerCtrl->turn == i){
 			lineLength = 9;
 			sprintf(buffer, "Your Turn");
 			padding = (partitionWidth - lineLength)/2;
-			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 11 + count);
+			alt_up_char_buffer_string(field->charBuffer, buffer, padding + partitionWidth*i, 3);
 		}
 
 	}

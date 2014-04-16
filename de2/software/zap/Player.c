@@ -3,55 +3,46 @@
 int connected_count = 0;
 
 void initPlayers(PlayerCtrl* playerCtrl, int count) {
-    if (count < 4){
-        printf("There has to be at least 4 players");
+    if (count < 0){
+        printf("There has to be at least 1 player");
         return;
     }
 
     playerCtrl->turn = 0;
 
     Player defaultPlayer;
-    defaultPlayer.id = -1;
-    defaultPlayer.pos = -1;
     defaultPlayer.role = NONE;
     defaultPlayer.lives = 0;
+    defaultPlayer.num_hand = 0;
+    defaultPlayer.num_blue = 0;
+    memset(defaultPlayer.blueCards, 0, sizeof(Card)*MAX_CARDS);
+    memset(defaultPlayer.hand, 0, sizeof(Card)*MAX_CARDS);
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
         playerCtrl->players[i] = defaultPlayer;
     }
 
     playerCtrl->players[0].role = SHERIFF;
-    playerCtrl->players[1].role = DEPUTY;
+    playerCtrl->players[1].role = RENEGADE;
     playerCtrl->players[2].role = OUTLAW;
-    playerCtrl->players[3].role = OUTLAW;
-
-    if (count > 4)
-        playerCtrl->players[4].role = DEPUTY;
-    if (count > 5)
-        playerCtrl->players[5].role = OUTLAW;
-    if (count == 7)
-        playerCtrl->players[6].role = RENEGADE;
 
     //Shuffle roles
-    for (i = 0; i < count; i++)
+    for (i = 0; i < NUM_PLAYERS; i++)
     {
         int j = i + rand() % (count - i);
-        if (j >= MAX_CARDS)
+        if (j >= count)
             printf("Randomizer exceeded maximum index\n");
         role temp = playerCtrl->players[j].role;
         playerCtrl->players[j].role = playerCtrl->players[i].role;
         playerCtrl->players[i].role = temp;
-        playerCtrl->players[i].num_blue = 0;
     }
 
     for (i = 0; i < NUM_PLAYERS; i++) {
-        Player *p = &(playerCtrl->players[i]);
-        memset(p->blueCards, 0, sizeof(Card)*MAX_CARDS);
-        memset(p->hand, 0, sizeof(Card)*MAX_CARDS);
-        if (p->role == NONE)
-            continue;
+    	Player *p = &(playerCtrl->players[i]);
         p->id = i;
         p->pos = i;
+        if (p->role == NONE)
+            continue;
         if (p->role == SHERIFF)
             p->lives = 5;
         else
@@ -131,8 +122,8 @@ PlayersInfo getPlayersInfoForId(PlayerCtrl* playerCtrl, int id) {
     int i;
     for (i = 0; i < NUM_PLAYERS; i++) {
     playersInfo.players[i] = playerCtrl->players[i];
-        if (playersInfo.players[i].pos < 0) {
-            playersInfo.distance[i] = -1;
+        if (playersInfo.players[i].lives <= 0) {
+            playersInfo.distance[i] = 10;
             continue;
         }
         int tempDistance =  playersInfo.players[i].pos - playersInfo.players[id].pos;

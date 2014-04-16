@@ -52,4 +52,6 @@ Message receive_interpret_android(void);
 
 Message create_message(messageType type, int fromId, int toId, int count, Card cards[], int self);
 
+void tell_update_hand(int pid);
+
 #endif
